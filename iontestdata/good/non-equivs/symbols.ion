@@ -1,0 +1,33 @@
+// case-sensitive
+[
+    'a',
+    'A',
+]
+[
+    a,
+    A,
+]
+
+embedded_documents::[
+    // system symbols for Ion 1.0 (with known text)
+    "$1",
+    "$2",
+    "$3",
+    "$4",
+    "$5",
+    "$6",
+    "$7",
+    "$8",
+    "$9",
+
+    // local symbols (with unknown text)
+    "$10",
+    "$97",
+    "$98",
+    "$99",
+]
+
+[
+    null.symbol,        // null symbol value
+    'null.symbol',      // symbol with 'null.symbol' as text
+]
