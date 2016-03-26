@@ -1,0 +1,20 @@
+{{"Kumo Says" /* hello */}}
+{{/*hello*/ "Kumo!"}}
+
+{{
+  // hello
+  "Kumo
+}}
+
+{{
+  "Kumo Says" /*nothing but*/
+  // hello
+
+{{'''A''' /* wild */ '''Kumo'''}}
+{{/*wild*/ '''Kumo''' /*!*/}}
+{{
+  // there was a dog
+  '''named''' // or called
+  /* really */
+  '''Kumo'''
+}}
