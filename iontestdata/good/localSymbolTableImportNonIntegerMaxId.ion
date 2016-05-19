@@ -1,11 +1,9 @@
 $ion_1_0
-
-// Import declaration with zero max_id
 $ion_symbol_table::
 {
   imports:[ { name: "fred",
               version: 1,
-              max_id: 0 },
+              max_id: "1" },
   ],
 }
 a
