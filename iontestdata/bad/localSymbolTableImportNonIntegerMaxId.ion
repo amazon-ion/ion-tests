@@ -1,3 +1,4 @@
+// Fails because there is no symbol table named "fred" and the max_id is effectively undefined (not an integer)
 $ion_1_0
 $ion_symbol_table::
 {
