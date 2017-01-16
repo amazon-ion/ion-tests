@@ -1,0 +1,8 @@
+// Some implementations do not support unlimited fractional precision. This case should be skipped in those
+// implementations.
+
+// frac. seconds precise, UTC
+(
+    2007-02-23T12:14:33.13371337133713371337Z
+    2007-02-23T12:14:33.13371337133713371337+00:00
+)
