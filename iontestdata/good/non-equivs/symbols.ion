@@ -19,12 +19,6 @@ embedded_documents::[
     "$7",
     "$8",
     "$9",
-
-    // local symbols (with unknown text)
-    "$10",
-    "$97",
-    "$98",
-    "$99",
 ]
 
 [
