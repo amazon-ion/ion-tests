@@ -118,6 +118,11 @@ stringWithLatinEncoding.10n
 Contains a String with several valid Latin-1 (ISO-8859-1) characters which do
 not produce valid UTF-8 code points.
 
+structOrderedEmpty.10n
+----------------------
+Contains an ordered Struct (type ID `0xD1`) with a length of `0` (`0x80`).
+Ordered structs must contain at least one symbol/value pair.
+
 symbolExplicitZero.10n
 ----------------------
 This file contains a symbol with the SID `0`.
