@@ -8,6 +8,26 @@ Where possible, these files contain comments identifying why the file should
 be treated as invalid. Since the binary Ion representation does not preserve
 comments, this file contains descriptions of binary failures.
 
+annotationLengthTooLongScalar.10n
+---------------------------------
+Contains an Annotation wrapper whose declared length is too long for its
+subfields (including its wrapped scalar value).
+
+annotationLengthTooLongContainer.10n
+---------------------------------
+Contains an Annotation wrapper whose declared length is too long for its
+subfields (including its wrapped container value).
+
+annotationLengthTooShortScalar.10n
+---------------------------------
+Contains an Annotation wrapper whose declared length is too short for its
+subfields (including its wrapped scalar value).
+
+annotationLengthTooShortContainer.10n
+---------------------------------
+Contains an Annotation wrapper whose declared length is too short for its
+subfields (including its wrapped container value).
+
 annotationNested.10n
 --------------------
 Contains an Annotation wrapper which contains another annotation wrapper as
@@ -61,7 +81,8 @@ data are available.
 
 emptyAnnotatedInt.10n
 ---------------------
-Contains an Int annotated with the SID `0`.
+Contains an Annotation wrapper with an *annot_length* subfield value of zero,
+which is illegal because at least one annotation must exist.
 
 floatLenTooLarge.10n
 --------------------
