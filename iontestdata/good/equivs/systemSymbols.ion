@@ -4,8 +4,10 @@
   $ion
 )
 (
-  $2
-  $ion_1_0
+  // When roundtripped as top-level values, these are no longer equivalent, as $ion_1_0 is an IVM while $2 is not.
+  // Putting these in containers solves that problem; there are no IVMs below the top level.
+  ($2)
+  ($ion_1_0)
 )
 (
   $3
