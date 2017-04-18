@@ -1,3 +1,9 @@
-// Empty symbol is not allowed.
+// Empty symbol is allowed.
 
 ''
+{'':abc}
+''::abc
+''::''
+{'':''::''}
+abc::''
+{'''''':abc}
