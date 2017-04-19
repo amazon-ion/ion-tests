@@ -104,6 +104,11 @@ minLongWithLenTooSmall.10n
 Contains an Int whose length is specified as 7 bytes, but contains 8 bytes of
 data. The trailing byte is `0x00` (a Null with an invalid _L_ value).
 
+nopPadTooShort.10n
+------------------
+Contains a NOP pad with a declared length of 16 bytes that ends after only 15
+bytes.
+
 nullBadTD.10n
 -------------
 Contains an Null with an invalid _L_ value of `0`.
