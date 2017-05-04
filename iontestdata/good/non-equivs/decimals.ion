@@ -24,6 +24,13 @@
     123d3,
 ]
 
+// different precisions
+[
+    123.,
+    123.0,
+    123.00,
+]
+
 // different precisions (positive zeroes)
 [
     0.,
