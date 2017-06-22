@@ -7,5 +7,6 @@
 ([])
 (null .timestamps)
 (op1.op2)
-//(a_plus_plus_plus_operator::+++ a_3::3)
-//(a_plus_plus_plus_operator:: +++ a_3::3)
+(a_plus_plus_plus_operator::+++ a_3::3)
+(a_plus_plus_plus_operator:: +++ a_3::3)
+(a_plus_plus_plus_operator::'+++')

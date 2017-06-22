@@ -23,3 +23,4 @@ $
 _9876543210
 $3
 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$_
+'$99' // Symbol with text "$99", as opposed to unquoted $99, which is an out-of-range SID with unknown text.
