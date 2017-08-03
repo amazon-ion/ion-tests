@@ -25,3 +25,8 @@ embedded_documents::[
     null.symbol,        // null symbol value
     'null.symbol',      // symbol with 'null.symbol' as text
 ]
+
+[
+    $4,     // Refers to SID 4, which is the system symbol with the text "name".
+    '$4'    // A symbol value with text "$4".
+]
