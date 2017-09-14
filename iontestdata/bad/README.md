@@ -104,6 +104,14 @@ minLongWithLenTooSmall.10n
 Contains an Int whose length is specified as 7 bytes, but contains 8 bytes of
 data. The trailing byte is `0x00` (a Null with an invalid _L_ value).
 
+negativeIntZero
+-----------------
+Contains a negative integer with length of 1 and value of zero (hex: `31 00`).
+
+negativeIntZero
+---------------
+Contains a negative integer with length zero (hex: `30`).
+
 nopPadTooShort.10n
 ------------------
 Contains a NOP pad with a declared length of 16 bytes that ends after only 15
