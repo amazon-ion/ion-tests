@@ -1,0 +1,2 @@
+// Valid UTF-8, but not an ASCII character so illegal in clobs
+{{"💩"}}
