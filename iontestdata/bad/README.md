@@ -145,6 +145,18 @@ symbolLenTooLarge.10n
 Contains a Symbol whose length is specified as 2 bytes, but only 1 byte of data
 is available.
 
+timestamp/timestampFraction10d-1.10n
+------------------------------------
+Contains a Timestamp with a fractional component of 10d-1.
+
+timestamp/timestampFraction11d-1.10n
+----------------------------------
+Contains a Timestamp with a fractional component of 11d-1.
+
+timestamp/timestampFraction1d0.10n
+----------------------------------
+Contains a Timestamp with a fractional component of 1d0.
+
 timestamp/timestampLenTooLarge.10n
 ----------------------------------
 Contains a Timestamp whose length is specified as 25 bytes, but only 24 bytes
