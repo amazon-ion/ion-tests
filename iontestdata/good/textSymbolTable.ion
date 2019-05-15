@@ -1,0 +1,3 @@
+// https://github.com/amzn/ion-java/issues/237
+
+$ion_symbol_table::{ symbols: ["local"] } $10::10 // $10 resolves to local
