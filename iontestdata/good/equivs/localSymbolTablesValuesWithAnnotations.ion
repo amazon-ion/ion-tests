@@ -1,7 +1,5 @@
 // https://github.com/amzn/ion-java/issues/237
 
- // $10 resolves to local
-
 embedded_documents::[
     '''
     $ion_symbol_table::{
