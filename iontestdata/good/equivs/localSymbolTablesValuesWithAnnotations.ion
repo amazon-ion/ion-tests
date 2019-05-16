@@ -1,0 +1,21 @@
+// https://github.com/amzn/ion-java/issues/237
+
+embedded_documents::[
+    '''
+    $ion_symbol_table::{
+        symbols: ["local"]
+    }
+    $10::10
+    ''',
+
+    '''
+    $ion_symbol_table::{
+        symbols: ["local"]
+    }
+    local::10
+    ''',
+
+    '''
+    local::10
+    '''
+]
