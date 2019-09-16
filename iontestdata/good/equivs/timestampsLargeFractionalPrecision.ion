@@ -16,3 +16,23 @@
     2007-02-23T12:14:33.18446744073709551616Z // Fraction is max 64 bit unsigned int + 1.
     2007-02-23T12:14:33.18446744073709551616+00:00
 )
+
+(
+    2007-02-23T12:14:33.00000738284738Z // Large fractional precision with many leading zeroes.
+    2007-02-23T12:14:33.00000738284738+00:00
+)
+
+(
+    2007-02-23T12:14:33.00738284738Z // Large fractional precision with a few leading zeroes.
+    2007-02-23T12:14:33.00738284738+00:00
+)
+
+(
+    2007-02-23T12:14:33.4350000000Z // Large fractional precision with trailing zeroes.
+    2007-02-23T12:14:33.4350000000+00:00
+)
+
+(
+    2007-02-23T12:14:33.00073000Z // Large fractional precision leading and trailing zeroes.
+    2007-02-23T12:14:33.00073000+00:00
+)
