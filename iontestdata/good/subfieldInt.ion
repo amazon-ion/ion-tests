@@ -118,7 +118,7 @@ $ion_1_0
 
 // 9 bytes
 // 64 bits
-// hex: 0xfffffffffffffff
+// hex: 0x00ffffffffffffffff
 // dec: 18446744073709551615
 18446744073709551614d0
 18446744073709551615d0
