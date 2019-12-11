@@ -1,10 +1,12 @@
 # Type Codes
 
-Test all of the type codes.  
-All values set to invalid type codes when possible.  
-Split the files by type code.  
+The files in this folder are used to test all of the type descriptors for Ion 1.0.  
+Each file contains a valid Ion [Value Stream](http://amzn.github.io/ion-docs/docs/binary.html#value-streams).  
+All representations are made up of invalid type descriptors when possible.
 
 ## T0 - null / nop padding
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#0-null  
 
 ```
 E0 01 00 EA 00 01 FF 02 FF FF 03 FF FF FF 04 FF
@@ -68,7 +70,13 @@ FF FF FF FF FF FF FF FF FF FF FF FF 0F
 > `0F`  
 > _null_ or _null.null_
 
+### Invalid null / nop padding type descriptors
+
+> _none_
+
 ## T1 - bool
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#1-bool
 
 ```
 E0 01 00 EA 10 11 1F 
@@ -91,6 +99,8 @@ E0 01 00 EA 10 11 1F
 > `12`, `13`, `14`, `15`, `16`, `17`, `18`, `19`, `1A`, `1B`, `1C`, `1D`
 
 ## T2 - int (positive)
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#2-and-3-int  
 
 ```
 E0 01 00 EA 20 21 FF 22 FF FF 23 FF FF FF 24 FF 
@@ -155,8 +165,14 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 2F
 > `2F`  
 > _null.int_
 
+### Invalid int (positive) type descriptors
+
+> _none_
+
 
 ## T3 - int (negative)
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#2-and-3-int  
 
 ```
 E0 01 00 EA 31 FF 32 FF FF 33 FF FF FF 34 FF FF 
@@ -224,6 +240,8 @@ FF FF FF FF FF FF FF FF FF FF FF FF 3F
 
 ## T4 - float
 
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#4-float  
+
 ```
 E0 01 00 EA 40 44 00 00 00 00 48 00 00 00 00 00 
 00 00 00 4F  
@@ -249,6 +267,8 @@ E0 01 00 EA 40 44 00 00 00 00 48 00 00 00 00 00
 > `41`, `42`, `43`, `45`, `46`, `47`, `49`, `4A`, `4B`, `4C`, `4D`, `4E`
 
 ## T5 - decimal
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#5-decimal  
 
 ```
 E0 01 00 EA 50 51 FF 52 FF FF 53 FF FF FF 54 FF 
@@ -312,7 +332,13 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 > `5F`  
 > _null.decimal_
 
+### Invalid decimal type descriptors
+
+> _none_
+
 ## T6 - timestamp
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp
 
 ```
 E0 01 00 EA 62 E1 E1 63 E1 E1 E1 64 8E 8E 8E 8E 
@@ -371,9 +397,305 @@ E0 01 00 EA 62 E1 E1 63 E1 E1 E1 64 8E 8E 8E 8E
 > `6F`  
 > _null.timestamp_
 
-
 ### Invalid timestamp type descriptors
 
 > `60`, `61`  
 
 ## T7 - symbol
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#7-symbol  
+
+```
+E0 01 00 EA 70 71 00 72 00 00 73 00 00 00 74 00 
+00 00 00 75 00 00 00 00 00 76 00 00 00 00 00 00 
+77 00 00 00 00 00 00 00 78 00 00 00 00 00 00 00 
+00 79 00 00 00 00 00 00 00 00 00 7A 00 00 00 00 
+00 00 00 00 00 00 7B 00 00 00 00 00 00 00 00 00 
+00 00 7C 00 00 00 00 00 00 00 00 00 00 00 00 7D 
+00 00 00 00 00 00 00 00 00 00 00 00 00 7E 8E 00 
+00 00 00 00 00 00 00 00 00 00 00 00 00 7F 
+
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
+
+> `70`  
+> symbol ID zero or _$0_
+
+> `71 00`  
+> 1 byte symbol ID
+
+> `72 00 00`  
+> 2 byte symbol ID
+
+> `73 00 00 00`  
+> 3 byte symbol ID
+
+> `74 00 00 00 00`  
+> 4 byte symbol ID
+
+> `75 00 00 00 00 00`  
+> 5 byte symbol ID
+
+> `76 00 00 00 00 00 00`  
+> 6 byte symbol ID
+
+> `77 00 00 00 00 00 00 00`  
+> 7 byte symbol ID
+
+> `78 00 00 00 00 00 00 00 00`  
+> 8 byte symbol ID
+
+> `79 00 00 00 00 00 00 00 00 00`  
+> 9 byte symbol ID
+
+> `7A 00 00 00 00 00 00 00 00 00 00`  
+> 10 byte symbol ID
+
+> `7B 00 00 00 00 00 00 00 00 00 00 00`  
+> 11 byte symbol ID
+
+> `7C 00 00 00 00 00 00 00 00 00 00 00 00`  
+> 12 byte symbol ID
+
+> `7D 00 00 00 00 00 00 00 00 00 00 00 00 00`  
+> 13 byte symbol ID
+
+> `7E 8E 00 00 00 00 00 00 00 00 00 00 00 00 00 00`  
+> VarUInt (8E = 14) byte symbol ID
+
+> `7F`  
+> _null.symbol_
+
+### Invalid symbol type descriptors
+
+> _none_
+
+## T8 - string
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#8-string
+
+```
+E0 01 00 EA 80 81 30 82 30 30 83 30 30 30 84 30 
+30 30 30 85 30 30 30 30 30 86 30 30 30 30 30 30 
+87 30 30 30 30 30 30 30 88 30 30 30 30 30 30 30 
+30 89 30 30 30 30 30 30 30 30 30 8A 30 30 30 30 
+30 30 30 30 30 30 8B 30 30 30 30 30 30 30 30 30 
+30 30 8C 30 30 30 30 30 30 30 30 30 30 30 30 8D 
+30 30 30 30 30 30 30 30 30 30 30 30 30 8E 8E 30 
+30 30 30 30 30 30 30 30 30 30 30 30 30 8F 
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
+
+> `80`  
+> _""_ (empty string)
+
+> `81 30`  
+> 1 byte string
+
+> `82 30 30`  
+> 2 byte string
+
+> `83 30 30 30`  
+> 3 byte string
+
+> `84 30 30 30 30`  
+> 4 byte string
+
+> `85 30 30 30 30 30`  
+> 5 byte string
+
+> `86 30 30 30 30 30 30`  
+> 6 byte string
+
+> `87 30 30 30 30 30 30 30`  
+> 7 byte string
+
+> `88 30 30 30 30 30 30 30 30`  
+> 8 byte string
+
+> `89 30 30 30 30 30 30 30 30 30`  
+> 9 byte string
+
+> `8A 30 30 30 30 30 30 30 30 30 30`  
+> 10 byte string
+
+> `8B 30 30 30 30 30 30 30 30 30 30 30`  
+> 11 byte string
+
+> `8C 30 30 30 30 30 30 30 30 30 30 30 30`  
+> 12 byte string
+
+> `8D 30 30 30 30 30 30 30 30 30 30 30 30 30`  
+> 13 byte string
+
+> `8E 8E 30 30 30 30 30 30 30 30 30 30 30 30 30 30`  
+> VarUInt (8E = 14) byte string
+
+> `8F`  
+> _null.string_
+
+### Invalid string type descriptors
+
+> _none_
+
+## T9 - clob
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#9-clob
+
+```
+E0 01 00 EA 90 91 FF 92 FF FF 93 FF FF FF 94 FF 
+FF FF FF 95 FF FF FF FF FF 96 FF FF FF FF FF FF 
+97 FF FF FF FF FF FF FF 98 FF FF FF FF FF FF FF 
+FF 99 FF FF FF FF FF FF FF FF FF 9A FF FF FF FF 
+FF FF FF FF FF FF 9B FF FF FF FF FF FF FF FF FF 
+FF FF 9C FF FF FF FF FF FF FF FF FF FF FF FF 9D 
+FF FF FF FF FF FF FF FF FF FF FF FF FF 9E 8E FF 
+FF FF FF FF FF FF FF FF FF FF FF FF FF 9F 
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
+
+> `90`  
+> _{{ "" }}_ (empty clob)
+
+> `91 FF`  
+> 1 byte clob
+
+> `92 FF FF`  
+> 2 byte clob
+
+> `93 FF FF FF`  
+> 3 byte clob
+
+> `94 FF FF FF FF`  
+> 4 byte clob
+
+> `95 FF FF FF FF FF`  
+> 5 byte clob
+
+> `96 FF FF FF FF FF FF`  
+> 6 byte clob
+
+> `97 FF FF FF FF FF FF FF`  
+> 7 byte clob
+
+> `98 FF FF FF FF FF FF FF FF`  
+> 8 byte clob
+
+> `99 FF FF FF FF FF FF FF FF FF`  
+> 9 byte clob
+
+> `9A FF FF FF FF FF FF FF FF FF FF`  
+> 10 byte clob
+
+> `9B FF FF FF FF FF FF FF FF FF FF FF`  
+> 11 byte clob
+
+> `9C FF FF FF FF FF FF FF FF FF FF FF FF`  
+> 12 byte clob
+
+> `9D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
+> 13 byte clob
+
+> `9E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
+> VarUInt (8E = 14) byte clob
+
+> `9F`  
+> _null.clob_
+
+### Invalid clob type descriptors
+
+> _none_
+
+## T10 - blob
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#10-blob
+
+```
+E0 01 00 EA A0 A1 FF A2 FF FF A3 FF FF FF A4 FF 
+FF FF FF A5 FF FF FF FF FF A6 FF FF FF FF FF FF 
+A7 FF FF FF FF FF FF FF A8 FF FF FF FF FF FF FF 
+FF A9 FF FF FF FF FF FF FF FF FF AA FF FF FF FF 
+FF FF FF FF FF FF AB FF FF FF FF FF FF FF FF FF 
+FF FF AC FF FF FF FF FF FF FF FF FF FF FF FF AD 
+FF FF FF FF FF FF FF FF FF FF FF FF FF AE 8E FF 
+FF FF FF FF FF FF FF FF FF FF FF FF FF AF 
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
+
+> `A0`  
+> _{{ }}_ (empty blob)
+
+> `A1 FF`  
+> 1 byte blob
+
+> `A2 FF FF`  
+> 2 byte blob
+
+> `A3 FF FF FF`  
+> 3 byte blob
+
+> `A4 FF FF FF FF`  
+> 4 byte blob
+
+> `A5 FF FF FF FF FF`  
+> 5 byte blob
+
+> `A6 FF FF FF FF FF FF`  
+> 6 byte blob
+
+> `A7 FF FF FF FF FF FF FF`  
+> 7 byte blob
+
+> `A8 FF FF FF FF FF FF FF FF`  
+> 8 byte blob
+
+> `A9 FF FF FF FF FF FF FF FF FF`  
+> 9 byte blob
+
+> `AA FF FF FF FF FF FF FF FF FF FF`  
+> 10 byte blob
+
+> `AB FF FF FF FF FF FF FF FF FF FF FF`  
+> 11 byte blob
+
+> `AC FF FF FF FF FF FF FF FF FF FF FF FF`  
+> 12 byte blob
+
+> `AD FF FF FF FF FF FF FF FF FF FF FF FF FF`  
+> 13 byte blob
+
+> `AE 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
+> VarUInt (8E = 14) byte blob
+
+> `AF`  
+> _null.blob_
+
+### Invalid blob type descriptors
+
+> _none_
+
+## T11 - list
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#11-list
+
+```
+E0 01 00 EA B0 B1 0F B2 0F 0F B3 0F 0F 0F B4 0F 
+0F 0F 0F B5 0F 0F 0F 0F 0F B6 0F 0F 0F 0F 0F 0F 
+B7 0F 0F 0F 0F 0F 0F 0F B8 0F 0F 0F 0F 0F 0F 0F 
+0F B9 0F 0F 0F 0F 0F 0F 0F 0F 0F BA 0F 0F 0F 0F 
+0F 0F 0F 0F 0F 0F BB 0F 0F 0F 0F 0F 0F 0F 0F 0F 
+0F 0F BC 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F BD 
+0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F BE 8E 0F 
+0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F BF 
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
