@@ -9,7 +9,7 @@ All representations are made up of invalid type descriptors when possible.
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#0-null  
 
 ```
-E0 01 00 EA 00 01 FF 02 FF FF 03 FF FF FF 04 FF
+E0 01 00 EA 00 01 FF 02 FF FF 03 FF FF FF 04 FF 
 FF FF FF 05 FF FF FF FF FF 06 FF FF FF FF FF FF 
 07 FF FF FF FF FF FF FF 08 FF FF FF FF FF FF FF 
 FF 09 FF FF FF FF FF FF FF FF FF 0A FF FF FF FF 
