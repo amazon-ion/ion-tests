@@ -76,7 +76,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF 0F
 
 ## T1 - bool
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#1-bool
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#1-bool  
 
 ```
 E0 01 00 EA 10 11 1F 
@@ -338,7 +338,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 
 ## T6 - timestamp
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp  
 
 ```
 E0 01 00 EA 62 E1 E1 63 E1 E1 E1 64 8E 8E 8E 8E 
@@ -474,7 +474,7 @@ E0 01 00 EA 70 71 00 72 00 00 73 00 00 00 74 00
 
 ## T8 - string
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#8-string
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#8-string  
 
 ```
 E0 01 00 EA 80 81 30 82 30 30 83 30 30 30 84 30 
@@ -544,7 +544,7 @@ E0 01 00 EA 80 81 30 82 30 30 83 30 30 30 84 30
 
 ## T9 - clob
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#9-clob
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#9-clob  
 
 ```
 E0 01 00 EA 90 91 FF 92 FF FF 93 FF FF FF 94 FF 
@@ -614,7 +614,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 9F
 
 ## T10 - blob
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#10-blob
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#10-blob  
 
 ```
 E0 01 00 EA A0 A1 FF A2 FF FF A3 FF FF FF A4 FF 
@@ -684,7 +684,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF AF
 
 ## T11 - list
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#11-list
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#11-list  
 
 ```
 E0 01 00 EA B0 B1 0F B2 0F 0F B3 0F 0F 0F B4 0F 
@@ -699,3 +699,264 @@ B7 0F 0F 0F 0F 0F 0F 0F B8 0F 0F 0F 0F 0F 0F 0F
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
+
+> `B0`  
+> _[]_ (empty list)
+
+> `B1 0F`  
+> 1 byte list
+
+> `B2 0F 0F`  
+> 2 byte list
+
+> `B3 0F 0F 0F`  
+> 3 byte list
+
+> `B4 0F 0F 0F 0F`  
+> 4 byte list
+
+> `B5 0F 0F 0F 0F 0F`  
+> 5 byte list
+
+> `B6 0F 0F 0F 0F 0F 0F`  
+> 6 byte list
+
+> `B7 0F 0F 0F 0F 0F 0F 0F`  
+> 7 byte list
+
+> `B8 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 8 byte list
+
+> `B9 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 9 byte list
+
+> `BA 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 10 byte list
+
+> `BB 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 11 byte list
+
+> `BC 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 12 byte list
+
+> `BD 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 13 byte list
+
+> `BE 8E 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> VarUInt (8E = 14) byte list
+
+> `BF`  
+> _null.list_
+
+### Invalid list type descriptors
+
+> _none_
+
+## T12 - sexp
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#12-sexp  
+
+```
+E0 01 00 EA C0 C1 0F C2 0F 0F C3 0F 0F 0F C4 0F 
+0F 0F 0F C5 0F 0F 0F 0F 0F C6 0F 0F 0F 0F 0F 0F 
+C7 0F 0F 0F 0F 0F 0F 0F C8 0F 0F 0F 0F 0F 0F 0F 
+0F C9 0F 0F 0F 0F 0F 0F 0F 0F 0F CA 0F 0F 0F 0F 
+0F 0F 0F 0F 0F 0F CB 0F 0F 0F 0F 0F 0F 0F 0F 0F 
+0F 0F CC 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F CD 
+0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F CE 8E 0F 
+0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F CF 
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
+
+> `C0`  
+> _()_ (empty sexp)
+
+> `C1 0F`  
+> 1 byte sexp
+
+> `C2 0F 0F`  
+> 2 byte sexp
+
+> `C3 0F 0F 0F`  
+> 3 byte sexp
+
+> `C4 0F 0F 0F 0F`  
+> 4 byte sexp
+
+> `C5 0F 0F 0F 0F 0F`  
+> 5 byte sexp
+
+> `C6 0F 0F 0F 0F 0F 0F`  
+> 6 byte sexp
+
+> `C7 0F 0F 0F 0F 0F 0F 0F`  
+> 7 byte sexp
+
+> `C8 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 8 byte sexp
+
+> `C9 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 9 byte sexp
+
+> `CA 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 10 byte sexp
+
+> `CB 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 11 byte sexp
+
+> `CC 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 12 byte sexp
+
+> `CD 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> 13 byte sexp
+
+> `CE 8E 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> VarUInt (8E = 14) byte sexp
+
+> `CF`  
+> _null.sexp_
+
+### Invalid sexp type descriptors
+
+> _none_
+
+## T13 - struct
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#13-struct  
+
+```
+E0 01 00 EA D0 D1 82 81 0F D2 81 0F D3 81 81 30 
+D4 81 82 30 30 D5 81 83 30 30 30 D6 81 84 30 30 
+30 30 D7 81 85 30 30 30 30 30 D8 81 86 30 30 30 
+30 30 30 D9 81 87 30 30 30 30 30 30 30 DA 81 88 
+30 30 30 30 30 30 30 30 DB 81 89 30 30 30 30 30 
+30 30 30 30 DC 81 8A 30 30 30 30 30 30 30 30 30 
+30 DD 81 8B 30 30 30 30 30 30 30 30 30 30 30 DE 
+8E 81 8C 30 30 30 30 30 30 30 30 30 30 30 30 DF 
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
+
+> `D0`  
+> _{}_ (empty struct)
+
+> `D1 82 81 0F`  
+> Sorted VarUInt (82 = 2) byte struct
+
+> `D2 81 0F`  
+> 2 byte struct
+
+> `D3 81 81 30`  
+> 3 byte struct
+
+> `D4 81 82 30 30`  
+> 4 byte struct
+
+> `D5 81 83 30 30 30`  
+> 5 byte struct
+
+> `D6 81 84 30 30 30 30`  
+> 6 byte struct
+
+> `D7 81 85 30 30 30 30 30`  
+> 7 byte struct
+
+> `D8 81 86 30 30 30 30 30 30`  
+> 8 byte struct
+
+> `D9 81 87 30 30 30 30 30 30 30`  
+> 9 byte struct
+
+> `DA 81 88 30 30 30 30 30 30 30 30`  
+> 10 byte struct
+
+> `DB 81 89 30 30 30 30 30 30 30 30 30`  
+> 11 byte struct
+
+> `DC 81 8A 30 30 30 30 30 30 30 30 30 30`  
+> 12 byte struct
+
+> `DD 81 8B 30 30 30 30 30 30 30 30 30 30 30`  
+> 13 byte struct
+
+> `DE 8E 81 8C 30 30 30 30 30 30 30 30 30 30 30 30`  
+> VarUInt (8E = 14) byte struct
+
+> `DF`  
+> _null.struct_
+
+### Invalid struct type descriptors
+
+> _none_
+
+## T14 - annotations
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#annotations  
+
+```
+E0 01 00 EA E0 01 00 EA E3 81 81 80 E4 81 81 81 
+30 E5 81 81 82 30 30 E6 81 81 83 30 30 30 E7 81 
+81 84 30 30 30 30 E8 81 81 85 30 30 30 30 30 E9 
+81 81 86 30 30 30 30 30 30 EA 81 81 87 30 30 30 
+30 30 30 30 EB 81 81 88 30 30 30 30 30 30 30 30 
+EC 81 81 89 30 30 30 30 30 30 30 30 30 ED 81 81 
+8A 30 30 30 30 30 30 30 30 30 30 EE 8E 81 81 8B 
+30 30 30 30 30 30 30 30 30 30 30
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM) (the only valid sequence after E0)
+
+> `E3 81 81 80`  
+> 3 byte annotation wrapper
+
+> `E4 81 81 81 30`  
+> 4 byte annotation wrapper
+
+> `E5 81 81 82 30 30`  
+> 5 byte annotation wrapper
+
+> `E6 81 81 83 30 30 30`  
+> 6 byte annotation wrapper
+
+> `E7 81 81 84 30 30 30 30`  
+> 7 byte annotation wrapper
+
+> `E8 81 81 85 30 30 30 30 30`  
+> 8 byte annotation wrapper
+
+> `E9 81 81 86 30 30 30 30 30 30`  
+> 9 byte annotation wrapper
+
+> `EA 81 81 87 30 30 30 30 30 30 30`  
+> 10 byte annotation wrapper
+
+> `EB 81 81 88 30 30 30 30 30 30 30 30`  
+> 11 byte annotation wrapper
+
+> `EC 81 81 89 30 30 30 30 30 30 30 30 30`  
+> 12 byte annotation wrapper
+
+> `ED 81 81 8A 30 30 30 30 30 30 30 30 30 30`  
+> 13 byte annotation wrapper
+
+> `EE 8E 81 81 8B 30 30 30 30 30 30 30 30 30 30 30`  
+> VarUInt (8E = 14) byte annotation wrapper
+
+### Invalid annotation type descriptors
+
+> `E1`, `E2`, `E15`
+
+## T15 - reserved
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#15-reserved  
+
+### Invalid reserved type descriptors
+
+> `F0`, `F1`, `F2`, `F3`, `F4`, `F5`, `F6`, `F7`, `F8`, `F9`, `FA`, `FB`, `FC`, `FD`, `FE`, `FF`
