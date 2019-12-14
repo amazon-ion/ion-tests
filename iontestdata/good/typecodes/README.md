@@ -957,6 +957,13 @@ EC 81 81 89 30 30 30 30 30 30 30 30 30 ED 81 81
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#15-reserved  
 
+```
+E0 01 00 EA
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
+
 ### Invalid reserved type descriptors
 
 > `F0`, `F1`, `F2`, `F3`, `F4`, `F5`, `F6`, `F7`, `F8`, `F9`, `FA`, `FB`, `FC`, `FD`, `FE`, `FF`
