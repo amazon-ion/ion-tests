@@ -1,0 +1,21 @@
+// Concatenated long strings with comments between literals
+[
+    '''foobar''',
+    '''foo'''
+    '''bar''',
+    '''foo'''
+
+    '''bar''',
+    '''foo''' // This comment does not prevent concatenation.
+    '''bar''',
+    '''foo''' /* This comment does not prevent concatenation. */ '''bar''',
+    '''foo'''
+    // This comment does not prevent concatenation.
+    '''bar''',
+    '''foo'''
+    /* This comment does not prevent concatenation. */
+    '''bar''',
+    '''foo''' // This comment
+              /* does not prevent concatenation
+               */'''bar''',
+]
