@@ -2,7 +2,8 @@
 
 The files in this folder are used to test all of the good type descriptors for Ion 1.0.  
 Each file contains a valid Ion [Value Stream](http://amzn.github.io/ion-docs/docs/binary.html#value-streams).  
-When possible, all representations are made up of invalid type descriptors to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests.
+When possible, all representations are made up of invalid type descriptors to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests.  
+Symbols are split into 2 files, one for small Symbol representations and one for larger Symbol representations.  
 
 ## T0 - null / nop padding
 
@@ -408,20 +409,14 @@ E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6F
 
 > `60`, `61`  
 
-## T7 - symbol
+## T7-small - symbol
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#7-symbol  
 
 ```
 E0 01 00 EA 70 71 00 72 00 00 73 00 00 00 74 00 
-00 00 00 75 00 00 00 00 00 76 00 00 00 00 00 00 
-77 00 00 00 00 00 00 00 78 00 00 00 00 00 00 00 
-00 79 00 00 00 00 00 00 00 00 00 7A 00 00 00 00 
-00 00 00 00 00 00 7B 00 00 00 00 00 00 00 00 00 
-00 00 7C 00 00 00 00 00 00 00 00 00 00 00 00 7D 
-00 00 00 00 00 00 00 00 00 00 00 00 00 7E 8E 00 
-00 00 00 00 00 00 00 00 00 00 00 00 00 7F 
-
+00 00 00 7F 
+ 
 ```
 
 > `E0 01 00 EA`  
@@ -441,6 +436,31 @@ E0 01 00 EA 70 71 00 72 00 00 73 00 00 00 74 00
 
 > `74 00 00 00 00`  
 > 4 byte symbol ID
+
+> `7F`  
+> _null.symbol_
+
+### Invalid symbol type descriptors
+
+> _none_
+
+## T7-large - symbol
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#7-symbol  
+
+```
+E0 01 00 EA 75 00 00 00 00 00 76 00 00 00 00 00 
+00 77 00 00 00 00 00 00 00 78 00 00 00 00 00 00 
+00 00 79 00 00 00 00 00 00 00 00 00 7A 00 00 00 
+00 00 00 00 00 00 00 7B 00 00 00 00 00 00 00 00 
+00 00 00 7C 00 00 00 00 00 00 00 00 00 00 00 00 
+7D 00 00 00 00 00 00 00 00 00 00 00 00 00 7E 8E 
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+ 
+```
+
+> `E0 01 00 EA`  
+> Binary Version Marker (BVM)
 
 > `75 00 00 00 00 00`  
 > 5 byte symbol ID
@@ -471,9 +491,6 @@ E0 01 00 EA 70 71 00 72 00 00 73 00 00 00 74 00
 
 > `7E 8E 00 00 00 00 00 00 00 00 00 00 00 00 00 00`  
 > VarUInt (8E = 14) byte symbol ID
-
-> `7F`  
-> _null.symbol_
 
 ### Invalid symbol type descriptors
 
