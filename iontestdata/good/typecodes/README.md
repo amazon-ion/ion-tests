@@ -1,8 +1,8 @@
 # Type Codes
 
-The files in this folder are used to test all of the type descriptors for Ion 1.0.  
+The files in this folder are used to test all of the good type descriptors for Ion 1.0.  
 Each file contains a valid Ion [Value Stream](http://amzn.github.io/ion-docs/docs/binary.html#value-streams).  
-All representations are made up of invalid type descriptors when possible.
+When possible, all representations are made up of invalid type descriptors to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests.
 
 ## T0 - null / nop padding
 
@@ -243,8 +243,8 @@ FF FF FF FF FF FF FF FF FF FF FF FF 3F
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#4-float  
 
 ```
-E0 01 00 EA 40 44 00 00 00 00 48 00 00 00 00 00 
-00 00 00 4F  
+E0 01 00 EA 40 44 12 12 12 12 48 12 12 12 12 12 
+12 12 12 4F  
 ```
 
 > `E0 01 00 EA`  
@@ -253,10 +253,10 @@ E0 01 00 EA 40 44 00 00 00 00 48 00 00 00 00 00
 > `40`  
 > _0e0_
 
-> `44 00 00 00 00`  
+> `44 12 12 12 12`  
 > 32 bit (4 octet) float
 
-> `48 00 00 00 00 00 00 00 00`  
+> `48 12 12 12 12 12 12 12 12`  
 > 64 bit (8 octet) float
 
 > `4F`  
@@ -341,14 +341,14 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp  
 
 ```
-E0 01 00 EA 62 E1 E1 63 E1 E1 E1 64 8E 8E 8E 8E 
-65 00 8E 8E 8E 8E 66 8E 8E 8E 8E 8E 8E 67 8E 8E 
-8E 8E 8E 8E 8E 68 8E 8E 8E 8E 8E 8E 8E 8E 69 8E 
-8E 8E 8E 8E 8E 8E 8E 8E 6A 8E 8E 8E 8E 8E 8E 8E 
-8E 8E 8E 6B 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 6C 
-8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 6D 8E 8E 8E 
-8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 6E 8F 8E 8E 8E 8E 
-8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 6F 
+E0 01 00 EA 62 E1 E1 63 E1 E1 E1 64 E1 E1 E1 E1 
+65 E1 12 E1 E1 E1 66 E1 E1 E1 E1 E1 E1 67 E1 E1 
+E1 E1 E1 E1 E1 68 E1 E1 E1 E1 E1 E1 E1 E1 69 E1 
+E1 E1 E1 E1 E1 E1 E1 E1 6A E1 E1 E1 E1 E1 E1 E1 
+E1 E1 E1 6B E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6C 
+E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6D E1 E1 E1 
+E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6E 8E E1 E1 E1 E1 
+E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6F 
  
 ```
 
@@ -356,43 +356,50 @@ E0 01 00 EA 62 E1 E1 63 E1 E1 E1 64 8E 8E 8E 8E
 > Binary Version Marker (BVM)
 
 > `62 E1 E1`  
-> 2 byte timestamp with at most VarInt offset and VarUInt year
+> 2 byte timestamp with at most VarInt offset and VarUInt year components  
+> month, day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
 > `63 E1 E1 E1`  
-> 3 byte timestamp with at most VarInt offset, VarUInt year, and VarUInt month
+> 3 byte timestamp with at most VarInt offset, VarUInt year, and VarUInt month components  
+> day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `64 8E 8E 8E 8E`  
-> 4 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day
+> `64 E1 E1 E1 E1`  
+> 4 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components  
+> hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `65 00 8E 8E 8E 8E`  
-> 5 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day
+> `65 E1 12 E1 E1 E1`  
+> 5 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components  
+> hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `66 8E 8E 8E 8E 8E 8E`  
-> 6 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, and VarUInt minute
+> `66 E1 E1 E1 E1 E1 E1`  
+> 6 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, and VarUInt minute components  
+> second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `67 8E 8E 8E 8E 8E 8E 8E`  
-> 7 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, and VarUInt second
+> `67 E1 E1 E1 E1 E1 E1 E1`  
+> 7 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, and VarUInt second  components  
+> fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `68 8E 8E 8E 8E 8E 8E 8E 8E`  
-> 8 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, VarUInt second, and VarInt fraction_exponent
+> `68 E1 E1 E1 E1 E1 E1 E1 E1`  
+> 8 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, VarUInt second, and VarInt fraction_exponent components  
+> fraction_coefficient component is not able to be specified
 
-> `69 8E 8E 8E 8E 8E 8E 8E 8E 8E`  
+> `69 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
 > 9 byte timestamp with all components possibly present
 
-> `6A 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E`  
+> `6A E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
 > 10 byte timestamp with all components possibly present
 
-> `6B 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E`  
+> `6B E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
 > 11 byte timestamp with all components possibly present
 
-> `6C 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E`  
+> `6C E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
 > 12 byte timestamp with all components possibly present
 
-> `6D 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E`  
+> `6D E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
 > 13 byte timestamp with all components possibly present
 
-> `6E 8F 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E 8E`  
-> VarUInt (8F = 15) byte timestamp with all components possibly present
+> `6E 8E E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
+> VarUInt (8E = 14) byte timestamp with all components possibly present
 
 > `6F`  
 > _null.timestamp_
@@ -687,14 +694,14 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF AF
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#11-list  
 
 ```
-E0 01 00 EA B0 B1 0F B2 0F 0F B3 0F 0F 0F B4 0F 
-0F 0F 0F B5 0F 0F 0F 0F 0F B6 0F 0F 0F 0F 0F 0F 
-B7 0F 0F 0F 0F 0F 0F 0F B8 0F 0F 0F 0F 0F 0F 0F 
-0F B9 0F 0F 0F 0F 0F 0F 0F 0F 0F BA 0F 0F 0F 0F 
-0F 0F 0F 0F 0F 0F BB 0F 0F 0F 0F 0F 0F 0F 0F 0F 
-0F 0F BC 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F BD 
-0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F BE 8E 0F 
-0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F BF 
+E0 01 00 EA B0 B1 00 B2 01 FF B3 02 FF FF B4 03 
+FF FF FF B5 04 FF FF FF FF B6 05 FF FF FF FF FF 
+B7 06 FF FF FF FF FF FF B8 07 FF FF FF FF FF FF 
+FF B9 08 FF FF FF FF FF FF FF FF BA 09 FF FF FF 
+FF FF FF FF FF FF BB 0A FF FF FF FF FF FF FF FF 
+FF FF BC 0B FF FF FF FF FF FF FF FF FF FF FF BD 
+0C FF FF FF FF FF FF FF FF FF FF FF FF BE 8E 0D 
+FF FF FF FF FF FF FF FF FF FF FF FF FF BF 
 ```
 
 > `E0 01 00 EA`  
@@ -703,46 +710,46 @@ B7 0F 0F 0F 0F 0F 0F 0F B8 0F 0F 0F 0F 0F 0F 0F
 > `B0`  
 > _[]_ (empty list)
 
-> `B1 0F`  
+> `B1 00`  
 > 1 byte list
 
-> `B2 0F 0F`  
+> `B2 01 FF`  
 > 2 byte list
 
-> `B3 0F 0F 0F`  
+> `B3 02 FF FF`  
 > 3 byte list
 
-> `B4 0F 0F 0F 0F`  
+> `B4 03 FF FF FF`  
 > 4 byte list
 
-> `B5 0F 0F 0F 0F 0F`  
+> `B5 04 FF FF FF FF`  
 > 5 byte list
 
-> `B6 0F 0F 0F 0F 0F 0F`  
+> `B6 05 FF FF FF FF FF`  
 > 6 byte list
 
-> `B7 0F 0F 0F 0F 0F 0F 0F`  
+> `B7 06 FF FF FF FF FF FF`  
 > 7 byte list
 
-> `B8 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `B8 07 FF FF FF FF FF FF FF`  
 > 8 byte list
 
-> `B9 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `B9 08 FF FF FF FF FF FF FF FF`  
 > 9 byte list
 
-> `BA 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `BA 09 FF FF FF FF FF FF FF FF FF`  
 > 10 byte list
 
-> `BB 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `BB 0A FF FF FF FF FF FF FF FF FF FF`  
 > 11 byte list
 
-> `BC 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `BC 0B FF FF FF FF FF FF FF FF FF FF FF`  
 > 12 byte list
 
-> `BD 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `BD 0C FF FF FF FF FF FF FF FF FF FF FF FF`  
 > 13 byte list
 
-> `BE 8E 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `BE 8E 0D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
 > VarUInt (8E = 14) byte list
 
 > `BF`  
@@ -757,14 +764,14 @@ B7 0F 0F 0F 0F 0F 0F 0F B8 0F 0F 0F 0F 0F 0F 0F
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#12-sexp  
 
 ```
-E0 01 00 EA C0 C1 0F C2 0F 0F C3 0F 0F 0F C4 0F 
-0F 0F 0F C5 0F 0F 0F 0F 0F C6 0F 0F 0F 0F 0F 0F 
-C7 0F 0F 0F 0F 0F 0F 0F C8 0F 0F 0F 0F 0F 0F 0F 
-0F C9 0F 0F 0F 0F 0F 0F 0F 0F 0F CA 0F 0F 0F 0F 
-0F 0F 0F 0F 0F 0F CB 0F 0F 0F 0F 0F 0F 0F 0F 0F 
-0F 0F CC 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F CD 
-0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F CE 8E 0F 
-0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F CF 
+E0 01 00 EA C0 C1 00 C2 01 FF C3 02 FF FF C4 03 
+FF FF FF C5 04 FF FF FF FF C6 05 FF FF FF FF FF 
+C7 06 FF FF FF FF FF FF C8 07 FF FF FF FF FF FF 
+FF C9 08 FF FF FF FF FF FF FF FF CA 09 FF FF FF 
+FF FF FF FF FF FF CB 0A FF FF FF FF FF FF FF FF 
+FF FF CC 0B FF FF FF FF FF FF FF FF FF FF FF CD 
+0C FF FF FF FF FF FF FF FF FF FF FF FF CE 8E 0D 
+FF FF FF FF FF FF FF FF FF FF FF FF FF CF 
 ```
 
 > `E0 01 00 EA`  
@@ -773,46 +780,46 @@ C7 0F 0F 0F 0F 0F 0F 0F C8 0F 0F 0F 0F 0F 0F 0F
 > `C0`  
 > _()_ (empty sexp)
 
-> `C1 0F`  
+> `C1 00`  
 > 1 byte sexp
 
-> `C2 0F 0F`  
+> `C2 01 FF`  
 > 2 byte sexp
 
-> `C3 0F 0F 0F`  
+> `C3 02 FF FF`  
 > 3 byte sexp
 
-> `C4 0F 0F 0F 0F`  
+> `C4 03 FF FF FF`  
 > 4 byte sexp
 
-> `C5 0F 0F 0F 0F 0F`  
+> `C5 04 FF FF FF FF`  
 > 5 byte sexp
 
-> `C6 0F 0F 0F 0F 0F 0F`  
+> `C6 05 FF FF FF FF FF`  
 > 6 byte sexp
 
-> `C7 0F 0F 0F 0F 0F 0F 0F`  
+> `C7 06 FF FF FF FF FF FF`  
 > 7 byte sexp
 
-> `C8 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `C8 07 FF FF FF FF FF FF FF`  
 > 8 byte sexp
 
-> `C9 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `C9 08 FF FF FF FF FF FF FF FF`  
 > 9 byte sexp
 
-> `CA 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `CA 09 FF FF FF FF FF FF FF FF FF`  
 > 10 byte sexp
 
-> `CB 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `CB 0A FF FF FF FF FF FF FF FF FF FF`  
 > 11 byte sexp
 
-> `CC 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `CC 0B FF FF FF FF FF FF FF FF FF FF FF`  
 > 12 byte sexp
 
-> `CD 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `CD 0C FF FF FF FF FF FF FF FF FF FF FF FF`  
 > 13 byte sexp
 
-> `CE 8E 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F 0F`  
+> `CE 8E 0D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
 > VarUInt (8E = 14) byte sexp
 
 > `CF`  
