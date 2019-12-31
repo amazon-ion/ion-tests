@@ -342,14 +342,14 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp  
 
 ```
-E0 01 00 EA 62 E1 E1 63 E1 E1 E1 64 E1 E1 E1 E1 
-65 E1 12 E1 E1 E1 66 E1 E1 E1 E1 E1 E1 67 E1 E1 
-E1 E1 E1 E1 E1 68 E1 E1 E1 E1 E1 E1 E1 E1 69 E1 
-E1 E1 E1 E1 E1 E1 E1 E1 6A E1 E1 E1 E1 E1 E1 E1 
-E1 E1 E1 6B E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6C 
-E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6D E1 E1 E1 
-E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6E 8E E1 E1 E1 E1 
-E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6F 
+E0 01 00 EA 62 E1 E1 63 E1 E1 81 64 E1 E1 81 81 
+65 E1 12 E1 81 81 66 E1 E1 81 81 81 81 67 E1 E1 
+81 81 81 81 81 68 E1 E1 81 81 81 81 81 E1 69 E1 
+E1 81 81 81 81 81 E1 12 6A E1 E1 81 81 81 81 81 
+E1 12 12 6B E1 E1 81 81 81 81 81 E1 12 12 12 6C 
+E1 E1 81 81 81 81 81 E1 12 12 12 12 6D E1 E1 81 
+81 81 81 81 E1 12 12 12 12 12 6E 8E E1 E1 81 81 
+81 81 81 E1 12 12 12 12 12 12 6F  
  
 ```
 
@@ -360,46 +360,46 @@ E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 6F
 > 2 byte timestamp with at most VarInt offset and VarUInt year components  
 > month, day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `63 E1 E1 E1`  
+> `63 E1 E1 81`  
 > 3 byte timestamp with at most VarInt offset, VarUInt year, and VarUInt month components  
 > day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `64 E1 E1 E1 E1`  
+> `64 E1 E1 81 81`  
 > 4 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components  
 > hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `65 E1 12 E1 E1 E1`  
+> `65 E1 12 E1 81 81`  
 > 5 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components  
 > hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `66 E1 E1 E1 E1 E1 E1`  
+> `66 E1 E1 81 81 81 81`  
 > 6 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, and VarUInt minute components  
 > second, fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `67 E1 E1 E1 E1 E1 E1 E1`  
+> `67 E1 E1 81 81 81 81 81`  
 > 7 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, and VarUInt second  components  
 > fraction_exponent, and fraction_coefficient components are not able to be specified
 
-> `68 E1 E1 E1 E1 E1 E1 E1 E1`  
+> `68 E1 E1 81 81 81 81 81 E1`  
 > 8 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, VarUInt second, and VarInt fraction_exponent components  
 > fraction_coefficient component is not able to be specified
 
-> `69 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
+> `69 E1 E1 81 81 81 81 81 E1 12`  
 > 9 byte timestamp with all components possibly present
 
-> `6A E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
+> `6A E1 E1 81 81 81 81 81 E1 12 12`  
 > 10 byte timestamp with all components possibly present
 
-> `6B E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
+> `6B E1 E1 81 81 81 81 81 E1 12 12 12`  
 > 11 byte timestamp with all components possibly present
 
-> `6C E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
+> `6C E1 E1 81 81 81 81 81 E1 12 12 12 12`  
 > 12 byte timestamp with all components possibly present
 
-> `6D E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
+> `6D E1 E1 81 81 81 81 81 E1 12 12 12 12 12`  
 > 13 byte timestamp with all components possibly present
 
-> `6E 8E E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1`  
+> `6E 8E E1 E1 81 81 81 81 81 E1 12 12 12 12 12 12`  
 > VarUInt (8E = 14) byte timestamp with all components possibly present
 
 > `6F`  
