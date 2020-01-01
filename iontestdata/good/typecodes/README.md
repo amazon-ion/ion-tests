@@ -122,46 +122,60 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 2F
 > _0_
 
 > `21 FF`  
-> 1 byte positive int
+> 1 byte positive int  
+> _255_
 
 > `22 FF FF`  
-> 2 byte positive int
+> 2 byte positive int  
+> _65535_
 
 > `23 FF FF FF`  
-> 3 byte positive int
+> 3 byte positive int  
+> _16777215_
 
 > `24 FF FF FF FF`  
-> 4 byte positive int
+> 4 byte positive int  
+> _4294967295_
 
 > `25 FF FF FF FF FF`  
-> 5 byte positive int
+> 5 byte positive int  
+> _1099511627775_
 
 > `26 FF FF FF FF FF FF`  
-> 6 byte positive int
+> 6 byte positive int  
+> _281474976710655_
 
 > `27 FF FF FF FF FF FF FF`  
-> 7 byte positive int
+> 7 byte positive int  
+> _72057594037927935_
 
 > `28 FF FF FF FF FF FF FF FF`  
-> 8 byte positive int
+> 8 byte positive int  
+> _18446744073709551615_
 
 > `29 FF FF FF FF FF FF FF FF FF`  
-> 9 byte positive int
+> 9 byte positive int  
+> _4722366482869645213695_
 
 > `2A FF FF FF FF FF FF FF FF FF FF`  
-> 10 byte positive int
+> 10 byte positive int  
+> _1208925819614629174706175_
 
 > `2B FF FF FF FF FF FF FF FF FF FF FF`  
-> 11 byte positive int
+> 11 byte positive int  
+> _309485009821345068724781055_
 
 > `2C FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 12 byte positive int
+> 12 byte positive int  
+> _79228162514264337593543950335_
 
 > `2D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 13 byte positive int
+> 13 byte positive int  
+> _20282409603651670423947251286015_
 
 > `2E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
 > VarUInt (8E = 14) byte positive int
+> _5192296858534827628530496329220095_
 
 > `2F`  
 > _null.int_
@@ -191,46 +205,60 @@ FF FF FF FF FF FF FF FF FF FF FF FF 3F
 > Binary Version Marker (BVM)
 
 > `31 FF`  
-> 1 byte negative int
+> 1 byte negative int  
+> _-255_
 
 > `32 FF FF`  
-> 2 byte negative int
+> 2 byte negative int  
+> _-65535_
 
 > `33 FF FF FF`  
-> 3 byte negative int
+> 3 byte negative int  
+> _-16777215_
 
 > `34 FF FF FF FF`  
-> 4 byte negative int
+> 4 byte negative int  
+> _-4294967295_
 
 > `35 FF FF FF FF FF`  
-> 5 byte negative int
+> 5 byte negative int  
+> _-1099511627775_
 
 > `36 FF FF FF FF FF FF`  
-> 6 byte negative int
+> 6 byte negative int  
+> _-281474976710655_
 
 > `37 FF FF FF FF FF FF FF`  
-> 7 byte negative int
+> 7 byte negative int  
+> _-72057594037927935_
 
 > `38 FF FF FF FF FF FF FF FF`  
-> 8 byte negative int
+> 8 byte negative int  
+> _-18446744073709551615_
 
 > `39 FF FF FF FF FF FF FF FF FF`  
-> 9 byte negative int
+> 9 byte negative int  
+> _-4722366482869645213695_
 
 > `3A FF FF FF FF FF FF FF FF FF FF`  
-> 10 byte negative int
+> 10 byte negative int  
+> _-1208925819614629174706175_
 
 > `3B FF FF FF FF FF FF FF FF FF FF FF`  
-> 11 byte negative int
+> 11 byte negative int  
+> _-309485009821345068724781055_
 
 > `3C FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 12 byte negative int
+> 12 byte negative int  
+> _-79228162514264337593543950335_
 
 > `3D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 13 byte negative int
+> 13 byte negative int  
+> _-20282409603651670423947251286015_
 
 > `3E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> VarUInt (8E = 14) byte negative int
+> VarUInt (8E = 14) byte negative int  
+> _-5192296858534827628530496329220095_
 
 > `3F`  
 > _null.int_
@@ -255,10 +283,12 @@ E0 01 00 EA 40 44 12 12 12 12 48 12 12 12 12 12
 > _0e0_
 
 > `44 12 12 12 12`  
-> 32 bit (4 octet) float
+> 32 bit (4 octet) float  
+> _4.609175024471393E-28_
 
 > `48 12 12 12 12 12 12 12 12`  
-> 64 bit (8 octet) float
+> 64 bit (8 octet) float  
+> _1.2497855238365512E-221_
 
 > `4F`  
 > _null.float_
@@ -289,46 +319,60 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 > _0._ or _0d0_
 
 > `51 FF`  
-> 1 byte decimal
+> 1 byte decimal  
+> _0d-63_ or _0E-63_
 
 > `52 FF FF`  
-> 2 byte decimal
+> 2 byte decimal  
+> _-1.27d-61_ or _-1.27E-61_
 
 > `53 FF FF FF`  
-> 3 byte decimal
+> 3 byte decimal  
+> _-3.2767d-59_ or _-3.2767E-59_
 
 > `54 FF FF FF FF`  
-> 4 byte decimal
+> 4 byte decimal  
+> _-8.388607d-57_ or _-8.388607E-57_
 
 > `55 FF FF FF FF FF`  
-> 5 byte decimal
+> 5 byte decimal  
+> _-2.147483647d-54_ or _-2.147483647E-54_
 
 > `56 FF FF FF FF FF FF`  
-> 6 byte decimal
+> 6 byte decimal  
+> _-5.49755813887d-52_ or _-5.49755813887E-52_
 
 > `57 FF FF FF FF FF FF FF`  
-> 7 byte decimal
+> 7 byte decimal  
+> _-1.40737488355327d-49_ or _-1.40737488355327E-49_
 
 > `58 FF FF FF FF FF FF FF FF`  
-> 8 byte decimal
+> 8 byte decimal  
+> _-3.6028797018963967d-47_ or _-3.6028797018963967E-47_
 
 > `59 FF FF FF FF FF FF FF FF FF`  
-> 9 byte decimal
+> 9 byte decimal  
+> _-9.223372036854775807d-45_ or _-9.223372036854775807E-45_
 
 > `5A FF FF FF FF FF FF FF FF FF FF`  
-> 10 byte decimal
+> 10 byte decimal  
+> _-2.361183241434822606847d-42_ or _-2.361183241434822606847E-42_
 
 > `5B FF FF FF FF FF FF FF FF FF FF FF`  
-> 11 byte decimal
+> 11 byte decimal  
+> _-6.04462909807314587353087d-40_ or _-6.04462909807314587353087E-40_
 
 > `5C FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 12 byte decimal
+> 12 byte decimal  
+> _-1.54742504910672534362390527d-37_ or _-1.54742504910672534362390527E-37_
 
 > `5D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 13 byte decimal
+> 13 byte decimal  
+> _-3.9614081257132168796771975167d-35_ or _-3.9614081257132168796771975167E-35_
 
 > `5E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> VarUInt (8E = 14) byte decimal
+> VarUInt (8E = 14) byte decimal  
+> _-1.0141204801825835211973625643007d-32_ or _-1.0141204801825835211973625643007E-32_
 
 > `5F`  
 > _null.decimal_
@@ -358,49 +402,62 @@ E1 E1 81 81 81 81 81 E1 12 12 12 12 6D E1 E1 81
 
 > `62 E1 E1`  
 > 2 byte timestamp with at most VarInt offset and VarUInt year components  
-> month, day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
+> month, day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified  
+> _0096T_
 
 > `63 E1 E1 81`  
 > 3 byte timestamp with at most VarInt offset, VarUInt year, and VarUInt month components  
-> day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
+> day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified  
+> _0096-12T_
 
 > `64 E1 E1 81 81`  
 > 4 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components  
-> hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
+> hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified  
+> _0096-12-31T_
 
 > `65 E1 12 E1 81 81`  
 > 5 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components  
-> hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified
+> hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified  
+> _2400-12-31T_
 
 > `66 E1 E1 81 81 81 81`  
 > 6 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, and VarUInt minute components  
-> second, fraction_exponent, and fraction_coefficient components are not able to be specified
+> second, fraction_exponent, and fraction_coefficient components are not able to be specified  
+> _0097-01-01T00:28-00:33_
 
 > `67 E1 E1 81 81 81 81 81`  
 > 7 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, and VarUInt second  components  
-> fraction_exponent, and fraction_coefficient components are not able to be specified
+> fraction_exponent, and fraction_coefficient components are not able to be specified  
+> _0097-01-01T00:28:01-00:33_
 
 > `68 E1 E1 81 81 81 81 81 E1`  
 > 8 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, VarUInt second, and VarInt fraction_exponent components  
-> fraction_coefficient component is not able to be specified
+> fraction_coefficient component is not able to be specified  
+> _0097-01-01T00:28:01.000000000000000000000000000000000-00:33_
 
 > `69 E1 E1 81 81 81 81 81 E1 12`  
-> 9 byte timestamp with all components possibly present
+> 9 byte timestamp with all components possibly present  
+> _0097-01-01T00:28:01.000000000000000000000000000000018-00:33_
 
 > `6A E1 E1 81 81 81 81 81 E1 12 12`  
-> 10 byte timestamp with all components possibly present
+> 10 byte timestamp with all components possibly present  
+> _0097-01-01T00:28:01.000000000000000000000000000004626-00:33_
 
 > `6B E1 E1 81 81 81 81 81 E1 12 12 12`  
-> 11 byte timestamp with all components possibly present
+> 11 byte timestamp with all components possibly present  
+> _0097-01-01T00:28:01.000000000000000000000000001184274-00:33_
 
 > `6C E1 E1 81 81 81 81 81 E1 12 12 12 12`  
-> 12 byte timestamp with all components possibly present
+> 12 byte timestamp with all components possibly present  
+> _0097-01-01T00:28:01.000000000000000000000000303174162-00:33_
 
 > `6D E1 E1 81 81 81 81 81 E1 12 12 12 12 12`  
-> 13 byte timestamp with all components possibly present
+> 13 byte timestamp with all components possibly present  
+> _0097-01-01T00:28:01.000000000000000000000077612585490-00:33_
 
 > `6E 8E E1 E1 81 81 81 81 81 E1 12 12 12 12 12 12`  
-> VarUInt (8E = 14) byte timestamp with all components possibly present
+> VarUInt (8E = 14) byte timestamp with all components possibly present  
+> _0097-01-01T00:28:01.000000000000000000019868821885458-00:33_
 
 > `6F`  
 > _null.timestamp_
@@ -426,16 +483,20 @@ E0 01 00 EA 70 71 00 72 00 00 73 00 00 00 74 00
 > symbol ID zero or _$0_
 
 > `71 00`  
-> 1 byte symbol ID
+> 1 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `72 00 00`  
-> 2 byte symbol ID
+> 2 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `73 00 00 00`  
-> 3 byte symbol ID
+> 3 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `74 00 00 00 00`  
-> 4 byte symbol ID
+> 4 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `7F`  
 > _null.symbol_
@@ -463,34 +524,44 @@ E0 01 00 EA 75 00 00 00 00 00 76 00 00 00 00 00
 > Binary Version Marker (BVM)
 
 > `75 00 00 00 00 00`  
-> 5 byte symbol ID
+> 5 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `76 00 00 00 00 00 00`  
-> 6 byte symbol ID
+> 6 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `77 00 00 00 00 00 00 00`  
-> 7 byte symbol ID
+> 7 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `78 00 00 00 00 00 00 00 00`  
-> 8 byte symbol ID
+> 8 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `79 00 00 00 00 00 00 00 00 00`  
-> 9 byte symbol ID
+> 9 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `7A 00 00 00 00 00 00 00 00 00 00`  
-> 10 byte symbol ID
+> 10 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `7B 00 00 00 00 00 00 00 00 00 00 00`  
-> 11 byte symbol ID
+> 11 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `7C 00 00 00 00 00 00 00 00 00 00 00 00`  
-> 12 byte symbol ID
+> 12 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `7D 00 00 00 00 00 00 00 00 00 00 00 00 00`  
-> 13 byte symbol ID
+> 13 byte symbol ID  
+> symbol ID zero or _$0_
 
 > `7E 8E 00 00 00 00 00 00 00 00 00 00 00 00 00 00`  
-> VarUInt (8E = 14) byte symbol ID
+> VarUInt (8E = 14) byte symbol ID  
+> symbol ID zero or _$0_
 
 ### Invalid symbol type descriptors
 
@@ -518,46 +589,60 @@ E0 01 00 EA 80 81 30 82 30 30 83 30 30 30 84 30
 > _""_ (empty string)
 
 > `81 30`  
-> 1 byte string
+> 1 byte string  
+> _"0"_
 
 > `82 30 30`  
-> 2 byte string
+> 2 byte string  
+> _"00"_
 
 > `83 30 30 30`  
-> 3 byte string
+> 3 byte string  
+> _"000"_
 
 > `84 30 30 30 30`  
-> 4 byte string
+> 4 byte string  
+> _"0000"_
 
 > `85 30 30 30 30 30`  
-> 5 byte string
+> 5 byte string  
+> _"00000"_
 
 > `86 30 30 30 30 30 30`  
-> 6 byte string
+> 6 byte string  
+> _"000000"_
 
 > `87 30 30 30 30 30 30 30`  
-> 7 byte string
+> 7 byte string  
+> _"0000000"_
 
 > `88 30 30 30 30 30 30 30 30`  
-> 8 byte string
+> 8 byte string  
+> _"00000000"_
 
 > `89 30 30 30 30 30 30 30 30 30`  
-> 9 byte string
+> 9 byte string  
+> _"000000000"_
 
 > `8A 30 30 30 30 30 30 30 30 30 30`  
-> 10 byte string
+> 10 byte string  
+> _"0000000000"_
 
 > `8B 30 30 30 30 30 30 30 30 30 30 30`  
-> 11 byte string
+> 11 byte string  
+> _"00000000000"_
 
 > `8C 30 30 30 30 30 30 30 30 30 30 30 30`  
-> 12 byte string
+> 12 byte string  
+> _"000000000000"_
 
 > `8D 30 30 30 30 30 30 30 30 30 30 30 30 30`  
-> 13 byte string
+> 13 byte string  
+> _"0000000000000"_
 
 > `8E 8E 30 30 30 30 30 30 30 30 30 30 30 30 30 30`  
-> VarUInt (8E = 14) byte string
+> VarUInt (8E = 14) byte string  
+> _"00000000000000"_
 
 > `8F`  
 > _null.string_
@@ -588,46 +673,60 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 9F
 > _{{ "" }}_ (empty clob)
 
 > `91 FF`  
-> 1 byte clob
+> 1 byte clob  
+> _{{ "\xFF" }}_
 
 > `92 FF FF`  
-> 2 byte clob
+> 2 byte clob  
+> _{{"\xFF\xFF"}}_
 
 > `93 FF FF FF`  
-> 3 byte clob
+> 3 byte clob  
+> _{{"\xFF\xFF\xFF"}}_
 
 > `94 FF FF FF FF`  
-> 4 byte clob
+> 4 byte clob  
+> _{{"\xFF\xFF\xFF\xFF"}}_
 
 > `95 FF FF FF FF FF`  
-> 5 byte clob
+> 5 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `96 FF FF FF FF FF FF`  
-> 6 byte clob
+> 6 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `97 FF FF FF FF FF FF FF`  
-> 7 byte clob
+> 7 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `98 FF FF FF FF FF FF FF FF`  
-> 8 byte clob
+> 8 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `99 FF FF FF FF FF FF FF FF FF`  
-> 9 byte clob
+> 9 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `9A FF FF FF FF FF FF FF FF FF FF`  
-> 10 byte clob
+> 10 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `9B FF FF FF FF FF FF FF FF FF FF FF`  
-> 11 byte clob
+> 11 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `9C FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 12 byte clob
+> 12 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `9D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 13 byte clob
+> 13 byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `9E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> VarUInt (8E = 14) byte clob
+> VarUInt (8E = 14) byte clob  
+> _{{"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"}}_
 
 > `9F`  
 > _null.clob_
@@ -658,46 +757,60 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF AF
 > _{{ }}_ (empty blob)
 
 > `A1 FF`  
-> 1 byte blob
+> 1 byte blob  
+> _{{/w==}}_ (base64 representation)
 
 > `A2 FF FF`  
-> 2 byte blob
+> 2 byte blob  
+> _{{//8=}}_ (base64 representation)
 
 > `A3 FF FF FF`  
-> 3 byte blob
+> 3 byte blob  
+> _{{////}}_ (base64 representation)
 
 > `A4 FF FF FF FF`  
-> 4 byte blob
+> 4 byte blob  
+> _{{/////w==}}_ (base64 representation)
 
 > `A5 FF FF FF FF FF`  
-> 5 byte blob
+> 5 byte blob  
+> _{{//////8=}}_ (base64 representation)
 
 > `A6 FF FF FF FF FF FF`  
-> 6 byte blob
+> 6 byte blob  
+> _{{////////}}_ (base64 representation)
 
 > `A7 FF FF FF FF FF FF FF`  
-> 7 byte blob
+> 7 byte blob  
+> _{{/////////w==}}_ (base64 representation)
 
 > `A8 FF FF FF FF FF FF FF FF`  
-> 8 byte blob
+> 8 byte blob  
+> _{{//////////8=}}_ (base64 representation)
 
 > `A9 FF FF FF FF FF FF FF FF FF`  
-> 9 byte blob
+> 9 byte blob  
+> _{{////////////}}_ (base64 representation)
 
 > `AA FF FF FF FF FF FF FF FF FF FF`  
-> 10 byte blob
+> 10 byte blob  
+> _{{/////////////w==}}_ (base64 representation)
 
 > `AB FF FF FF FF FF FF FF FF FF FF FF`  
-> 11 byte blob
+> 11 byte blob  
+> _{{//////////////8=}}_ (base64 representation)
 
 > `AC FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 12 byte blob
+> 12 byte blob  
+> _{{////////////////}}_ (base64 representation)
 
 > `AD FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 13 byte blob
+> 13 byte blob  
+> _{{/////////////////w==}}_ (base64 representation)
 
 > `AE 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> VarUInt (8E = 14) byte blob
+> VarUInt (8E = 14) byte blob  
+> _{{//////////////////8=}}_ (base64 representation)
 
 > `AF`  
 > _null.blob_
@@ -728,46 +841,60 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF BF
 > _[]_ (empty list)
 
 > `B1 00`  
-> 1 byte list
+> 1 byte list  
+> _[]_ (empty list)
 
 > `B2 01 FF`  
-> 2 byte list
+> 2 byte list  
+> _[]_ (empty list)
 
 > `B3 02 FF FF`  
-> 3 byte list
+> 3 byte list  
+> _[]_ (empty list)
 
 > `B4 03 FF FF FF`  
-> 4 byte list
+> 4 byte list  
+> _[]_ (empty list)
 
 > `B5 04 FF FF FF FF`  
-> 5 byte list
+> 5 byte list  
+> _[]_ (empty list)
 
 > `B6 05 FF FF FF FF FF`  
-> 6 byte list
+> 6 byte list  
+> _[]_ (empty list)
 
 > `B7 06 FF FF FF FF FF FF`  
-> 7 byte list
+> 7 byte list  
+> _[]_ (empty list)
 
 > `B8 07 FF FF FF FF FF FF FF`  
-> 8 byte list
+> 8 byte list  
+> _[]_ (empty list)
 
 > `B9 08 FF FF FF FF FF FF FF FF`  
-> 9 byte list
+> 9 byte list  
+> _[]_ (empty list)
 
 > `BA 09 FF FF FF FF FF FF FF FF FF`  
-> 10 byte list
+> 10 byte list  
+> _[]_ (empty list)
 
 > `BB 0A FF FF FF FF FF FF FF FF FF FF`  
-> 11 byte list
+> 11 byte list  
+> _[]_ (empty list)
 
 > `BC 0B FF FF FF FF FF FF FF FF FF FF FF`  
-> 12 byte list
+> 12 byte list  
+> _[]_ (empty list)
 
 > `BD 0C FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 13 byte list
+> 13 byte list  
+> _[]_ (empty list)
 
 > `BE 8E 0D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> VarUInt (8E = 14) byte list
+> VarUInt (8E = 14) byte list  
+> _[]_ (empty list)
 
 > `BF`  
 > _null.list_
@@ -798,46 +925,60 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF CF
 > _()_ (empty sexp)
 
 > `C1 00`  
-> 1 byte sexp
+> 1 byte sexp  
+> _()_ (empty sexp)
 
 > `C2 01 FF`  
-> 2 byte sexp
+> 2 byte sexp  
+> _()_ (empty sexp)
 
 > `C3 02 FF FF`  
-> 3 byte sexp
+> 3 byte sexp  
+> _()_ (empty sexp)
 
 > `C4 03 FF FF FF`  
-> 4 byte sexp
+> 4 byte sexp  
+> _()_ (empty sexp)
 
 > `C5 04 FF FF FF FF`  
-> 5 byte sexp
+> 5 byte sexp  
+> _()_ (empty sexp)
 
 > `C6 05 FF FF FF FF FF`  
-> 6 byte sexp
+> 6 byte sexp  
+> _()_ (empty sexp)
 
 > `C7 06 FF FF FF FF FF FF`  
-> 7 byte sexp
+> 7 byte sexp  
+> _()_ (empty sexp)
 
 > `C8 07 FF FF FF FF FF FF FF`  
-> 8 byte sexp
+> 8 byte sexp  
+> _()_ (empty sexp)
 
 > `C9 08 FF FF FF FF FF FF FF FF`  
-> 9 byte sexp
+> 9 byte sexp  
+> _()_ (empty sexp)
 
 > `CA 09 FF FF FF FF FF FF FF FF FF`  
-> 10 byte sexp
+> 10 byte sexp  
+> _()_ (empty sexp)
 
 > `CB 0A FF FF FF FF FF FF FF FF FF FF`  
-> 11 byte sexp
+> 11 byte sexp  
+> _()_ (empty sexp)
 
 > `CC 0B FF FF FF FF FF FF FF FF FF FF FF`  
-> 12 byte sexp
+> 12 byte sexp  
+> _()_ (empty sexp)
 
 > `CD 0C FF FF FF FF FF FF FF FF FF FF FF FF`  
-> 13 byte sexp
+> 13 byte sexp  
+> _()_ (empty sexp)
 
 > `CE 8E 0D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> VarUInt (8E = 14) byte sexp
+> VarUInt (8E = 14) byte sexp  
+> _()_ (empty sexp)
 
 > `CF`  
 > _null.sexp_
@@ -868,46 +1009,60 @@ D4 81 82 30 30 D5 81 83 30 30 30 D6 81 84 30 30
 > _{}_ (empty struct)
 
 > `D1 82 81 0F`  
-> Sorted VarUInt (82 = 2) byte struct
+> Sorted VarUInt (82 = 2) byte struct  
+> _{ $ion:null }_
 
 > `D2 81 0F`  
-> 2 byte struct
+> 2 byte struct  
+> _{ $ion:null }_
 
 > `D3 81 81 30`  
-> 3 byte struct
+> 3 byte struct  
+> _{ $ion:"0" }_
 
 > `D4 81 82 30 30`  
-> 4 byte struct
+> 4 byte struct  
+> _{ $ion:"00" }_
 
 > `D5 81 83 30 30 30`  
-> 5 byte struct
+> 5 byte struct  
+> _{ $ion:"000" }_
 
 > `D6 81 84 30 30 30 30`  
-> 6 byte struct
+> 6 byte struct  
+> _{ $ion:"0000" }_
 
 > `D7 81 85 30 30 30 30 30`  
-> 7 byte struct
+> 7 byte struct  
+> _{ $ion:"00000" }_
 
 > `D8 81 86 30 30 30 30 30 30`  
-> 8 byte struct
+> 8 byte struct  
+> _{ $ion:"000000" }_
 
 > `D9 81 87 30 30 30 30 30 30 30`  
-> 9 byte struct
+> 9 byte struct  
+> _{ $ion:"0000000" }_
 
 > `DA 81 88 30 30 30 30 30 30 30 30`  
-> 10 byte struct
+> 10 byte struct  
+> _{ $ion:"00000000" }_
 
 > `DB 81 89 30 30 30 30 30 30 30 30 30`  
-> 11 byte struct
+> 11 byte struct  
+> _{ $ion:"000000000" }_
 
 > `DC 81 8A 30 30 30 30 30 30 30 30 30 30`  
-> 12 byte struct
+> 12 byte struct  
+> _{ $ion:"0000000000" }_
 
 > `DD 81 8B 30 30 30 30 30 30 30 30 30 30 30`  
-> 13 byte struct
+> 13 byte struct  
+> _{ $ion:"00000000000" }_
 
 > `DE 8E 81 8C 30 30 30 30 30 30 30 30 30 30 30 30`  
-> VarUInt (8E = 14) byte struct
+> VarUInt (8E = 14) byte struct  
+> _{ $ion:"000000000000" }_
 
 > `DF`  
 > _null.struct_
@@ -938,40 +1093,52 @@ EC 81 81 89 30 30 30 30 30 30 30 30 30 ED 81 81
 > Binary Version Marker (BVM) (the only valid sequence after E0)
 
 > `E3 81 81 80`  
-> 3 byte annotation wrapper
+> 3 byte annotation wrapper  
+> _$ion::""_
 
 > `E4 81 81 81 30`  
-> 4 byte annotation wrapper
+> 4 byte annotation wrapper  
+> _$ion::"0"_
 
 > `E5 81 81 82 30 30`  
-> 5 byte annotation wrapper
+> 5 byte annotation wrapper  
+> _$ion::"00"_
 
 > `E6 81 81 83 30 30 30`  
-> 6 byte annotation wrapper
+> 6 byte annotation wrapper  
+> _$ion::"000"_
 
 > `E7 81 81 84 30 30 30 30`  
-> 7 byte annotation wrapper
+> 7 byte annotation wrapper  
+> _$ion::"0000"_
 
 > `E8 81 81 85 30 30 30 30 30`  
-> 8 byte annotation wrapper
+> 8 byte annotation wrapper  
+> _$ion::"00000"_
 
 > `E9 81 81 86 30 30 30 30 30 30`  
-> 9 byte annotation wrapper
+> 9 byte annotation wrapper  
+> _$ion::"000000"_
 
 > `EA 81 81 87 30 30 30 30 30 30 30`  
-> 10 byte annotation wrapper
+> 10 byte annotation wrapper  
+> _$ion::"0000000"_
 
 > `EB 81 81 88 30 30 30 30 30 30 30 30`  
-> 11 byte annotation wrapper
+> 11 byte annotation wrapper  
+> _$ion::"00000000"_
 
 > `EC 81 81 89 30 30 30 30 30 30 30 30 30`  
-> 12 byte annotation wrapper
+> 12 byte annotation wrapper  
+> _$ion::"000000000"_
 
 > `ED 81 81 8A 30 30 30 30 30 30 30 30 30 30`  
-> 13 byte annotation wrapper
+> 13 byte annotation wrapper  
+> _$ion::"0000000000"_
 
 > `EE 8E 81 81 8B 30 30 30 30 30 30 30 30 30 30 30`  
-> VarUInt (8E = 14) byte annotation wrapper
+> VarUInt (8E = 14) byte annotation wrapper  
+> _$ion::"00000000000"_
 
 ### Invalid annotation type descriptors
 
@@ -980,13 +1147,6 @@ EC 81 81 89 30 30 30 30 30 30 30 30 30 ED 81 81
 ## T15 - reserved
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#15-reserved  
-
-```
-E0 01 00 EA
-```
-
-> `E0 01 00 EA`  
-> Binary Version Marker (BVM)
 
 ### Invalid reserved type descriptors
 
