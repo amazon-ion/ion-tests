@@ -2,7 +2,7 @@
 
 The files in this folder are used to test all of the good type descriptors for Ion 1.0.  
 Each file contains a valid Ion [Value Stream](http://amzn.github.io/ion-docs/docs/binary.html#value-streams).  
-When possible, all representations are made up of invalid type descriptors to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests.  
+Where possible, all representations are made up of invalid type descriptors to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests.  
 Symbols are split into 2 files, one for small Symbol representations and one for larger Symbol representations.  
 
 ## T0 - null / nop padding
@@ -174,7 +174,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 2F
 > _20282409603651670423947251286015_
 
 > `2E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
-> VarUInt (8E = 14) byte positive int
+> VarUInt (8E = 14) byte positive int  
 > _5192296858534827628530496329220095_
 
 > `2F`  
