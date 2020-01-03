@@ -2,7 +2,7 @@
 
 The files in this folder are used to test all of the good type descriptors for Ion 1.0.  
 Each file contains a valid Ion [Value Stream](http://amzn.github.io/ion-docs/docs/binary.html#value-streams).  
-Where possible, all representations are made up of invalid type descriptors to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests.  
+Where possible, all representations are made up of invalid type descriptors (`12`, `30`, `E1`, `FF`) to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests. For example, by choosing an invalid type descriptor, `FF`, as the int representation in `2E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`,  a reader that gets the length incorrect is more likely to fail by skipping to a `FF` rather than to part of the representation that also happens to be a valid type descriptor.  
 Symbols are split into 2 files, one for small Symbol representations and one for larger Symbol representations.  
 
 ## T0 - null / nop padding
@@ -320,59 +320,59 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 
 > `51 FF`  
 > 1 byte decimal  
-> _0d-63_ or _0E-63_
+> _0d-63_
 
 > `52 FF FF`  
 > 2 byte decimal  
-> _-1.27d-61_ or _-1.27E-61_
+> _-1.27d-61_
 
 > `53 FF FF FF`  
 > 3 byte decimal  
-> _-3.2767d-59_ or _-3.2767E-59_
+> _-3.2767d-59_
 
 > `54 FF FF FF FF`  
 > 4 byte decimal  
-> _-8.388607d-57_ or _-8.388607E-57_
+> _-8.388607d-57_
 
 > `55 FF FF FF FF FF`  
 > 5 byte decimal  
-> _-2.147483647d-54_ or _-2.147483647E-54_
+> _-2.147483647d-54_
 
 > `56 FF FF FF FF FF FF`  
 > 6 byte decimal  
-> _-5.49755813887d-52_ or _-5.49755813887E-52_
+> _-5.49755813887d-52_
 
 > `57 FF FF FF FF FF FF FF`  
 > 7 byte decimal  
-> _-1.40737488355327d-49_ or _-1.40737488355327E-49_
+> _-1.40737488355327d-49_
 
 > `58 FF FF FF FF FF FF FF FF`  
 > 8 byte decimal  
-> _-3.6028797018963967d-47_ or _-3.6028797018963967E-47_
+> _-3.6028797018963967d-47_
 
 > `59 FF FF FF FF FF FF FF FF FF`  
 > 9 byte decimal  
-> _-9.223372036854775807d-45_ or _-9.223372036854775807E-45_
+> _-9.223372036854775807d-45_
 
 > `5A FF FF FF FF FF FF FF FF FF FF`  
 > 10 byte decimal  
-> _-2.361183241434822606847d-42_ or _-2.361183241434822606847E-42_
+> _-2.361183241434822606847d-42_
 
 > `5B FF FF FF FF FF FF FF FF FF FF FF`  
 > 11 byte decimal  
-> _-6.04462909807314587353087d-40_ or _-6.04462909807314587353087E-40_
+> _-6.04462909807314587353087d-40_
 
 > `5C FF FF FF FF FF FF FF FF FF FF FF FF`  
 > 12 byte decimal  
-> _-1.54742504910672534362390527d-37_ or _-1.54742504910672534362390527E-37_
+> _-1.54742504910672534362390527d-37_
 
 > `5D FF FF FF FF FF FF FF FF FF FF FF FF FF`  
 > 13 byte decimal  
-> _-3.9614081257132168796771975167d-35_ or _-3.9614081257132168796771975167E-35_
+> _-3.9614081257132168796771975167d-35_
 
 > `5E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`  
 > VarUInt (8E = 14) byte decimal  
-> _-1.0141204801825835211973625643007d-32_ or _-1.0141204801825835211973625643007E-32_
+> _-1.0141204801825835211973625643007d-32_
 
 > `5F`  
 > _null.decimal_
@@ -381,19 +381,14 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 
 > _none_
 
-## T6 - timestamp
+## T6-small - timestamp
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp  
 
 ```
 E0 01 00 EA 62 E1 E1 63 E1 E1 81 64 E1 E1 81 81 
 65 E1 12 E1 81 81 66 E1 E1 81 81 81 81 67 E1 E1 
-81 81 81 81 81 68 E1 E1 81 81 81 81 81 E1 69 E1 
-E1 81 81 81 81 81 E1 12 6A E1 E1 81 81 81 81 81 
-E1 12 12 6B E1 E1 81 81 81 81 81 E1 12 12 12 6C 
-E1 E1 81 81 81 81 81 E1 12 12 12 12 6D E1 E1 81 
-81 81 81 81 E1 12 12 12 12 12 6E 8E E1 E1 81 81 
-81 81 81 E1 12 12 12 12 12 12 6F  
+81 81 81 81 81 6F  
  
 ```
 
@@ -401,66 +396,83 @@ E1 E1 81 81 81 81 81 E1 12 12 12 12 6D E1 E1 81
 > Binary Version Marker (BVM)
 
 > `62 E1 E1`  
-> 2 byte timestamp with at most VarInt offset and VarUInt year components  
-> month, day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified  
-> _0096T_
+> 2 byte timestamps can have at most VarInt offset and VarUInt year components.  
+> Month, day, hour, minute, second, fraction_exponent, and fraction_coefficient components cannot be specified in a 2 byte timestamp.  
+> _0097T_
 
 > `63 E1 E1 81`  
-> 3 byte timestamp with at most VarInt offset, VarUInt year, and VarUInt month components  
-> day, hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified  
-> _0096-12T_
+> 3 byte timestamps can have at most VarInt offset, VarUInt year, and VarUInt month components.  
+> Day, hour, minute, second, fraction_exponent, and fraction_coefficient components cannot be specified in a 3 byte timestamp.  
+> _0097-01T_
 
 > `64 E1 E1 81 81`  
-> 4 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components  
-> hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified  
-> _0096-12-31T_
+> 4 byte timestamps can have at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components.  
+> Hour, minute, second, fraction_exponent, and fraction_coefficient components  cannot be specified in a 4 byte timestamp.  
+> _0097-01-01T_ or _0097-01-01_
 
 > `65 E1 12 E1 81 81`  
-> 5 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components  
-> hour, minute, second, fraction_exponent, and fraction_coefficient components are not able to be specified  
-> _2400-12-31T_
+> 5 byte timestamp can have at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components.  
+> Hour, minute, second, fraction_exponent, and fraction_coefficient components cannot be specified in a 5 byte timestamp.  
+> _2401-01-01T_ or _2401-01-01_
 
 > `66 E1 E1 81 81 81 81`  
-> 6 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, and VarUInt minute components  
-> second, fraction_exponent, and fraction_coefficient components are not able to be specified  
+> 6 byte timestamp can have at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, and VarUInt minute components.  
+> Second, fraction_exponent, and fraction_coefficient components cannot be specified in a 6 byte timestamp.  
 > _0097-01-01T00:28-00:33_
 
 > `67 E1 E1 81 81 81 81 81`  
-> 7 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, and VarUInt second  components  
-> fraction_exponent, and fraction_coefficient components are not able to be specified  
+> 7 byte timestamp can have at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, and VarUInt second  components.  
+> Fraction_exponent, and fraction_coefficient components cannot be specified in a 7 byte timestamp.  
 > _0097-01-01T00:28:01-00:33_
-
-> `68 E1 E1 81 81 81 81 81 E1`  
-> 8 byte timestamp with at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, VarUInt second, and VarInt fraction_exponent components  
-> fraction_coefficient component is not able to be specified  
-> _0097-01-01T00:28:01.000000000000000000000000000000000-00:33_
-
-> `69 E1 E1 81 81 81 81 81 E1 12`  
-> 9 byte timestamp with all components possibly present  
-> _0097-01-01T00:28:01.000000000000000000000000000000018-00:33_
-
-> `6A E1 E1 81 81 81 81 81 E1 12 12`  
-> 10 byte timestamp with all components possibly present  
-> _0097-01-01T00:28:01.000000000000000000000000000004626-00:33_
-
-> `6B E1 E1 81 81 81 81 81 E1 12 12 12`  
-> 11 byte timestamp with all components possibly present  
-> _0097-01-01T00:28:01.000000000000000000000000001184274-00:33_
-
-> `6C E1 E1 81 81 81 81 81 E1 12 12 12 12`  
-> 12 byte timestamp with all components possibly present  
-> _0097-01-01T00:28:01.000000000000000000000000303174162-00:33_
-
-> `6D E1 E1 81 81 81 81 81 E1 12 12 12 12 12`  
-> 13 byte timestamp with all components possibly present  
-> _0097-01-01T00:28:01.000000000000000000000077612585490-00:33_
-
-> `6E 8E E1 E1 81 81 81 81 81 E1 12 12 12 12 12 12`  
-> VarUInt (8E = 14) byte timestamp with all components possibly present  
-> _0097-01-01T00:28:01.000000000000000000019868821885458-00:33_
 
 > `6F`  
 > _null.timestamp_
+
+### Invalid timestamp type descriptors
+
+> `60`, `61`  
+
+## T6-large - timestamp
+
+Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp  
+
+```
+E0 01 00 EA 68 E1 E1 81 81 81 81 81 E1 69 E1 E1 
+81 81 81 81 81 E1 12 6A E1 E1 81 81 81 81 81 E1 
+12 12 6B E1 E1 81 81 81 81 81 E1 12 12 12 6C E1 
+E1 81 81 81 81 81 E1 12 12 12 12 6D E1 E1 81 81 
+81 81 81 E1 12 12 12 12 12 6E 8E E1 E1 81 81 81 
+81 81 E1 12 12 12 12 12 12
+```
+
+> `68 E1 E1 81 81 81 81 81 E1`  
+> 8 byte timestamp can have at most VarInt offset, VarUInt year, VarUInt month, VarUInt day, VarUInt hour, VarUInt minute, VarUInt second, and VarInt fraction_exponent components.  
+> The fraction_coefficient component cannot be specified in a 8 byte timestamp.  
+> _0097-01-01T00:28:01.000000000000000000000000000000000-00:33_
+
+> `69 E1 E1 81 81 81 81 81 E1 12`  
+> 9 byte timestamp with all components possibly present.  
+> _0097-01-01T00:28:01.000000000000000000000000000000018-00:33_
+
+> `6A E1 E1 81 81 81 81 81 E1 12 12`  
+> 10 byte timestamp with all components possibly present.  
+> _0097-01-01T00:28:01.000000000000000000000000000004626-00:33_
+
+> `6B E1 E1 81 81 81 81 81 E1 12 12 12`  
+> 11 byte timestamp with all components possibly present.  
+> _0097-01-01T00:28:01.000000000000000000000000001184274-00:33_
+
+> `6C E1 E1 81 81 81 81 81 E1 12 12 12 12`  
+> 12 byte timestamp with all components possibly present.  
+> _0097-01-01T00:28:01.000000000000000000000000303174162-00:33_
+
+> `6D E1 E1 81 81 81 81 81 E1 12 12 12 12 12`  
+> 13 byte timestamp with all components possibly present.  
+> _0097-01-01T00:28:01.000000000000000000000077612585490-00:33_
+
+> `6E 8E E1 E1 81 81 81 81 81 E1 12 12 12 12 12 12`  
+> VarUInt (8E = 14) byte timestamp with all components possibly present.  
+> _0097-01-01T00:28:01.000000000000000000019868821885458-00:33_
 
 ### Invalid timestamp type descriptors
 
