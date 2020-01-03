@@ -9,7 +9,7 @@ Each type descriptor is broken out into a separate file.
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#1-bool
 
-### T1L2
+### type_1_length_2
 
 ```
 E0 01 00 EA 12 
@@ -21,7 +21,7 @@ E0 01 00 EA 12
 > `12`  
 > Invalid bool
 
-### T1L3
+### type_1_length_3
 
 ```
 E0 01 00 EA 13 
@@ -33,7 +33,7 @@ E0 01 00 EA 13
 > `13`  
 > Invalid bool
 
-### T1L4
+### type_1_length_4
 
 ```
 E0 01 00 EA 14
@@ -45,7 +45,7 @@ E0 01 00 EA 14
 > `14`  
 > Invalid bool
 
-### T1L5
+### type_1_length_5
 
 ```
 E0 01 00 EA 15
@@ -57,7 +57,7 @@ E0 01 00 EA 15
 > `15`  
 > Invalid bool
 
-### T1L6
+### type_1_length_6
 
 ```
 E0 01 00 EA 16 
@@ -69,7 +69,7 @@ E0 01 00 EA 16
 > `16`  
 > Invalid bool
 
-### T1L7
+### type_1_length_7
 
 ```
 E0 01 00 EA 17 
@@ -81,7 +81,7 @@ E0 01 00 EA 17
 > `17`  
 > Invalid bool
 
-### T1L8
+### type_1_length_8
 
 ```
 E0 01 00 EA 18 
@@ -93,7 +93,7 @@ E0 01 00 EA 18
 > `18`  
 > Invalid bool
 
-### T1L9
+### type_1_length_9
 
 ```
 E0 01 00 EA 19 
@@ -105,7 +105,7 @@ E0 01 00 EA 19
 > `19`  
 > Invalid bool
 
-### T1LA
+### type_1_length_10
 
 ```
 E0 01 00 EA 1A 
@@ -117,7 +117,7 @@ E0 01 00 EA 1A
 > `1A`  
 > Invalid bool
 
-### T1LB
+### type_1_length_11
 
 ```
 E0 01 00 EA 1B 
@@ -129,7 +129,7 @@ E0 01 00 EA 1B
 > `1B`  
 > Invalid bool
 
-### T1LC
+### type_1_length_12
 
 ```
 E0 01 00 EA 1C 
@@ -141,7 +141,7 @@ E0 01 00 EA 1C
 > `1C`  
 > Invalid bool
 
-### T1LD
+### type_1_Length_13
 
 ```
 E0 01 00 EA 1D 
@@ -153,7 +153,7 @@ E0 01 00 EA 1D
 > `1D`  
 > Invalid bool
 
-### T1LE
+### type_1_length_14
 
 ```
 E0 01 00 EA 1E 81 FF 
@@ -169,7 +169,7 @@ E0 01 00 EA 1E 81 FF
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#2-and-3-int 
 
-### T3L0
+### type_3_length_0
 
 ```
 E0 01 00 EA 30 
@@ -185,7 +185,7 @@ E0 01 00 EA 30
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#4-float 
 
-### T4L1
+### type_4_length_1
 
 ```
 E0 01 00 EA 41 00 
@@ -197,7 +197,7 @@ E0 01 00 EA 41 00
 > `41 00`  
 > Invalid float with an arbitrary 1 byte representation
 
-### T4L2
+### type_4_length_2
 
 ```
 E0 01 00 EA 42 00 00 
@@ -209,7 +209,7 @@ E0 01 00 EA 42 00 00
 > `42 00 00`  
 > Invalid float with an arbitrary 2 byte representation
 
-### T4L3
+### type_4_length_3
 
 ```
 E0 01 00 EA 43 00 00 00 
@@ -221,7 +221,7 @@ E0 01 00 EA 43 00 00 00
 > `43 00 00 00`  
 > Invalid float with an arbitrary 3 byte representation
 
-### T4L5
+### type_4_length_5
 
 ```
 E0 01 00 EA 45 00 00 00 00 00 
@@ -233,7 +233,7 @@ E0 01 00 EA 45 00 00 00 00 00
 > `45 00 00 00 00 00`  
 > Invalid float with an arbitrary 5 byte representation
 
-### T4L6
+### type_4_length_6
 
 ```
 E0 01 00 EA 46 00 00 00 00 00 00 
@@ -245,7 +245,7 @@ E0 01 00 EA 46 00 00 00 00 00 00
 > `46 00 00 00 00 00 00`  
 > Invalid float with an arbitrary 6 byte representation
 
-### T4L7
+### type_4_length_7
 
 ```
 E0 01 00 EA 47 00 00 00 00 00 00 00 
@@ -257,7 +257,7 @@ E0 01 00 EA 47 00 00 00 00 00 00 00
 > `47 00 00 00 00 00 00 00`  
 > Invalid float with an arbitrary 7 byte representation
 
-### T4L9
+### type_4_length_9
 
 ```
 E0 01 00 EA 49 00 00 00 00 00 00 00 00 00 
@@ -269,7 +269,7 @@ E0 01 00 EA 49 00 00 00 00 00 00 00 00 00
 > `49 00 00 00 00 00 00 00 00 00`  
 > Invalid float with an arbitrary 9 byte representation
 
-### T4LA
+### type_4_length_10
 
 ```
 E0 01 00 EA 4A 00 00 00 00 00 00 00 00 00 00 
@@ -281,7 +281,7 @@ E0 01 00 EA 4A 00 00 00 00 00 00 00 00 00 00
 > `4A 00 00 00 00 00 00 00 00 00 00`  
 > Invalid float with an arbitrary 10 byte representation
 
-### T4LB
+### type_4_length_11
 
 ```
 E0 01 00 EA 4B 00 00 00 00 00 00 00 00 00 00 00 
@@ -293,7 +293,7 @@ E0 01 00 EA 4B 00 00 00 00 00 00 00 00 00 00 00
 > `4B 00 00 00 00 00 00 00 00 00 00 00`  
 > Invalid float with an arbitrary 11 byte representation
 
-### T4LC
+### type_4_length_12
 
 ```
 E0 01 00 EA 4C 00 00 00 00 00 00 00 00 00 00 00 
@@ -306,7 +306,7 @@ E0 01 00 EA 4C 00 00 00 00 00 00 00 00 00 00 00
 > `4C 00 00 00 00 00 00 00 00 00 00 00 00`  
 > Invalid float with an arbitrary 12 byte representation
 
-### T4LD
+### type_4_length_13
 
 ```
 E0 01 00 EA 4D 00 00 00 00 00 00 00 00 00 00 00 
@@ -319,7 +319,7 @@ E0 01 00 EA 4D 00 00 00 00 00 00 00 00 00 00 00
 > `4D 00 00 00 00 00 00 00 00 00 00 00 00 00`  
 > Invalid float with an arbitrary 13 byte representation
 
-### T4LE
+### type_4_length_14
 
 ```
 E0 01 00 EA 4E 81 00 
@@ -335,7 +335,7 @@ E0 01 00 EA 4E 81 00
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp 
 
-### T6L0
+### type_6_length_0
 
 ```
 E0 01 00 EA 60 
@@ -347,7 +347,7 @@ E0 01 00 EA 60
 > `60`  
 > Invalid timestamp
 
-### T6L1
+### type_6_length_1
 
 ```
 E0 01 00 EA 61 00 
@@ -363,7 +363,7 @@ E0 01 00 EA 61 00
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#annotations  
 
-### TEL1
+### type_14_length_1
 
 ```
 E0 01 00 EA E1 00 
@@ -375,7 +375,7 @@ E0 01 00 EA E1 00
 > `E1 00`  
 > Invalid annotation with an arbitrary 1 byte representation
 
-### TEL2
+### type_14_length_2
 
 ```
 E0 01 00 EA E2 00 00 
@@ -387,7 +387,7 @@ E0 01 00 EA E2 00 00
 > `E2 00 00`  
 > Invalid annotation with an arbitrary 2 byte representation
 
-### TELF
+### type_14_length_15
 
 ```
 E0 01 00 EA EF 
@@ -403,7 +403,7 @@ E0 01 00 EA EF
 
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#15-reserved
 
-### TFL0
+### type_15_length_0
 
 ```
 E0 01 00 EA F0 
@@ -415,7 +415,7 @@ E0 01 00 EA F0
 > `F0`  
 > Reserved type descriptor
 
-### TFL1
+### type_15_length_1
 
 ```
 E0 01 00 EA F1 00 
@@ -427,7 +427,7 @@ E0 01 00 EA F1 00
 > `F1 00`  
 > Invalid reserved type descriptor with an arbitrary 1 byte representation
 
-### TFL2
+### type_15_length_2
 
 ```
 E0 01 00 EA F2 00 00 
@@ -439,7 +439,7 @@ E0 01 00 EA F2 00 00
 > `F2 00 00`  
 > Invalid reserved type descriptor with an arbitrary 2 byte representation
 
-### TFL3
+### type_15_length_3
 
 ```
 E0 01 00 EA F3 00 00 00 
@@ -451,7 +451,7 @@ E0 01 00 EA F3 00 00 00
 > `F3 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 3 byte representation
 
-### TFL4
+### type_15_length_4
 
 ```
 E0 01 00 EA F4 00 00 00 00 
@@ -463,7 +463,7 @@ E0 01 00 EA F4 00 00 00 00
 > `F4 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 4 byte representation
 
-### TFL5
+### type_15_length_5
 
 ```
 E0 01 00 EA F5 00 00 00 00 00 
@@ -475,7 +475,7 @@ E0 01 00 EA F5 00 00 00 00 00
 > `F5 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 5 byte representation
 
-### TFL6
+### type_15_length_6
 
 ```
 E0 01 00 EA F6 00 00 00 00 00 00 
@@ -487,7 +487,7 @@ E0 01 00 EA F6 00 00 00 00 00 00
 > `F6 00 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 6 byte representation
 
-### TFL7
+### type_15_length_7
 
 ```
 E0 01 00 EA F7 00 00 00 00 00 00 00 
@@ -499,7 +499,7 @@ E0 01 00 EA F7 00 00 00 00 00 00 00
 > `F7 00 00 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 7 byte representation
 
-### TFL8
+### type_15_length_8
 
 ```
 E0 01 00 EA F8 00 00 00 00 00 00 00 00 
@@ -511,7 +511,7 @@ E0 01 00 EA F8 00 00 00 00 00 00 00 00
 > `F8 00 00 00 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 8 byte representation
 
-### TFL9
+### type_15_length_9
 
 ```
 E0 01 00 EA F9 00 00 00 00 00 00 00 00 00 
@@ -523,7 +523,7 @@ E0 01 00 EA F9 00 00 00 00 00 00 00 00 00
 > `F9 00 00 00 00 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 9 byte representation
 
-### TFLA
+### type_15_length_10
 
 ```
 E0 01 00 EA FA 00 00 00 00 00 00 00 00 00 00 
@@ -535,7 +535,7 @@ E0 01 00 EA FA 00 00 00 00 00 00 00 00 00 00
 > `FA 00 00 00 00 00 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 10 byte representation
 
-### TFLB
+### type_15_length_11
 
 ```
 E0 01 00 EA FB 00 00 00 00 00 00 00 00 00 00 00 
@@ -547,7 +547,7 @@ E0 01 00 EA FB 00 00 00 00 00 00 00 00 00 00 00
 > `FB 00 00 00 00 00 00 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 11 byte representation
 
-### TFLC
+### type_15_length_12
 
 ```
 E0 01 00 EA FC 00 00 00 00 00 00 00 00 00 00 00 
@@ -560,7 +560,7 @@ E0 01 00 EA FC 00 00 00 00 00 00 00 00 00 00 00
 > `FC 00 00 00 00 00 00 00 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 12 byte representation
 
-### TFLD
+### type_15_length_13
 
 ```
 E0 01 00 EA FD 00 00 00 00 00 00 00 00 00 00 00 
@@ -573,7 +573,7 @@ E0 01 00 EA FD 00 00 00 00 00 00 00 00 00 00 00
 > `FD 00 00 00 00 00 00 00 00 00 00 00 00 00`  
 > Invalid reserved type descriptor with an arbitrary 13 byte representation
 
-### TFLE
+### type_15_length_14
 
 ```
 E0 01 00 EA FE 81 00 
@@ -585,7 +585,7 @@ E0 01 00 EA FE 81 00
 > `FE 81 00`  
 > Invalid reserved type descriptor with an arbitrary 1 byte VarUInt representation
 
-### TFLF
+### type_15_length_15
 
 ```
 E0 01 00 EA FF 
