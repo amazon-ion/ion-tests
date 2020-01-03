@@ -12,146 +12,148 @@ Specification: http://amzn.github.io/ion-docs/docs/binary.html#1-bool
 ### type_1_length_2
 
 ```
-E0 01 00 EA 12 
+E0 01 00 EA 12 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `12`  
-> Invalid bool
+> `12 00 00`  
+> Invalid bool with an arbitrary 2 byte representation
 
 ### type_1_length_3
 
 ```
-E0 01 00 EA 13 
+E0 01 00 EA 13 00 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `13`  
-> Invalid bool
+> `13 00 00 00`  
+> Invalid bool with an arbitrary 3 byte representation
 
 ### type_1_length_4
 
 ```
-E0 01 00 EA 14
+E0 01 00 EA 14 00 00 00 00
 ``` 
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `14`  
-> Invalid bool
+> `14 00 00 00 00`  
+> Invalid bool with an arbitrary 4 byte representation
 
 ### type_1_length_5
 
 ```
-E0 01 00 EA 15
+E0 01 00 EA 15 00 00 00 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `15`  
-> Invalid bool
+> `15 00 00 00 00 00`  
+> Invalid bool with an arbitrary 5 byte representation
 
 ### type_1_length_6
 
 ```
-E0 01 00 EA 16 
+E0 01 00 EA 16 00 00 00 00 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `16`  
-> Invalid bool
+> `16 00 00 00 00 00 00`  
+> Invalid bool with an arbitrary 6 byte representation
 
 ### type_1_length_7
 
 ```
-E0 01 00 EA 17 
+E0 01 00 EA 17 00 00 00 00 00 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `17`  
-> Invalid bool
+> `17 00 00 00 00 00 00 00`  
+> Invalid bool with an arbitrary 7 byte representation
 
 ### type_1_length_8
 
 ```
-E0 01 00 EA 18 
+E0 01 00 EA 18 00 00 00 00 00 00 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `18`  
-> Invalid bool
+> `18 00 00 00 00 00 00 00 00`  
+> Invalid bool with an arbitrary 8 byte representation
 
 ### type_1_length_9
 
 ```
-E0 01 00 EA 19 
+E0 01 00 EA 19 00 00 00 00 00 00 00 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `19`  
-> Invalid bool
+> `19 00 00 00 00 00 00 00 00 00`  
+> Invalid bool with an arbitrary 9 byte representation
 
 ### type_1_length_10
 
 ```
-E0 01 00 EA 1A 
+E0 01 00 EA 1A 00 00 00 00 00 00 00 00 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `1A`  
-> Invalid bool
+> `1A 00 00 00 00 00 00 00 00 00 00`  
+> Invalid bool with an arbitrary 10 byte representation
 
 ### type_1_length_11
 
 ```
-E0 01 00 EA 1B 
+E0 01 00 EA 1B 00 00 00 00 00 00 00 00 00 00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `1B`  
-> Invalid bool
+> `1B 00 00 00 00 00 00 00 00 00 00 00`  
+> Invalid bool with an arbitrary 11 byte representation
 
 ### type_1_length_12
 
 ```
-E0 01 00 EA 1C 
+E0 01 00 EA 1C 00 00 00 00 00 00 00 00 00 00 00 
+00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `1C`  
-> Invalid bool
+> `1C 00 00 00 00 00 00 00 00 00 00 00 00`  
+> Invalid bool with an arbitrary 12 byte representation
 
 ### type_1_Length_13
 
 ```
-E0 01 00 EA 1D 
+E0 01 00 EA 1D 00 00 00 00 00 00 00 00 00 00 00 
+00 00
 ```
 
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `1D`  
-> Invalid bool
+> `1D 00 00 00 00 00 00 00 00 00 00 00 00 00`  
+> Invalid bool with an arbitrary 13 byte representation
 
 ### type_1_length_14
 
