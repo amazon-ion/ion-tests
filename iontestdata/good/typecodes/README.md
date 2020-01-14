@@ -3,7 +3,7 @@
 The files in this folder are used to test all of the good type descriptors for Ion 1.0.  
 Each file contains a valid Ion [Value Stream](http://amzn.github.io/ion-docs/docs/binary.html#value-streams).  
 Where possible, all representations are made up of invalid type descriptors (`12`, `30`, `E1`, `FF`) to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests. For example, by choosing an invalid type descriptor, `FF`, as the int representation in `2E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`,  a reader that gets the length incorrect is more likely to fail by skipping to a `FF` rather than to part of the representation that also happens to be a valid type descriptor.  
-Symbols are split into 2 files, one for small Symbol representations and one for larger Symbol representations.  
+Timestamps and symbols are split into 2 files, one for small representations and one for larger representations.  
 
 ## T0 - null / nop padding
 
@@ -386,8 +386,8 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp  
 
 ```
-E0 01 00 EA 62 E1 E1 63 E1 E1 81 64 E1 E1 81 81 
-65 E1 12 E1 81 81 66 E1 E1 81 81 81 81 67 E1 E1 
+E0 01 00 EA 62 C0 E1 63 C0 E1 81 64 C0 E1 81 81 
+65 C0 12 E1 81 81 66 E1 E1 81 81 81 81 67 E1 E1 
 81 81 81 81 81 6F  
  
 ```
@@ -395,22 +395,22 @@ E0 01 00 EA 62 E1 E1 63 E1 E1 81 64 E1 E1 81 81
 > `E0 01 00 EA`  
 > Binary Version Marker (BVM)
 
-> `62 E1 E1`  
+> `62 C0 E1`  
 > 2 byte timestamps can have at most VarInt offset and VarUInt year components.  
 > Month, day, hour, minute, second, fraction_exponent, and fraction_coefficient components cannot be specified in a 2 byte timestamp.  
 > _0097T_
 
-> `63 E1 E1 81`  
+> `63 C0 E1 81`  
 > 3 byte timestamps can have at most VarInt offset, VarUInt year, and VarUInt month components.  
 > Day, hour, minute, second, fraction_exponent, and fraction_coefficient components cannot be specified in a 3 byte timestamp.  
 > _0097-01T_
 
-> `64 E1 E1 81 81`  
+> `64 C0 E1 81 81`  
 > 4 byte timestamps can have at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components.  
 > Hour, minute, second, fraction_exponent, and fraction_coefficient components  cannot be specified in a 4 byte timestamp.  
 > _0097-01-01T_ or _0097-01-01_
 
-> `65 E1 12 E1 81 81`  
+> `65 C0 12 E1 81 81`  
 > 5 byte timestamp can have at most VarInt offset, VarUInt year, VarUInt month, and VarUInt day components.  
 > Hour, minute, second, fraction_exponent, and fraction_coefficient components cannot be specified in a 5 byte timestamp.  
 > _2401-01-01T_ or _2401-01-01_
