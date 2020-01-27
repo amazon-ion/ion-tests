@@ -65,18 +65,18 @@ data are available.
 
 decimalExpTooLarge.10n
 ----------------------
-This file contains a decimal who's exponent exceeds the length defined by the
+This file contains a Decimal who's exponent exceeds the length defined by the
 decimal container's length.
 
 decimalLenCauses64BitOverflow.10n
 ---------------------------------
-This file contains a decimal who's total length is 2^64-1, larger than the
+This file contains a Decimal who's total length is 2^64-1, larger than the
 datagram size, and when combined with a buffer offset, is likely to cause an
 overflow when calculating the end index of the value.
 
 decimalLenTooLarge.10n
 ----------------------
-Contains a Clob whose length is specified as 34 bytes, but only 24 bytes of
+Contains a Decimal whose length is specified as 34 bytes, but only 24 bytes of
 data are available.
 
 emptyAnnotatedInt.10n
