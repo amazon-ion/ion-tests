@@ -65,12 +65,12 @@ data are available.
 
 decimalExpTooLarge.10n
 ----------------------
-This file contains a Decimal who's exponent exceeds the length defined by the
+This file contains a Decimal whose exponent exceeds the length defined by the
 decimal container's length.
 
 decimalLenCauses64BitOverflow.10n
 ---------------------------------
-This file contains a Decimal who's total length is 2^64-1, larger than the
+This file contains a Decimal whose total length is 2^64-1, larger than the
 datagram size, and when combined with a buffer offset, is likely to cause an
 overflow when calculating the end index of the value.
 
