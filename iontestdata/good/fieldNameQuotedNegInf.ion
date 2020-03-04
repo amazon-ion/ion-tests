@@ -1,1 +1,1 @@
-{ '+inf' : false }
+{ '-inf': false }
