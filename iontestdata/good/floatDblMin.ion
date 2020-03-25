@@ -19,3 +19,5 @@ Values below are taken from that same page.
 2.225073858507201200000e-308         // trailing zeros
 2.2250738585072012e-00308            // leading zeros in the exponent
 2.2250738585072012997800001e-308     // superfluous digits beyond digit 17
+2.2250738585072014e-308              // smallest negative normalized double
+2.2250738585072009e-308              // a very small double
