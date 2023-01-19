@@ -1,13 +1,13 @@
 # Type Codes
 
 The files in this folder are used to test all of the bad type descriptors for Ion 1.0.  
-Each file contains an invalid Ion [Value Stream](http://amzn.github.io/ion-docs/docs/binary.html#value-streams).  
+Each file contains an invalid Ion [Value Stream](https://amazon-ion.github.io/ion-docs/docs/binary.html#value-streams).  
 All representations are made up of valid type descriptors to ensure readers are failing when appropriate.  
 Each type descriptor is broken out into a separate file.  
 
 ## T1 - bool
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#1-bool
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#1-bool
 
 ### type_1_length_2
 
@@ -169,7 +169,7 @@ E0 01 00 EA 1E 81 FF
 
 ## T3 - int (negative)
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#2-and-3-int 
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#2-and-3-int 
 
 ### type_3_length_0
 
@@ -185,7 +185,7 @@ E0 01 00 EA 30
 
 ## T4 - float
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#4-float 
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#4-float 
 
 ### type_4_length_1
 
@@ -335,7 +335,7 @@ E0 01 00 EA 4E 81 00
 
 ## T6 - timestamp
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp 
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#6-timestamp 
 
 ### type_6_length_0
 
@@ -363,7 +363,7 @@ E0 01 00 EA 61 00
 
 ## T14 - annotations
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#annotations  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#annotations  
 
 ### type_14_length_1
 
@@ -403,7 +403,7 @@ E0 01 00 EA EF
 
 ## T15 - reserved
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#15-reserved
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#15-reserved
 
 ### type_15_length_0
 

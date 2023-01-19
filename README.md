@@ -1,5 +1,5 @@
 # Amazon Ion Test Data
-The `iontestdata` folder contains samples of [Ion](http://amzn.github.io/ion-docs)
+The `iontestdata` folder contains samples of [Ion](https://amazon-ion.github.io/ion-docs)
 content for use by compatibility test suites.
 
 Consumers must assume that additional nested subfolders may be added, and
