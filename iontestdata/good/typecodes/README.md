@@ -1,13 +1,13 @@
 # Type Codes
 
 The files in this folder are used to test all of the good type descriptors for Ion 1.0.  
-Each file contains a valid Ion [Value Stream](http://amzn.github.io/ion-docs/docs/binary.html#value-streams).  
+Each file contains a valid Ion [Value Stream](https://amazon-ion.github.io/ion-docs/docs/binary.html#value-streams).  
 Where possible, all representations are made up of invalid type descriptors (`12`, `30`, `E1`, `FF`) to ensure readers are reading the proper lengths without relying on an implementation for reading the representation. Symbols are an exception; writing a symbol table with a large `max_id` adds unwanted complexity to the tests. For example, by choosing an invalid type descriptor, `FF`, as the int representation in `2E 8E FF FF FF FF FF FF FF FF FF FF FF FF FF FF`,  a reader that gets the length incorrect is more likely to fail by skipping to a `FF` rather than to part of the representation that also happens to be a valid type descriptor.  
 Timestamps and symbols are split into 2 files, one for small representations and one for larger representations.  
 
 ## T0 - null / nop padding
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#0-null  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#0-null  
 
 ```
 E0 01 00 EA 00 01 FF 02 FF FF 03 FF FF FF 04 FF 
@@ -77,7 +77,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF 0F
 
 ## T1 - bool
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#1-bool  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#1-bool  
 
 ```
 E0 01 00 EA 10 11 1F 
@@ -101,7 +101,7 @@ E0 01 00 EA 10 11 1F
 
 ## T2 - int (positive)
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#2-and-3-int  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#2-and-3-int  
 
 ```
 E0 01 00 EA 20 21 FF 22 FF FF 23 FF FF FF 24 FF 
@@ -187,7 +187,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 2F
 
 ## T3 - int (negative)
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#2-and-3-int  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#2-and-3-int  
 
 ```
 E0 01 00 EA 31 FF 32 FF FF 33 FF FF FF 34 FF FF 
@@ -269,7 +269,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF 3F
 
 ## T4 - float
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#4-float  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#4-float  
 
 ```
 E0 01 00 EA 40 44 12 12 12 12 48 12 12 12 12 12 
@@ -299,7 +299,7 @@ E0 01 00 EA 40 44 12 12 12 12 48 12 12 12 12 12
 
 ## T5 - decimal
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#5-decimal  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#5-decimal  
 
 ```
 E0 01 00 EA 50 51 FF 52 FF FF 53 FF FF FF 54 FF 
@@ -383,7 +383,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 5F
 
 ## T6-small - timestamp
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#6-timestamp  
 
 ```
 E0 01 00 EA 62 C0 E1 63 C0 E1 81 64 C0 E1 81 81 
@@ -434,7 +434,7 @@ E0 01 00 EA 62 C0 E1 63 C0 E1 81 64 C0 E1 81 81
 
 ## T6-large - timestamp
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#6-timestamp  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#6-timestamp  
 
 ```
 E0 01 00 EA 68 E1 E1 81 81 81 81 81 E1 69 E1 E1 
@@ -480,7 +480,7 @@ E1 81 81 81 81 81 E1 12 12 12 12 6D E1 E1 81 81
 
 ## T7-small - symbol
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#7-symbol  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#7-symbol  
 
 ```
 E0 01 00 EA 70 71 00 72 00 00 73 00 00 00 74 00 
@@ -519,7 +519,7 @@ E0 01 00 EA 70 71 00 72 00 00 73 00 00 00 74 00
 
 ## T7-large - symbol
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#7-symbol  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#7-symbol  
 
 ```
 E0 01 00 EA 75 00 00 00 00 00 76 00 00 00 00 00 
@@ -581,7 +581,7 @@ E0 01 00 EA 75 00 00 00 00 00 76 00 00 00 00 00
 
 ## T8 - string
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#8-string  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#8-string  
 
 ```
 E0 01 00 EA 80 81 30 82 30 30 83 30 30 30 84 30 
@@ -665,7 +665,7 @@ E0 01 00 EA 80 81 30 82 30 30 83 30 30 30 84 30
 
 ## T9 - clob
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#9-clob  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#9-clob  
 
 ```
 E0 01 00 EA 90 91 FF 92 FF FF 93 FF FF FF 94 FF 
@@ -749,7 +749,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF 9F
 
 ## T10 - blob
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#10-blob  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#10-blob  
 
 ```
 E0 01 00 EA A0 A1 FF A2 FF FF A3 FF FF FF A4 FF 
@@ -833,7 +833,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF AF
 
 ## T11 - list
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#11-list  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#11-list  
 
 ```
 E0 01 00 EA B0 B1 00 B2 01 FF B3 02 FF FF B4 03 
@@ -917,7 +917,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF BF
 
 ## T12 - sexp
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#12-sexp  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#12-sexp  
 
 ```
 E0 01 00 EA C0 C1 00 C2 01 FF C3 02 FF FF C4 03 
@@ -1001,7 +1001,7 @@ FF FF FF FF FF FF FF FF FF FF FF FF FF CF
 
 ## T13 - struct
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#13-struct  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#13-struct  
 
 ```
 E0 01 00 EA D0 D1 82 81 0F D2 81 0F D3 81 81 30 
@@ -1085,7 +1085,7 @@ D4 81 82 30 30 D5 81 83 30 30 30 D6 81 84 30 30
 
 ## T14 - annotations
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#annotations  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#annotations  
 
 ```
 E0 01 00 EA E0 01 00 EA E3 81 81 80 E4 81 81 81 
@@ -1158,7 +1158,7 @@ EC 81 81 89 30 30 30 30 30 30 30 30 30 ED 81 81
 
 ## T15 - reserved
 
-Specification: http://amzn.github.io/ion-docs/docs/binary.html#15-reserved  
+Specification: https://amazon-ion.github.io/ion-docs/docs/binary.html#15-reserved  
 
 ### Invalid reserved type descriptors
 
