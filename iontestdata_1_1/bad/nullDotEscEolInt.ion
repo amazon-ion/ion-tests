@@ -1,0 +1,4 @@
+$ion_1_1
+// Nulls must be a single token.
+[ null.\
+int ]

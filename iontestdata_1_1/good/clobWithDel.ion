@@ -1,0 +1,4 @@
+$ion_1_1
+// These clobs all contain DEL (0x7f) characters.
+{{""}}
+{{''''''}}

@@ -1,0 +1,4 @@
+$ion_1_1
+// Timestamp cannot have negative year
+// The array prevents this from parsing as two values ('-' operator)
+[ -2007-06-04 ]

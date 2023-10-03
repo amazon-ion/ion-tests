@@ -1,0 +1,4 @@
+$ion_1_1
+// Here the LF is escaped-away leaving an empty symbol.
+'\
+'

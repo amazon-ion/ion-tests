@@ -1,0 +1,4 @@
+$ion_1_1
+// Numbers can't be terminated by backslash.
+( 0x3\
+)

@@ -1,0 +1,4 @@
+$ion_1_1
+// \e is not a valid Ion escape sequence
+
+'\e'

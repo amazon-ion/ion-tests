@@ -1,0 +1,3 @@
+$ion_1_1
+// malformed utf-16 surrogate - missing 1st code unit in a symbol
+'\udc00'

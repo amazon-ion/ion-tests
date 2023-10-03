@@ -1,0 +1,13 @@
+$ion_1_1
+// None of these values should be null.
+0
+0.0
+0d0
+0e0
+""
+''''''
+{{}}
+{{""}}
+[]
+()
+{}
