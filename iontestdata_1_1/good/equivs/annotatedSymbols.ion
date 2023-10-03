@@ -1,0 +1,22 @@
+$ion_1_1
+(
+  annotation :: value
+  annotation:: value
+  annotation ::value
+  annotation::value
+
+  annotation :: 'value'
+  annotation:: 'value'
+  annotation ::'value'
+  annotation::'value'
+
+  'annotation' :: value
+  'annotation':: value
+  'annotation' ::value
+  'annotation'::value
+
+  'annotation' :: 'value'
+  'annotation':: 'value'
+  'annotation' ::'value'
+  'annotation'::'value'
+)

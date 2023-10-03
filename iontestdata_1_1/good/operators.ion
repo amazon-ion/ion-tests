@@ -1,0 +1,24 @@
+$ion_1_1
+// The complete list of operator characters.
+
+(
+  !
+  #
+  %
+  &
+  *
+  +
+  -
+  .
+  /
+  ;
+  <
+  =
+  >
+  ?
+  @
+  ^
+  `
+  |
+  ~
+)

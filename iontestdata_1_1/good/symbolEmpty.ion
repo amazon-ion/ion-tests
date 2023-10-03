@@ -1,0 +1,10 @@
+$ion_1_1
+// Empty symbol is allowed.
+
+''
+{'':abc}
+''::abc
+''::''
+{'':''::''}
+abc::''
+{'''''':abc}

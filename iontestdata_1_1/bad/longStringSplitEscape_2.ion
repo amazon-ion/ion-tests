@@ -1,0 +1,4 @@
+$ion_1_1
+// Malformed long string - Unicode escapes cannot be split
+'''\U0000''' '''1234'''
+

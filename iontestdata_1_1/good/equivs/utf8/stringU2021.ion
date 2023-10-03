@@ -1,0 +1,8 @@
+$ion_1_1
+// Double dagger is a 3-byte UTF-8 character
+
+(
+  "\u2021"
+  "\U00002021"
+  "‡"
+)

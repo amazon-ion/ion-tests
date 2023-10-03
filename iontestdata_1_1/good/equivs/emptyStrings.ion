@@ -1,0 +1,24 @@
+$ion_1_1
+(
+""
+
+"\
+"
+
+"\
+\
+"
+
+''''''
+
+""  // Avoid concatenation
+
+'''\
+'''
+
+"" // Avoid concatenation
+
+'''\
+\
+'''
+)

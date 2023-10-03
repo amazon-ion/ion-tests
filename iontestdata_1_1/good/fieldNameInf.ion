@@ -1,0 +1,4 @@
+$ion_1_1
+// Trap for ION-208
+
+{ inf : false }

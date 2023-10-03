@@ -1,0 +1,4 @@
+$ion_1_1
+// This traps an off-by-one bug in binary length calculation.
+
+-128
