@@ -1,0 +1,28 @@
+$ion_1_1
+{
+  'a string value': "abc",
+  'make_string combining strings': (:make_string "a" "b" "c"),
+  'make_string combining symbols': (:make_string a b c),
+  'make_string combining strings and symbols': (:make_string a "b" c),
+  'make_string with nested invocation': (:make_string "a" (:make_string "b" "c")),
+}
+
+{
+  'an empty string': "",
+  'an empty make_string': (:make_string)
+}
+
+{
+  'a string value in a list': ["abc"],
+  'make_string invoked in a list': [(:make_string "a" "b" "c")],
+}
+
+{
+  'a string value in a sexp': ("abc"),
+  'make_string invoked in a sexp': ((:make_string "a" "b" "c")),
+}
+
+{
+  'a string value in a struct': { letters: "abc" },
+  'make_string invoked in a struct': { letters: (:make_string "a" "b" "c") },
+}
