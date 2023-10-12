@@ -1,0 +1,6 @@
+$ion_1_1
+{ (:void) }
+{ (:void), }
+{ (:void), a: 1 }
+{ a: 1, (:void) }
+{ a: 1, (:void), }
