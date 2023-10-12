@@ -1,0 +1,63 @@
+$ion_1_1
+
+{
+  'a value': "abc",
+  'a values invocation containing the same value': (:values "abc" ),
+  'a values invocation containing nested invocations': (:values (:values) (:values "abc")),
+}
+
+{
+  'a list of values': [1, 2, 3],
+  'a list with some values populated by values invocation': [1, (:values 2 3)],
+  'a list filled entirely by a values invocation': [(:values 1 2 3)],
+  'a list inside a values invocation': (:values [(:values 1 2 3)]),
+}
+
+{
+  'a sexp of values': (1 2 3),
+  'a sexp with some values populated by values invocation': (1 (:values 2 3)),
+  'a sexp filled entirely by a values invocation': ((:values 1 2 3)),
+  'a sexp inside a values invocation': (:values ((:values 1 2 3))),
+}
+
+{
+  'a struct': { a: 1, b: 2, b: 3 },
+  'a struct with values macro for one field': { a: 1, b: 2, (:values {b: 3}) },
+  'a struct with values macro for multiple fields': { (:values {a: 1, b: 2, b: 3}) },
+  'a struct with multiple values macros for fields': { (:values {a: 1}), (:values { b: 2, b: 3}) },
+  'a struct with values macro for one field value': { a: 1, b: 2, b: (:values 3) },
+  'a struct with values macro for multiple field values': { a: 1, b: (:values 2 3) },
+}
+
+{
+  'an empty struct': {},
+  'a struct with empty values': {(:values)},
+  'a struct with empty values for a field': {a: (:values)},
+}
+
+embedded_documents::{
+  'a document with no values':
+    '''
+    $ion_1_1
+    ''',
+  'empty values macro at the top level':
+    '''
+    $ion_1_1
+    (:values)
+    ''',
+}
+
+embedded_documents::{
+  'a document with multiple values':
+    '''
+    $ion_1_1
+    1
+    2
+    3
+    ''',
+  'values macro with multiple args at the top level':
+    '''
+    $ion_1_1
+    (:values 1 2 3)
+    ''',
+}
