@@ -2,7 +2,7 @@ $ion_1_1
 // different declared local symbols
 embedded_documents::[
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:[ "rock", "paper", "scissors" ]
     }
@@ -11,7 +11,7 @@ embedded_documents::[
     $12
     ''',
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:[ "foo", "bar", "baz" ]
     }

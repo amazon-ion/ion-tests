@@ -2,19 +2,19 @@ $ion_1_1
 // Local symbol tables with different symbol declarations
 embedded_documents::[
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:[ "foo", "bar", "baz", "qux" ]
     }
     ''',
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:[ "another", "local", "symbol", "table" ]
     }
     ''',
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:[ "blah", "bleh" ]
     }
@@ -24,7 +24,7 @@ embedded_documents::[
 // Symbols that contain the same text
 embedded_documents::[
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:[ "foo", "bar", "baz", "qux" ]
     }
@@ -34,7 +34,7 @@ embedded_documents::[
     $13
     ''',
     '''
-    $ion_1_0
+    $ion_1_1
     foo
     bar
     baz
@@ -45,7 +45,7 @@ embedded_documents::[
 // Symbols that contain the same text
 embedded_documents::[
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:[ "filler1", "foo", "filler2", "bar", "filler3", "baz", "filler4" ]
     }
@@ -54,7 +54,7 @@ embedded_documents::[
     $15
     ''',
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:[ "foo", "bar", "baz" ]
     }

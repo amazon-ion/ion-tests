@@ -1,5 +1,4 @@
 $ion_1_1
-$ion_1_0
 
 // This test file contains boundary values of the basic field (binary sub-field)
 // VarInt. These values covers the different boundary conditions of calculation

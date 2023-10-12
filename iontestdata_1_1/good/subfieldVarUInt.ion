@@ -1,5 +1,4 @@
 $ion_1_1
-$ion_1_0
 
 // This test file contains boundary values of the basic field (binary sub-field)
 // VarUInt. These values covers the different boundary conditions of calculation
@@ -34,7 +33,6 @@ $ion_1_0
 // 7 bits
 // hex: 0x7f
 // dec: 127
-$ion_1_0
 $ion_symbol_table::{
     imports:[ { name: "com.amazon.blah.blah.blah",
                 version: 1,
@@ -50,7 +48,6 @@ $ion_symbol_table::{
 // 14 bits
 // hex: 0x3fff
 // dec: 16383
-$ion_1_0
 $ion_symbol_table::{
     imports:[ { name: "com.amazon.blah.blah.blah",
                 version: 1,
@@ -66,7 +63,6 @@ $ion_symbol_table::{
 // 21 bits
 // hex: 0x1fffff
 // dec: 2097151
-$ion_1_0
 $ion_symbol_table::{
     imports:[ { name: "com.amazon.blah.blah.blah",
                 version: 1,
@@ -82,7 +78,6 @@ $ion_symbol_table::{
 // 28 bits
 // hex: 0xfffffff
 // dec: 268435455
-$ion_1_0
 $ion_symbol_table::{
     imports:[ { name: "com.amazon.blah.blah.blah",
                 version: 1,
