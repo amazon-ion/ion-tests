@@ -5,7 +5,7 @@ $ion_1_1
 
 embedded_documents::[
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::{
         symbols:["foo", "bar"]
     }
@@ -13,7 +13,7 @@ embedded_documents::[
     ''',
 
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::annotated::{
         symbols:["foo", "bar"]
     }
@@ -21,7 +21,7 @@ embedded_documents::[
     ''',
 
     '''
-    $ion_1_0
+    $ion_1_1
     $ion_symbol_table::annotated::{
         symbols:abc::["foo", def::"bar"]
     }

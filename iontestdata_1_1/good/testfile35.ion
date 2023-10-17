@@ -1,5 +1,4 @@
 $ion_1_1
-$ion_1_0
 $ion_shared_symbol_table::{
   name:"test", version:1, 
   symbols:["dates","whenDate"]
