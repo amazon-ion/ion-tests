@@ -1,25 +1,50 @@
-// import declaration, with max_id > 0
+// verifies that imported symbols with undefined text are not equivalent to:
+// - other imported symbols with undefined text with different SIds
+// - local symbols with undefined text
+// - symbols with defined text
 embedded_documents::[
     '''
     $ion_1_0
     $ion_symbol_table::{
-        symbols:[ "foo", "bar", "baz" ]
+        imports:[ { name: "com.amazon.ion.tests",
+                    version: 1,
+                    max_id: 2 }
+        ],
+        symbols:[ "foo", 31 ]
     }
-    $10
-    $11
-    $12
+    $10 // first imported symbol of undefined text
     ''',
     '''
     $ion_1_0
     $ion_symbol_table::{
         imports:[ { name: "com.amazon.ion.tests",
                     version: 1,
-                    max_id: 1 }
+                    max_id: 2 }
         ],
-        symbols:[ "foo", "bar", "baz" ]
+        symbols:[ "foo", 31 ]
     }
-    $10
-    $11
-    $12
+    $11 // second imported symbol of undefined text
+    ''',
+    '''
+    $ion_1_0
+    $ion_symbol_table::{
+        imports:[ { name: "com.amazon.ion.tests",
+                    version: 1,
+                    max_id: 2 }
+        ],
+        symbols:[ "foo", 31 ]
+    }
+    $12 // local symbol with text "foo"
+    ''',
+    '''
+    $ion_1_0
+    $ion_symbol_table::{
+        imports:[ { name: "com.amazon.ion.tests",
+                    version: 1,
+                    max_id: 2 }
+        ],
+        symbols:[ "foo", 31 ]
+    }
+    $13 // local symbol with undefined text
     ''',
 ]
