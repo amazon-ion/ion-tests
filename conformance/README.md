@@ -605,7 +605,7 @@ expectation, ending that branch of the test tree.
 
 These rules describe Ion data-model results for use in the `models` expectation:
 
-```
+```ebnf
 model-value   ::=  model-content  |  annotated
 
 model-content ::=  null
