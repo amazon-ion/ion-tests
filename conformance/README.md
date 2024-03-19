@@ -228,7 +228,7 @@ To be more specific, `(in10 _form_ ...)` is equivalent to:
 (each (text)
       (text "$ion_1_0")
       (binary "E00100EA")
-      (text "$ion_1_0")
+      (text "$ion_1_1")
       (binary "E00101EA")
       (then _form_ ...))
 ```
@@ -241,7 +241,7 @@ it must ignore any `in11` clauses, and interpret `in1x` the same as `in10`.
 ## Modeling outputs
 
 The `produces` form is specified to use Ion data-model equivalence when checking
-results.  This works nicely when you have that implemented, but its somewhat
+results.  This works nicely when you have that implemented, but it's somewhat
 circular and hard to bootstrap, especially when you're still implementing
 JSON extensions like annotations, symbols, and S-expressions.
 
@@ -385,7 +385,7 @@ increasing the likelihood of syntactic errors in the input data itself:
       (signals "No such macro: noSuchMacro"))
 ```
 
-We can address these errors by allow the input to be expressed directly as data,
+We can address these errors by allowing the input to be expressed directly as data,
 without a wrapping string.  The `toplevel` fragment does that:
 
 ```
