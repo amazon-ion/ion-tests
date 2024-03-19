@@ -107,8 +107,9 @@ In clauses that accept fragments, more than one can be provided:
       (produces $ion $ion_1_0 $ion_symbol_table))
 ```
 
-As suggested by this example, when fragments are combined, appropriate whitespace is injected
-to keep them from combining.
+When fragments are combined, appropriate whitespace is implicitly injected
+to prevent tokenization from crossing the boundary.  In other words, the above
+behaves like `(text "$1 $2 $3")` and not `(text "$1$2$3")`.
 
 One important constraint is that a fragment must represent zero or more complete
 top-level values, unless a `signals` clause immediately follows.
@@ -175,11 +176,9 @@ TODO: What does combining text + binary mean?
 
 In theory, we can mix and match text, binary, and AST in a single
 document, since ultimately they all express the same thing in different ways.
-This requires the test-runner to not simply concatenate fragments but to
-transcribe them into one format before ultimately parsing the document and
-validating expectations.
-Of course this raises the bar on the test runner; at the very least it requires
-an Ion *writer*.
+This means the test-runner cannot simply concatenate fragments, and it must
+either switch parsing modes mid-stream (theoretically sound since fragments must
+contain full top-level values), or transcribe the fragment into one format.
 But there are benefits to this approach:
 
 * A test runner can conceivably transcribe every test document into both text
@@ -245,13 +244,13 @@ results.  This works nicely when you have that implemented, but it's somewhat
 circular and hard to bootstrap, especially when you're still implementing
 JSON extensions like annotations, symbols, and S-expressions.
 
-As an alternative, you can use the `models` expectation to express output in a
+As an alternative, you can use the `denotes` expectation to express output in a
 form that expresses the Ion data model in more primitive terms.
 
 ```
 (in10 (text "(symval 1.2) a::b::null.bool")
-      (models (sexp (symbol "symval") (decimal 12 -1))
-              (annot (null bool) "a" "b")))
+      (denotes (sexp (symbol "symval") (decimal 12 -1))
+               (annot (null bool) "a" "b")))
 ```
 
 This example uses new expression forms denoting `symbol`, `decimal`, and `null`
@@ -271,8 +270,8 @@ keyword symbols with strings:
 
 ```
 ["in10", ["text", "(symval 1.2) a::b::null.bool"),
-         ["models", ["sexp", ["symbol", "symval"], ["decimal", 12, -1]]
-                    ["annot", [null, "bool"], "a", "b"]]]
+         ["denotes", ["sexp", ["symbol", "symval"], ["decimal", 12, -1]]
+                     ["annot", [null, "bool"], "a", "b"]]]
 ```
 
 This works because every DSL clause has the shape “sexp starting with a keyword
@@ -297,7 +296,7 @@ expectations such as these:
       (each (text "$ion")
             (text "$1")
             (text "$10")
-            (models (symbol "$ion"))))    // Or, equivalently: (produces $ion)
+            (denotes (symbol "$ion"))))    // Or, equivalently: (produces $ion)
 ```
 
 When text is unknown for a SID, equivalence depends on whether the SID maps into
@@ -309,7 +308,7 @@ In the former case, all unknown symbols are equivalent to `$0`:
       (each (text "$0")
             (text "$10")
             (text "$11")
-            (models (symbol 0))))
+            (denotes (symbol 0))))
 ```
 
 Here we use a variant of the `symbol` model using an integer SID rather than a
@@ -321,8 +320,8 @@ the same local address in the same-named symbol table:
 ```
 (in10 (text '''$ion_symbol_table::{imports:[{name:"not found", max_id:2}]}''')
       (text "$10 $11")
-      (models (symbol ("not found" 1))
-              (symbol ("not found" 2))))
+      (denotes (symbol ("not found" 1))
+               (symbol ("not found" 2))))
 ```
 
 Here the `symbol` is modeled as a pair of symtab-name and local address.
@@ -340,7 +339,7 @@ At present, the following forms are accepted:
   * `'#$0'` denotes symbol zero.
   * Symbols of the form `'#$name#ddd'`, where _name_ is not empty and _ddd_ is
     one or more digits, denotes an unknown symbol at address _ddd_ of symtab
-    _name_.  In other words, it models `(symbol ("name" ddd))`.
+    _name_.  In other words, it denotes `(symbol ("name" ddd))`.
   * All other symbols starting with `#$` must signal an erroneous test case.
 
 Per these rules, we can rewrite the above test cases as:
@@ -477,7 +476,7 @@ conventions apply.
 > [!IMPORTANT]
 > As before, this comes at the reasonable cost that one can’t use such symbols
 > as test data in this category of fragments.  Those values can still be covered
-> using the more primitive `text` and `models` forms.
+> using the more primitive `text` and `denotes` forms.
 
 To encode an IVM, write `'#$ion_1_0'` or `'#$ion_1_1'` as a direct element of
 `toplevel`.  Note that the unmangled forms `$ion_1_0` or `'$ion_1_0'` denote
@@ -573,9 +572,12 @@ fragment ::=  "("  "text"      string*  ")"
 
 continuation ::=  expectation  |  extension+
 
-expectation  ::=  "("  "produces"  datum*  ")"
-               |  "("  "produces"  datum*  ")"
-               |  "("  "models"    model*  ")"
+expectation  ::=  "("  "produces"  datum*        ")"
+               |  "("  "produces"  datum*        ")"
+               |  "("  "denotes"   model-value*  ")"
+               |  "("  "signals"   message       ")"
+               |  "("  "and"       expectation+  ")"
+               |  "("  "not"       expectation   ")"
 
 extension    ::=  "("  "then"  fragment+  continuation  ")"
                |  "("  "each"  fragment+  continuation  ")"
@@ -603,16 +605,17 @@ current document(s) with one or more _extension_s, or verifies that they meet an
 expectation, ending that branch of the test tree.
 
 
-These rules describe Ion data-model results for use in the `models` expectation:
+These rules describe Ion data-model results for use in the `denotes` expectation:
 
 ```ebnf
 model-value   ::=  model-content  |  annotated
 
-model-content ::=  null
+model-content ::=  null.null
                 |  bool
                 |  int
                 |  string
                 |  "("  "null"    model-type    ")"
+                |  "("  "string"  codepoint*    ")"
                 |  "("  "symbol"  model-symtok  ")"
                 |  "("  "list"    model-value*  ")"
                 |  "("  "sexp"    model-value*  ")"
@@ -622,14 +625,21 @@ model-content ::=  null
 
 // TODO Other types per denotational semantics
 
+codepoint     ::=  int                               // in the range 0..0x10FFFF
+
 model-symtok  ::=  string
                 |  int
-                |  "("  string  int  ")"  // AbsentSym
+                |  "("  "text"  codepoint*  ")"
+                |  "("  "absent"  string  int  ")"       // symtab name + offset
 
 model-field   ::=  "("  model-symtok  model-value  ")"
 
 annotated     ::=  "("  "annot"  model-content  string*  ")"
 ```
+
+The `model-content` forms `(string ...)` and `(symbol (text ...))` express text
+in terms of Unicode code points, which is needed to test parsing of escape
+sequences.
 
 
 # Test Tiers
@@ -653,11 +663,11 @@ in JSON. For example:
 ```
 
 The next logical tiers would introduce basic symbols and sexps into the parser.
-Here, the `models` expectation becomes valuable:
+Here, the `denotes` expectation becomes valuable:
 
 ```
 ["in1x", ["text", "(1 2.3)"],
-         ["models", ["sexp", ["int", 1], ["decimal", 23, -1]]]]
+         ["denotes", ["sexp", ["int", 1], ["decimal", 23, -1]]]]
 ```
 
 The inner clauses should align with the formal data model in the denotational
@@ -670,9 +680,6 @@ strings.
 * The denotational test cases are wired with a small catalog of shared symtabs
   (and soon, shared modules) so that related functionality can be tested.
   In the stand-alone suite, we should have a similar mechanism.
-* Do we need a "not equivalent" expectation?
 * I’ve got a bunch of test cases (not written in this DSL) that check the bounds
   of the current symbol table or macro table; that would be nice to have an
   expectation for.
-  * But that leads to wanting to combine expectations: this input produces this
-    output _and_ results in this size of symbol table.
