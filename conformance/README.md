@@ -269,7 +269,7 @@ written as JSON data by replacing S-expressions with lists (JSON "arrays") and
 keyword symbols with strings:
 
 ```
-["in10", ["text", "(symval 1.2) a::b::null.bool"),
+["in10", ["text", "(symval 1.2) a::b::null.bool"],
          ["denotes", ["sexp", ["symbol", "symval"], ["decimal", 12, -1]]
                      ["annot", [null, "bool"], "a", "b"]]]
 ```
@@ -573,7 +573,6 @@ fragment ::=  "("  "text"      string*  ")"
 continuation ::=  expectation  |  extension+
 
 expectation  ::=  "("  "produces"  datum*        ")"
-               |  "("  "produces"  datum*        ")"
                |  "("  "denotes"   model-value*  ")"
                |  "("  "signals"   message       ")"
                |  "("  "and"       expectation+  ")"
