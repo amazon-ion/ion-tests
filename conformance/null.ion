@@ -1,0 +1,5 @@
+// Copyright (c) 2023-2024 Amazon.com, Inc.  All rights reserved.
+
+(in1x
+  (toplevel null      null.null a::null)
+  (produces null.null null.null a::null))
