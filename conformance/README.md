@@ -608,33 +608,51 @@ expectation, ending that branch of the test tree.
 These rules describe Ion data-model results for use in the `denotes` expectation:
 
 ```ebnf
-model-value   ::=  model-content  |  annotated
+model-value     ::=  model-content  |  annotated
 
-model-content ::=  null.null
-                |  bool
-                |  int
-                |  string
-                |  "("  "null"    model-type    ")"
-                |  "("  "string"  codepoint*    ")"
-                |  "("  "symbol"  model-symtok  ")"
-                |  "("  "list"    model-value*  ")"
-                |  "("  "sexp"    model-value*  ")"
-                |  "("  "struct"  model-field*  ")"
-                |  "("  "blob"    bytes*        ")"
-                |  "("  "clob"    bytes*        ")"
+model-content   ::=  null.null
+                  |  bool
+                  |  int
+                  |  string
+                  |  "("  "null"      model-type       ")"
+                  |  "("  "bool"      bool             ")"
+                  |  "("  "int"       int              ")"
+                  |  "("  "float"     string           ")" // See https://amazon-ion.github.io/ion-docs/docs/float.html
+                  |  "("  "decimal"   model-decimal    ")"
+                  |  "("  "timestamp" model-timestamp  ")"
+                  |  "("  "string"    codepoint*       ")"
+                  |  "("  "symbol"    model-symtok     ")"
+                  |  "("  "list"      model-value*     ")"
+                  |  "("  "sexp"      model-value*     ")"
+                  |  "("  "struct"    model-field*     ")"
+                  |  "("  "blob"      bytes*           ")"
+                  |  "("  "clob"      bytes*           ")"
 
 // TODO Other types per denotational semantics
 
-codepoint     ::=  int                               // in the range 0..0x10FFFF
+codepoint       ::=  int                                   // in the range 0..0x10FFFF
 
-model-symtok  ::=  string
-                |  int
-                |  "("  "text"  codepoint*  ")"
-                |  "("  "absent"  string  int  ")"       // symtab name + offset
+model-symtok    ::=  string
+                  |  int
+                  |  "("  "text"  codepoint*  ")"
+                  |  "("  "absent"  string  int  ")"       // symtab name + offset
 
-model-field   ::=  "("  model-symtok  model-value  ")"
+model-field     ::=  "("  model-symtok  model-value  ")"
 
-annotated     ::=  "("  "annot"  model-content  string*  ")"
+model-decimal   ::= int int                                // coefficient + exponent
+                  | "negative_zero" int
+
+model-timestamp ::= int
+                  | int int
+                  | int int int
+                  | int int int int int offset?
+                  | int int int int int int offset?
+                  | int int int int int decimal offset?
+
+offset          ::= "Z"
+                  | string                                 // content matches ^[+-]\d{2}:\d{2}$
+
+annotated       ::=  "("  "annot"  model-content  model-symtok*  ")"
 ```
 
 The `model-content` forms `(string ...)` and `(symbol (text ...))` express text
