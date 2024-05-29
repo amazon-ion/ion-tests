@@ -1,6 +1,6 @@
 # Amazon Ion Test Data
 
-The `iontestdata_*` folders contain samples of [Ion](https://amazon-ion.github.io/ion-docs)
+The `iontestdata*` folders contain samples of [Ion](https://amazon-ion.github.io/ion-docs)
 content for use by compatibility test suites.
 
 Consumers must assume that additional nested subfolders may be added, and
@@ -8,7 +8,7 @@ should therefore recurse down from the desired folder if appropriate.
 
 ## Ion 1.0
 
-Ion 1.0 test data is found in `iontestdata_1_0`.
+Ion 1.0 test data is found in `iontestdata`.
 
 The content is partitioned as follows:
 
