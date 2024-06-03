@@ -1,0 +1,32 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Basic local symbols inside $ion_encoding
+
+(ion_1_1
+  (each (toplevel $ion_encoding::((symbol_table ["a", "b"])))
+        (toplevel $ion_encoding::((symbol_table ["a"] ["b"])))
+        (toplevel $ion_encoding::((symbol_table ["a"] [] ["b"])))
+        (toplevel $ion_encoding::((symbol_table ["a"] null.list ["b"])))
+        (then (toplevel '#$12' '#$13')
+              (produces a b))
+        (then (toplevel '#$14')
+              (signals "Invalid symbol address:"))))
+
+// TODO accept symbols as well
+
+
+// Sexps not allowed in symbol_table; reserve those forms for extension.
+(ion_1_1
+  (each (encoding (symbol_table null.sexp))
+        (encoding (symbol_table ()))
+        (encoding (symbol_table ("a" "b")))
+        (encoding (symbol_table ["a"] ("b")))
+        (signals "Unexpected element in `symbol_table`")))
+
+
+// Encoding directives replace the symbol table
+(ion_1_1
+  (encoding (symbol_table ["a"])) (toplevel '#$12')
+  (encoding (symbol_table ["b"])) (toplevel '#$12')
+  (produces a b))
