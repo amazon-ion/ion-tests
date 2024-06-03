@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(in1x
+(ion_1_x
   // Verify basic pass-through behavior between `toplevel` and `produces`.
   (toplevel null      null.null a::null)
   (produces null.null null.null a::null))
