@@ -1,0 +1,15 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Inlining of multiple return values into E-expression arguments.
+
+
+(ion_1_1
+  (each (toplevel ('#$:$ion:make_list' 1 2 ('#$:values') 3 4))
+        (toplevel ('#$:$ion:make_list' 1 ('#$:values' 2 3) 4))
+        (toplevel ('#$:$ion:make_list' ('#$:values' 1 2 3 4)))
+        (produces [1, 2, 3, 4]))
+  (each (toplevel ('#$:$ion:make_sexp' 1 2 ('#$:values') 3 4))
+        (toplevel ('#$:$ion:make_sexp' 1 ('#$:values' 2 3) 4))
+        (toplevel ('#$:$ion:make_sexp' ('#$:values' 1 2 3 4)))
+        (produces (1 2 3 4))))
