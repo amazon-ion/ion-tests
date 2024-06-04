@@ -1,0 +1,73 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+// Non-structs pass through
+(ion_1_x
+  (then (toplevel first $ion_symbol_table::[] second)
+        (produces first $ion_symbol_table::[] second))
+  (then (toplevel first $ion_symbol_table::() second)
+        (produces first $ion_symbol_table::() second)))
+
+// IST structs are elided from app view
+(ion_1_x
+  (then (toplevel first $ion_symbol_table::{} $ion_symbol_table::null.struct second)
+        (produces first                                                      second))
+  // ...but only at top-level
+  (then (toplevel [first, $ion_symbol_table::{}, $ion_symbol_table::null.struct, second])
+        (produces [first, $ion_symbol_table::{}, $ion_symbol_table::null.struct, second])))
+
+
+// Basic symbol expansion
+(ion_1_0
+  (each (toplevel $ion_symbol_table::{symbols:["a"]})
+        (toplevel             '#$3'::{  '#$7':["a"]})
+        (then (toplevel '#$10'::'#$10' '#$10')
+              (produces      a::a         a))))
+
+
+// Out-of-bounds SID
+//  At present, the DSL doesn't support partial expansion of the front of stream.
+(ion_1_0
+  (then (toplevel '#$10')
+        (signals "Invalid symbol address: 10"))
+  (then (toplevel $ion_symbol_table::{symbols:["a"]})
+        (then (toplevel '#$11')
+              (signals "Invalid symbol address: 11")))
+  (then (toplevel $ion_symbol_table::{symbols:["a", "b"]})
+        (then (toplevel '#$10' '#$11')
+              (produces a b))
+        (then (toplevel '#$12')
+              (signals "Invalid symbol address: 12"))))
+
+
+// Empty, null, or malformed `symbols` field is ignored
+(ion_1_0 (each (toplevel $ion_symbol_table::{symbols:[]       })
+               (toplevel $ion_symbol_table::{symbols:null.list})
+               (toplevel $ion_symbol_table::{symbols:42       })
+               (toplevel $ion_symbol_table::{symbols:("b")    })
+               (then (toplevel '#$10')
+                     (signals "Invalid symbol address: 10"))))
+
+
+// Non-string and null (local) `symbols` entries act like $0
+(ion_1_0
+  (then (toplevel $ion_symbol_table::{symbols:[a, 1, true, ()]}
+                  '#$10' '#$11' '#$12' '#$13')
+        (produces '#$0'  '#$0'  '#$0'  '#$0'))
+  (then (toplevel $ion_symbol_table::{symbols:["a", null.null, null.symbol, null.string, null.int, "b"]})
+        (toplevel '#$10' '#$11' '#$12' '#$13' '#$14' '#$15')
+        (produces a      '#$0'  '#$0'  '#$0'  '#$0'  b)))
+
+// Successive ISTs replace earlier ones
+(ion_1_0 (toplevel $ion_symbol_table::{symbols:["a"]} '#$10'
+                   $ion_symbol_table::{symbols:["b"]} '#$10')
+         (produces a b))
+
+// $ion_symbol_table must be first annotation
+(ion_1_0
+  (then (toplevel not::$ion_symbol_table::{symbols:["a"]})
+        (produces not::$ion_symbol_table::{symbols:["a"]}))
+  (then (toplevel $ion_symbol_table::{symbols:["a"]}
+                  '#$10' not::$ion_symbol_table::{symbols:["b"]} '#$10')
+        (produces a      not::$ion_symbol_table::{symbols:["b"]} a)))

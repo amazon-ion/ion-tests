@@ -1,0 +1,11 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(ion_1_x
+  // IVMs don't appear in output data.
+  (toplevel '#$ion_1_0' null '#$ion_1_1' null)
+  (produces null null))
+
+(ion_1_x
+  (toplevel null '#$ion_12_34')
+  (signals "Unsupported Ion version: 12.34"))
