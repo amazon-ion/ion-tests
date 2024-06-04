@@ -12,7 +12,7 @@
   (signals "Invalid symbol address: 10"))
 
 (ion_1_1
-  (toplevel '#$10')
-  (produces $ion_literal))
+  (toplevel '#$10'        '#$11')
+  (produces $ion_encoding $ion_literal))
 
 // TODO Ion 1.1 system symtab upper-bound
