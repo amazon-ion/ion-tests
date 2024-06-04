@@ -21,7 +21,7 @@
 // Basic symbol expansion
 (ion_1_0
   (each (toplevel $ion_symbol_table::{symbols:["a"]})
-        (toplevel                $3::{     $7:["a"]})
+        (toplevel             '#$3'::{  '#$7':["a"]})
         (then (toplevel '#$10'::'#$10' '#$10')
               (produces      a::a         a))))
 
