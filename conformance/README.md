@@ -234,7 +234,7 @@ To be more specific, `(ion_1_0 _form_ ...)` behaves like:
 
 
 When this test suite is used by an implementation that only supports 1.0,
-it must ignore any `ion_1_1` clauses, and interpret `ion_1_x` the same as 
+it must ignore any `ion_1_1` clauses, and interpret `ion_1_x` the same as
 `ion_1_0`.
 
 
@@ -561,9 +561,11 @@ type.
 These rules describe the overall shape of test cases:
 
 ```ebnf
-test ::=  "("  "ion_1_0"  fragment*  continuation  ")"
-       |  "("  "ion_1_1"  fragment*  continuation  ")"
-       |  "("  "ion_1_x"  fragment*  continuation  ")"
+test ::=  "("  "ion_1_0"  name-string  fragment*  continuation  ")"
+       |  "("  "ion_1_1"  name-string  fragment*  continuation  ")"
+       |  "("  "ion_1_x"  name-string  fragment*  continuation  ")"
+
+name-string ::= string
 
 fragment ::=  "("  "text"      string*  ")"
            |  "("  "binary"    bytes*   ")"
@@ -573,20 +575,20 @@ fragment ::=  "("  "text"      string*  ")"
 
 continuation ::=  expectation  |  extension+
 
-expectation  ::=  "("  "produces"  datum*        ")"
+expectation  ::=  "("  "produces"  datum*        ")"       // "datum" is any valid ion data with no special interpretation
                |  "("  "denotes"   model-value*  ")"
                |  "("  "signals"   message       ")"
                |  "("  "and"       expectation+  ")"
                |  "("  "not"       expectation   ")"
 
-extension    ::=  "("  "then"  fragment+  continuation  ")"
-               |  "("  "each"  fragment+  continuation  ")"
+extension    ::=  "("  "then"  name-string?  fragment+  continuation  ")"
+               |  "("  "each"  name-string?  fragment+  continuation  ")"
 
 bytes  ::=  int      // In the range 0..255
          |  string   // Containing hexadecimal digits and whitespace
 ```
 
-TODO: Explain `datum` and `ast`
+TODO: Explain `ast`
 
 The DSL’s expression grammar hierarchically composes a set of abstract Ion
 documents from one or more *fragment*s of content, then verifies that the
@@ -628,8 +630,6 @@ model-content   ::=  null.null
                   |  "("  "blob"      bytes*           ")"
                   |  "("  "clob"      bytes*           ")"
 
-// TODO Other types per denotational semantics
-
 codepoint       ::=  int                                   // in the range 0..0x10FFFF
 
 model-symtok    ::=  string
@@ -640,17 +640,31 @@ model-symtok    ::=  string
 model-field     ::=  "("  model-symtok  model-value  ")"
 
 model-decimal   ::= int int                                // coefficient + exponent
-                  | "negative_zero" int
+                  | "(" "negative_0" ")" int
 
-model-timestamp ::= int
-                  | int int
-                  | int int int
-                  | int int int int int offset?
-                  | int int int int int int offset?
-                  | int int int int int decimal offset?
+// All timestamp subfields are interpreted as UTC time.
+// I.e. the following timestamps are not equivalent, but they represent the same point in time.
+// (timestamp (precision second) 1 2 3 (offset -1440) 4 5 6)
+// (timestamp (precision second) 1 2 3 (offset +1440) 4 5 6)
 
-offset          ::= "Z"
-                  | string                                 // content matches ^[+-]\d{2}:\d{2}$
+model-timestamp ::= prec-year     int
+                  | prec-month    int int
+                  | prec-day      int int int
+                  | prec-minute   int int int offset int int
+                  | prec-second   int int int offset int int int
+                  | prec-fraction int int int offset int int int model-decimal
+
+prec-year       ::= "("  "precision"  "year"   ")"
+prec-month      ::= "("  "precision"  "month"  ")"
+prec-day        ::= "("  "precision"  "day"    ")"
+prec-minute     ::= "("  "precision"  "minute" ")"
+prec-second     ::= "("  "precision"  "second" ")"
+prec-fraction   ::= "("  "precision"  int      ")"         // positive, count of digits of fractional part of seconds
+
+offset          ::= "(" "offset" offset-minutes ")"
+
+offset-minutes  ::= int                                    // in the range -1440..1440
+                  | null                                   // indicates unknown offset
 
 annotated       ::=  "("  "annot"  model-content  model-symtok*  ")"
 ```
@@ -701,3 +715,4 @@ strings.
 * I’ve got a bunch of test cases (not written in this DSL) that check the bounds
   of the current symbol table or macro table; that would be nice to have an
   expectation for.
+* Define an expectation for point-in-time equality of timestamps.
