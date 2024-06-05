@@ -172,7 +172,7 @@ ensuring that all input forms handle scenarios the same way.
 
 ### Combining Formats
 
-The previous section implies that in general, a test case can be though of as a
+The previous section implies that in general, a test case can be thought of as a
 tree where the interior nodes are fragments, and the leaves are expectations.
 Each expectation is tied to a single document formed by combining the fragments
 along the path from the root to the expectation.
