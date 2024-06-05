@@ -6,7 +6,7 @@
 $ion_shared_symbol_table::{
   name:"empty", version:1, symbols:[]
 }
-// DO NOT ADD OTHER VERSIONS.
+// DO NOT ADD OTHER VERSIONS OF "empty".
 
 
 // abcs
@@ -26,7 +26,7 @@ $ion_shared_symbol_table::{
   name:"mnop", version:1, symbols:["m"]
 }
 
-// VERSION 2 MUST NOT EXIST
+// VERSION 2 OF "mnop" MUST NOT EXIST
 
 $ion_shared_symbol_table::{
   name:"mnop", version:3, symbols:["m", "n", "o"]
