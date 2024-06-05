@@ -181,7 +181,7 @@ In theory, we could mix and match text, binary, and AST fragments in a single
 document, since ultimately they all express the same thing in different ways.
 However, that forces fairly complicated transcoding into the test framework.
 To keep things reasonable, we constrain test trees such that `text` and `binary`
-fragments cannot coexist on the path to ane expectation.
+fragments cannot coexist on the path to one expectation.
 AST fragments, however, can mix with text or binary fragments.
 This is the case in most situations, since the `ion_1_*` clauses inherently
 abstract over the bytes on an IVM.
