@@ -46,7 +46,7 @@
         (each (toplevel   '#$12')
               (toplevel   '#$12' :: 1)
               (toplevel { '#$12'  : 1 })
-              (signals "Invalid symbol addressx:"))))
+              (signals "Invalid symbol address:"))))
 
 
 (ion_1_0 "Malformed `symbols` field is ignored"
