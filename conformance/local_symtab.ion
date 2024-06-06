@@ -2,70 +2,80 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-// Non-structs pass through
-(ion_1_x
+(ion_1_x "Non-structs pass through"
   (then (toplevel first $ion_symbol_table::[] second)
         (produces first $ion_symbol_table::[] second))
   (then (toplevel first $ion_symbol_table::() second)
         (produces first $ion_symbol_table::() second)))
 
-// IST structs are elided from app view
-(ion_1_x
+
+(ion_1_x "IST structs are elided from app view"
   (then (toplevel first $ion_symbol_table::{} $ion_symbol_table::null.struct second)
         (produces first                                                      second))
-  // ...but only at top-level
-  (then (toplevel [first, $ion_symbol_table::{}, $ion_symbol_table::null.struct, second])
+  (then "but only at top-level"
+        (toplevel [first, $ion_symbol_table::{}, $ion_symbol_table::null.struct, second])
         (produces [first, $ion_symbol_table::{}, $ion_symbol_table::null.struct, second])))
 
 
-// Basic symbol expansion
-(ion_1_0
-  (each (toplevel $ion_symbol_table::{symbols:["a"]})
-        (toplevel             '#$3'::{  '#$7':["a"]})
-        (then (toplevel '#$10'::'#$10' '#$10')
-              (produces      a::a         a))))
+(ion_1_0 "User symbols expand as expected"
+  (then "with one-item local symtab"
+        (each (toplevel $ion_symbol_table::{symbols:["a"]})
+              (toplevel             '#$3'::{  '#$7':["a"]})
+              (toplevel '#$10'::'#$10' '#$10')
+              (produces      a::a         a)))
+  (then "with multi-item local symtab"
+        (toplevel $ion_symbol_table::{symbols:["a", "b"]})
+        (toplevel '#$10' '#$11')
+        (produces a b)))
 
 
-// Out-of-bounds SID
-//  At present, the DSL doesn't support partial expansion of the front of stream.
-(ion_1_0
-  (then (toplevel '#$10')
-        (signals "Invalid symbol address: 10"))
-  (then (toplevel $ion_symbol_table::{symbols:["a"]})
-        (then (toplevel '#$11')
-              (signals "Invalid symbol address: 11")))
-  (then (toplevel $ion_symbol_table::{symbols:["a", "b"]})
-        (then (toplevel '#$10' '#$11')
-              (produces a b))
-        (then (toplevel '#$12')
-              (signals "Invalid symbol address: 12"))))
+(ion_1_0 "Out-of-bounds symbol reference fails"
+  (then "without local symtab"
+        (each (toplevel   '#$10')
+              (toplevel   '#$10' :: 1)
+              (toplevel { '#$10'  : 1 })
+              (signals "Invalid symbol address:")))
+  (then "with one-item local symtab"
+        (toplevel $ion_symbol_table::{symbols:["a"]})
+        (each (toplevel   '#$11')
+              (toplevel   '#$11' :: 1)
+              (toplevel { '#$11'  : 1 })
+              (signals "Invalid symbol address:")))
+  (then "with multi-item local symtab"
+        (toplevel $ion_symbol_table::{symbols:["a", "b"]})
+        (each (toplevel   '#$12')
+              (toplevel   '#$12' :: 1)
+              (toplevel { '#$12'  : 1 })
+              (signals "Invalid symbol addressx:"))))
 
 
-// Empty, null, or malformed `symbols` field is ignored
-(ion_1_0 (each (toplevel $ion_symbol_table::{symbols:[]       })
-               (toplevel $ion_symbol_table::{symbols:null.list})
-               (toplevel $ion_symbol_table::{symbols:42       })
-               (toplevel $ion_symbol_table::{symbols:("b")    })
-               (then (toplevel '#$10')
-                     (signals "Invalid symbol address: 10"))))
+(ion_1_0 "Malformed `symbols` field is ignored"
+  (each (toplevel $ion_symbol_table::{symbols:[]       })
+        (toplevel $ion_symbol_table::{symbols:null.list})
+        (toplevel $ion_symbol_table::{symbols:42       })
+        (toplevel $ion_symbol_table::{symbols:("b")    })
+        (then (toplevel '#$10')
+              (signals "Invalid symbol address: 10"))))
 
 
-// Non-string and null (local) `symbols` entries act like $0
-(ion_1_0
-  (then (toplevel $ion_symbol_table::{symbols:[a, 1, true, ()]}
+(ion_1_0 "Malformed local `symbols` entries act like $0"
+  (then "when not a string"
+        (toplevel $ion_symbol_table::{symbols:[a, 1, true, ()]}
                   '#$10' '#$11' '#$12' '#$13')
         (produces '#$0'  '#$0'  '#$0'  '#$0'))
-  (then (toplevel $ion_symbol_table::{symbols:["a", null.null, null.symbol, null.string, null.int, "b"]})
+  (then "when null"
+        (toplevel $ion_symbol_table::{symbols:["a", null.null, null.symbol, null.string, null.int, "b"]})
         (toplevel '#$10' '#$11' '#$12' '#$13' '#$14' '#$15')
         (produces a      '#$0'  '#$0'  '#$0'  '#$0'  b)))
 
-// Successive ISTs replace earlier ones
-(ion_1_0 (toplevel $ion_symbol_table::{symbols:["a"]} '#$10'
-                   $ion_symbol_table::{symbols:["b"]} '#$10')
-         (produces a b))
 
-// $ion_symbol_table must be first annotation
-(ion_1_0
+(ion_1_0 "Successive LSTs replace earlier ones"
+  (toplevel $ion_symbol_table::{symbols:["a"]} '#$10'
+            $ion_symbol_table::{symbols:["b"]} '#$10')
+  (produces a b))
+
+
+(ion_1_0 "$ion_symbol_table must be first annotation"
   (then (toplevel not::$ion_symbol_table::{symbols:["a"]})
         (produces not::$ion_symbol_table::{symbols:["a"]}))
   (then (toplevel $ion_symbol_table::{symbols:["a"]}
