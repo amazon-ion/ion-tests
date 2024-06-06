@@ -21,8 +21,8 @@
   (then "with one-item local symtab"
         (each (toplevel $ion_symbol_table::{symbols:["a"]})
               (toplevel             '#$3'::{  '#$7':["a"]})
-              (toplevel '#$10'::'#$10' '#$10')
-              (produces      a::a         a)))
+              (then (toplevel '#$10'::'#$10' '#$10')
+                    (produces      a::a         a))))
   (then "with multi-item local symtab"
         (toplevel $ion_symbol_table::{symbols:["a", "b"]})
         (toplevel '#$10' '#$11')
