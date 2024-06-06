@@ -236,7 +236,7 @@ The example above simply says that an empty Ion document produces no data.
 To make a more meaningful test, we must add some input to the document:
 
 ```
-(document (text "null.int") (denotes (null int)))
+(document (then (text "null.int") (denotes (null int))))
 ```
 
 Here, the input document is an eight-byte text document containing exactly the
