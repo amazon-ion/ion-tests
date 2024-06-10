@@ -13,15 +13,21 @@
         (then (toplevel '#$14')
               (signals "Invalid symbol address:"))))
 
-// TODO accept symbols as well
+// TODO accept symbols in the list
 
 
-// Sexps not allowed in symbol_table; reserve those forms for extension.
-(ion_1_1
-  (each (encoding (symbol_table null.sexp))
+// Sexps not allowed in symbol_table; .
+(ion_1_1 "Erroneous elements in symbol_table"
+  (each "sexps are reserved for future extension"
+        (encoding (symbol_table null.sexp))
         (encoding (symbol_table ()))
         (encoding (symbol_table ("a" "b")))
         (encoding (symbol_table ["a"] ("b")))
+        (signals "Unexpected element in `symbol_table`"))
+  (each (encoding (symbol_table null.null))
+        (encoding (symbol_table "misplaced string"))
+        (encoding (symbol_table null.symbol))
+        (encoding (symbol_table 12))
         (signals "Unexpected element in `symbol_table`")))
 
 
