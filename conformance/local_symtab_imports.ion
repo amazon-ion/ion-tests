@@ -1,0 +1,152 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+(ion_1_0 "Empty or malformed `imports` field is ignored"
+  (each (toplevel $ion_symbol_table::{symbols:["a"], imports:1        })
+        (toplevel $ion_symbol_table::{symbols:["a"], imports:boom     })
+        (toplevel $ion_symbol_table::{symbols:["a"], imports:[]       })
+        (toplevel $ion_symbol_table::{symbols:["a"], imports:null     })
+        (toplevel $ion_symbol_table::{symbols:["a"], imports:null.list})
+        (toplevel $ion_symbol_table::{symbols:["a"], imports:null.int })
+        (then (toplevel '#$10')
+              (produces a))))
+
+(ion_1_0 "Imports sexp isn't treated like a list"
+  // The import would cause an error if import were attempted.
+  (toplevel $ion_symbol_table::{symbols:["a"], imports:({name:"not-in-catalog"})}
+            '#$10')
+  (produces a))
+
+
+// Non-exact-match imports
+
+(ion_1_x "If no max_id, lack of exact-match must raise an error"
+  (then (toplevel $ion_symbol_table::{imports:[{name:"not-in-catalog"}]})
+        (signals "No exact-match for not-in-catalog@1"))
+  (then (toplevel $ion_symbol_table::{imports:[{name:"empty", version:2}]})
+        (signals "No exact-match for empty@2")))
+
+(ion_1_x "If max_id not non-negative int, lack of exact-match must raise an error"
+  (then (toplevel $ion_symbol_table::{imports:[{name:"not-in-catalog", max_id:null.int}]})
+        (signals "No exact-match for not-in-catalog@1"))
+  (then (toplevel $ion_symbol_table::{imports:[{name:"empty", version:2, max_id:-5}]})
+        (signals "No exact-match for empty@2")))
+
+
+(ion_1_0 "When max_id is valid, pad/truncade mismatched or absent SSTs"
+  (then (toplevel $ion_symbol_table::{imports:[{name:"absent", max_id:0}, {name:"abcs"}]}
+                  '#$10')
+        (produces a))
+  (then (toplevel $ion_symbol_table::{imports:[{name:"absent", max_id:2}, {name:"abcs"}]}
+                  '#$10' '#$11' '#$12')
+        (denotes (symbol (absent "absent" 1)) (symbol (absent "absent" 2)) (symbol "a")))
+  (then (toplevel $ion_symbol_table::{imports:[{name:"empty", version:2, max_id:3},
+                                               {name:"abcs"}]}
+                  '#$10' '#$11' '#$12' '#$13')
+        (denotes (symbol (absent "empty" 1))
+                 (symbol (absent "empty" 2))
+                 (symbol (absent "empty" 3))
+                 (symbol "a")))
+  (then (toplevel $ion_symbol_table::{imports:[{name:"mnop", version:2, max_id:2},
+                                               {name:"abcs"}]}
+                  '#$10' '#$11' '#$12')
+        // mnop v2 doesn't exist, so we should get truncated v4, which has a gap
+        (denotes (symbol (absent "mnop" 1)) (symbol "n") (symbol "a"))))
+
+
+(ion_1_0 "Exact-match imports"
+  (each (toplevel $ion_symbol_table::{imports:[{name:"abcs"           }]})
+        (toplevel $ion_symbol_table::{imports:[{name:"abcs", version:1}]})
+        (then (toplevel '#$10')
+              (produces a))
+        (then (toplevel '#$11')
+              (signals "Invalid symbol address: 11")))
+  (then (toplevel $ion_symbol_table::{imports:[{name:"abcs", version:2}]})
+        (then (toplevel '#$10' '#$11')
+              (produces a b))
+        (then (toplevel '#$12')
+              (signals "Invalid symbol address: 12"))))
+
+
+(ion_1_0 "Exact-match with larger max_id inserts padding"
+  (toplevel $ion_symbol_table::{imports:[{name:"empty", version:1, max_id:3},
+                                         {name:"abcs"}]}
+            '#$13')
+  (produces a))
+
+
+// Multiple imports
+
+// TODO:[TAB-BOUNDS] This should be easier.
+(ion_1_0
+  (toplevel $ion_symbol_table::{imports:[{name:"mnop", max_id:3}, {name:"abcs"}]})
+  (then (toplevel '#$10' '#$13')
+        (produces m      a))
+  (then (toplevel '#$14')
+        (signals "Invalid symbol address: 14")))
+
+
+// TODO Use both versions of abcs; how to handle the second copy of "a"?
+
+(ion_1_0 "imports entry is ignored if name is empty or malformed"
+  (each (toplevel $ion_symbol_table::{imports:[{name:""},          {name:"abcs"}]})
+        (toplevel $ion_symbol_table::{imports:[{name:null},        {name:"abcs"}]})
+        (toplevel $ion_symbol_table::{imports:[{name:null.string}, {name:"abcs"}]})
+        (toplevel $ion_symbol_table::{imports:[{name:1, version:1},{name:"abcs"}]})
+        (then (toplevel '#$10')
+              (produces a))))
+
+
+(ion_1_0 "imports entry is ignored if not a struct"
+  (each (toplevel $ion_symbol_table::{imports:[null,        {name:"abcs"}]})
+        (toplevel $ion_symbol_table::{imports:[null.bool,   {name:"abcs"}]})
+        (toplevel $ion_symbol_table::{imports:[null.struct, {name:"abcs"}]})
+        (toplevel $ion_symbol_table::{imports:[true,        {name:"abcs"}]})
+        (toplevel $ion_symbol_table::{imports:[[],          {name:"abcs"}]})
+        (toplevel $ion_symbol_table::{imports:[(),          {name:"abcs"}]})
+        (then (toplevel '#$10')
+              (produces a))))
+
+
+(ion_1_0 "Malformed version is normalized to 1"
+  (each (toplevel $ion_symbol_table::{imports:[{name:"abcs", version:null     }]})
+        (toplevel $ion_symbol_table::{imports:[{name:"abcs", version:null.int }]})
+        (toplevel $ion_symbol_table::{imports:[{name:"abcs", version:null.bool}]})
+        (toplevel $ion_symbol_table::{imports:[{name:"abcs", version:"2"      }]})
+        (then (toplevel '#$10')
+              (produces a))
+        (then (toplevel '#$11')
+              (signals "Invalid symbol address: 11"))))
+
+
+(ion_1_0 "Malformed max_id is ignored given exact match"
+  (each (toplevel $ion_symbol_table::{imports:[{name:"abcs", max_id:null     }, {name:"mnop"}]})
+        (toplevel $ion_symbol_table::{imports:[{name:"abcs", max_id:null.int }, {name:"mnop"}]})
+        (toplevel $ion_symbol_table::{imports:[{name:"abcs", max_id:null.bool}, {name:"mnop"}]})
+        (toplevel $ion_symbol_table::{imports:[{name:"abcs", max_id:-1       }, {name:"mnop"}]})
+        (toplevel $ion_symbol_table::{imports:[{name:"abcs", max_id:"2"      }, {name:"mnop"}]})
+        (then (toplevel '#$10' '#$11')
+              (produces a m))))
+
+
+(ion_1_x "Repeated fields in symbol table signal an error"
+  (then (toplevel $ion_symbol_table::{imports:[], imports:null})
+        (signals "Repeated field: imports"))
+  (then (toplevel $ion_symbol_table::{symbols:[], symbols:null})
+        (signals "Repeated field: symbols")))
+
+
+(ion_1_x "Repeated fields in an import signal an error"
+  (then (toplevel $ion_symbol_table::{imports:[{name:"empty", name:"empty"}]})
+        (signals "Repeated field: name"))
+  (then (toplevel $ion_symbol_table::{imports:[{name:"empty", version:1, version:1}]})
+        (signals "Repeated field: version"))
+  (then (toplevel $ion_symbol_table::{imports:[{name:"empty", max_id:1, max_id:1}]})
+        (signals "Repeated field: max_id")))
+
+
+(ion_1_0 "Importing the current symbol table"
+  (toplevel $ion_symbol_table::{symbols:["a"]} '#$10'
+            $ion_symbol_table::{symbols:["b"], imports:$ion_symbol_table} '#$10' '#$11')
+  (produces a a b))
