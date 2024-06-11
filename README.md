@@ -1,6 +1,15 @@
 # Amazon Ion Test Data
 
-The `iontestdata*` folders contain samples of [Ion](https://amazon-ion.github.io/ion-docs)
+This package contains a variety of test data for implementations of the
+[Amazon Ion](https://amazon-ion.github.io/ion-docs) data format.
+
+The `catalog` folder contains Ion catalog data: shared symbol tables and modules
+that are available for use by all other parts of this test suite.
+
+The `conformance` folder contains formal test cases for Ion implementations,
+expressed using a small, declarative domain-specific language.
+
+The `iontestdata*` folders contain samples of Ion
 content for use by compatibility test suites.
 
 Consumers must assume that additional nested subfolders may be added, and

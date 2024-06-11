@@ -1,7 +1,7 @@
 # Catalog data for Ion test cases
 
 This directory includes Ion catalog data: shared symbol tables and modules that
-are reused across other Ion documents.
+can be used by any Ion documents in this test suite.
 
 Catalog entities are indexed by a name and version, where the name is a non-empty
 string (sequence of Unicode code points) and the version is a positive integer.
