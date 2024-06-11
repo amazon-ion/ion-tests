@@ -647,8 +647,8 @@ model-decimal   ::= int int                                // coefficient + expo
 
 // All timestamp subfields are interpreted as UTC time.
 // I.e. the following timestamps are not equivalent, but they represent the same point in time.
-// (timestamp (precision second) 1 2 3 (offset -1440) 4 5 6)
-// (timestamp (precision second) 1 2 3 (offset +1440) 4 5 6)
+// (timestamp second 1 2 3 (offset -1440) 4 5 6)
+// (timestamp second 1 2 3 (offset +1440) 4 5 6)
 
 model-timestamp ::= year     int
                   | month    int int
