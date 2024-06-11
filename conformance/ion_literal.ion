@@ -4,13 +4,13 @@
 
 (ion_1_1
   (each (toplevel '#$11'             '#$11'::'#$11'             '#$11'::1)
-        (toplevel $ion_literal $ion_literal::$ion_literal $ion_literal::1)
-        (produces $ion_literal               $ion_literal               1)))
+        (toplevel $ion_literal $ion_literal::$ion_literal $ion_literal::1 $ion_literal::$ion_literal::1)
+        (produces $ion_literal               $ion_literal               1              $ion_literal::1)))
 
 // But the annotation is only recognized at top level.
 (ion_1_1
-  (toplevel ['#$11',             '#$11'::'#$11',       $ion_literal::1])
-  (produces [$ion_literal, $ion_literal::$ion_literal, $ion_literal::1]))
+  (toplevel ['#$11',             '#$11'::'#$11',       $ion_literal::1, $ion_literal::$ion_literal::1])
+  (produces [$ion_literal, $ion_literal::$ion_literal, $ion_literal::1, $ion_literal::$ion_literal::1]))
 
 // No such effects in 1.0, even with the same SID.
 (ion_1_0
