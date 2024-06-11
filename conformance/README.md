@@ -561,9 +561,9 @@ type.
 These rules describe the overall shape of test cases:
 
 ```ebnf
-test ::=  "("  "ion_1_0"  name-string  fragment*  continuation  ")"
-       |  "("  "ion_1_1"  name-string  fragment*  continuation  ")"
-       |  "("  "ion_1_x"  name-string  fragment*  continuation  ")"
+test ::=  "("  "ion_1_0"  name-string?  fragment*  continuation  ")"
+       |  "("  "ion_1_1"  name-string?  fragment*  continuation  ")"
+       |  "("  "ion_1_x"  name-string?  fragment*  continuation  ")"
 
 name-string ::= string
 
@@ -619,7 +619,7 @@ model-content   ::=  null.null
                   |  "("  "null"      model-type       ")"
                   |  "("  "bool"      bool             ")"
                   |  "("  "int"       int              ")"
-                  |  "("  "float"     string           ")" // See https://amazon-ion.github.io/ion-docs/docs/float.html
+                  |  "("  "float"     model-float      ")"
                   |  "("  "decimal"   model-decimal    ")"
                   |  "("  "timestamp" model-timestamp  ")"
                   |  "("  "string"    codepoint*       ")"
@@ -639,27 +639,23 @@ model-symtok    ::=  string
 
 model-field     ::=  "("  model-symtok  model-value  ")"
 
+// TODO: Determine whether we can come up with anything better for model-float
+model-float     ::= string                                 // See https://amazon-ion.github.io/ion-docs/docs/float.html
+
 model-decimal   ::= int int                                // coefficient + exponent
-                  | "(" "negative_0" ")" int
+                  | "negative_0" int                       // negative zero coefficient + exponent
 
 // All timestamp subfields are interpreted as UTC time.
 // I.e. the following timestamps are not equivalent, but they represent the same point in time.
 // (timestamp (precision second) 1 2 3 (offset -1440) 4 5 6)
 // (timestamp (precision second) 1 2 3 (offset +1440) 4 5 6)
 
-model-timestamp ::= prec-year     int
-                  | prec-month    int int
-                  | prec-day      int int int
-                  | prec-minute   int int int offset int int
-                  | prec-second   int int int offset int int int
-                  | prec-fraction int int int offset int int int model-decimal
-
-prec-year       ::= "("  "precision"  "year"   ")"
-prec-month      ::= "("  "precision"  "month"  ")"
-prec-day        ::= "("  "precision"  "day"    ")"
-prec-minute     ::= "("  "precision"  "minute" ")"
-prec-second     ::= "("  "precision"  "second" ")"
-prec-fraction   ::= "("  "precision"  int      ")"         // positive, count of digits of fractional part of seconds
+model-timestamp ::= year     int
+                  | month    int int
+                  | day      int int int
+                  | minute   int int int offset int int
+                  | second   int int int offset int int int
+                  | fraction int int int offset int int int model-decimal
 
 offset          ::= "(" "offset" offset-minutes ")"
 
