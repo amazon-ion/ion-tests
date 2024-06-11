@@ -234,7 +234,7 @@ To be more specific, `(ion_1_0 _form_ ...)` behaves like:
 
 
 When this test suite is used by an implementation that only supports 1.0,
-it must ignore any `ion_1_1` clauses, and interpret `ion_1_x` the same as 
+it must ignore any `ion_1_1` clauses, and interpret `ion_1_x` the same as
 `ion_1_0`.
 
 
@@ -561,9 +561,11 @@ type.
 These rules describe the overall shape of test cases:
 
 ```ebnf
-test ::=  "("  "ion_1_0"  fragment*  continuation  ")"
-       |  "("  "ion_1_1"  fragment*  continuation  ")"
-       |  "("  "ion_1_x"  fragment*  continuation  ")"
+test ::=  "("  "ion_1_0"  name-string?  fragment*  continuation  ")"
+       |  "("  "ion_1_1"  name-string?  fragment*  continuation  ")"
+       |  "("  "ion_1_x"  name-string?  fragment*  continuation  ")"
+
+name-string ::= string
 
 fragment ::=  "("  "text"      string*  ")"
            |  "("  "binary"    bytes*   ")"
@@ -573,20 +575,20 @@ fragment ::=  "("  "text"      string*  ")"
 
 continuation ::=  expectation  |  extension+
 
-expectation  ::=  "("  "produces"  datum*        ")"
+expectation  ::=  "("  "produces"  datum*        ")"       // "datum" is any valid ion data with no special interpretation
                |  "("  "denotes"   model-value*  ")"
                |  "("  "signals"   message       ")"
                |  "("  "and"       expectation+  ")"
                |  "("  "not"       expectation   ")"
 
-extension    ::=  "("  "then"  fragment+  continuation  ")"
-               |  "("  "each"  fragment+  continuation  ")"
+extension    ::=  "("  "then"  name-string?  fragment+  continuation  ")"
+               |  "("  "each"  name-string?  fragment+  continuation  ")"
 
 bytes  ::=  int      // In the range 0..255
          |  string   // Containing hexadecimal digits and whitespace
 ```
 
-TODO: Explain `datum` and `ast`
+TODO: Explain `ast`
 
 The DSL’s expression grammar hierarchically composes a set of abstract Ion
 documents from one or more *fragment*s of content, then verifies that the
@@ -608,33 +610,59 @@ expectation, ending that branch of the test tree.
 These rules describe Ion data-model results for use in the `denotes` expectation:
 
 ```ebnf
-model-value   ::=  model-content  |  annotated
+model-value     ::=  model-content  |  annotated
 
-model-content ::=  null.null
-                |  bool
-                |  int
-                |  string
-                |  "("  "null"    model-type    ")"
-                |  "("  "string"  codepoint*    ")"
-                |  "("  "symbol"  model-symtok  ")"
-                |  "("  "list"    model-value*  ")"
-                |  "("  "sexp"    model-value*  ")"
-                |  "("  "struct"  model-field*  ")"
-                |  "("  "blob"    bytes*        ")"
-                |  "("  "clob"    bytes*        ")"
+model-content   ::=  null.null
+                  |  bool
+                  |  int
+                  |  string
+                  |  "("  "null"      model-type       ")"
+                  |  "("  "bool"      bool             ")"
+                  |  "("  "int"       int              ")"
+                  |  "("  "float"     model-float      ")"
+                  |  "("  "decimal"   model-decimal    ")"
+                  |  "("  "timestamp" model-timestamp  ")"
+                  |  "("  "string"    codepoint*       ")"
+                  |  "("  "symbol"    model-symtok     ")"
+                  |  "("  "list"      model-value*     ")"
+                  |  "("  "sexp"      model-value*     ")"
+                  |  "("  "struct"    model-field*     ")"
+                  |  "("  "blob"      bytes*           ")"
+                  |  "("  "clob"      bytes*           ")"
 
-// TODO Other types per denotational semantics
+codepoint       ::=  int                                   // in the range 0..0x10FFFF
 
-codepoint     ::=  int                               // in the range 0..0x10FFFF
+model-symtok    ::=  string
+                  |  int
+                  |  "("  "text"  codepoint*  ")"
+                  |  "("  "absent"  string  int  ")"       // symtab name + offset
 
-model-symtok  ::=  string
-                |  int
-                |  "("  "text"  codepoint*  ")"
-                |  "("  "absent"  string  int  ")"       // symtab name + offset
+model-field     ::=  "("  model-symtok  model-value  ")"
 
-model-field   ::=  "("  model-symtok  model-value  ")"
+// TODO: Determine whether we can come up with anything better for model-float
+model-float     ::= string                                 // See https://amazon-ion.github.io/ion-docs/docs/float.html
 
-annotated     ::=  "("  "annot"  model-content  string*  ")"
+model-decimal   ::= int int                                // coefficient + exponent
+                  | "negative_0" int                       // negative zero coefficient + exponent
+
+// All timestamp subfields are interpreted as UTC time.
+// I.e. the following timestamps are not equivalent, but they represent the same point in time.
+// (timestamp second 1 2 3 (offset -1440) 4 5 6)
+// (timestamp second 1 2 3 (offset +1440) 4 5 6)
+
+model-timestamp ::= year     int
+                  | month    int int
+                  | day      int int int
+                  | minute   int int int offset int int
+                  | second   int int int offset int int int
+                  | fraction int int int offset int int int model-decimal
+
+offset          ::= "(" "offset" offset-minutes ")"
+
+offset-minutes  ::= int                                    // in the range -1440..1440
+                  | null                                   // indicates unknown offset
+
+annotated       ::=  "("  "annot"  model-content  model-symtok*  ")"
 ```
 
 The `model-content` forms `(string ...)` and `(symbol (text ...))` express text
@@ -683,3 +711,4 @@ strings.
 * I’ve got a bunch of test cases (not written in this DSL) that check the bounds
   of the current symbol table or macro table; that would be nice to have an
   expectation for.
+* Define an expectation for point-in-time equality of timestamps.
