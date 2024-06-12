@@ -90,7 +90,7 @@ For example:
 ```
 
 
-## Combining fragments
+## Multiple fragments
 
 It was noted above that the `text` clause is appended to the declared IVM to
 produce an input document.  This is an example of a _fragment_ clause, so named
@@ -172,66 +172,106 @@ ensuring that all input forms handle scenarios the same way.
 
 ### Combining Formats
 
-TODO: What does combining text + binary mean?
+The previous section implies that in general, a test case can be thought of as a
+tree where the interior nodes are fragments, and the leaves are expectations.
+Each expectation is tied to a single document formed by combining the fragments
+along the path from the root to the expectation.
 
-In theory, we can mix and match text, binary, and AST in a single
+In theory, we could mix and match text, binary, and AST fragments in a single
 document, since ultimately they all express the same thing in different ways.
-This means the test-runner cannot simply concatenate fragments, and it must
-either switch parsing modes mid-stream (theoretically sound since fragments must
-contain full top-level values), or transcribe the fragment into one format.
-But there are benefits to this approach:
+However, that forces fairly complicated transcoding into the test framework.
+To keep things reasonable, we constrain test trees such that `text` and `binary`
+fragments cannot coexist on the path to one expectation.
+AST fragments, however, can mix with text or binary fragments.
+This is the case in most situations, since the `ion_1_*` clauses inherently
+abstract over the bytes on an IVM.
 
-* A test runner can conceivably transcribe every test document into both text
-  and binary.
-* The test suite would inherently exercise both parsers *and both encoders*.
+Before checking an expectation, the conformance framework constructs a document
+by combining the preceding sequence of fragments:
+  * If any fragment is `text`, any AST fragments are effectively converted to
+text before processing.  Adjacent text fragments MUST be joined with whitespace.
+  * If any fragment is `binary`, any AST fragments are effectively encoded to
+binary before processing.
 
-When the implementation does not work with ASTs, those fragments can be
-near-trivially be transcoded into text fragments.
+We say "effectively" because the implementation is not _required_ to do such
+transcoding; that is not the behavior under test.
+It may be easier and/or faster to skip that, as long as the observable results
+are equivalent: the effect on the encoding context, the data produced, and any 
+errors signaled.
 
-It would also be valuable if the DSL can be extended to intentionally focus on
-the encoder by providing AST fragments and expecting certain bytes.
-I can imagine that gets tricky given the variety of encoding options available.
-Perhaps we could have DSL clauses that direct specific encoding choices, so that
-we can expect specific byte sequences.
+When all fragments are abstract (that is, there are no `text` or `binary`
+fragments on the path to an expectation), it is assumed that the test case is
+not intended to verify the behavior of the Ion parser/decoder, but rather the
+expansion process that happens after parsing completes.
+The implementation may verify the test accordingly, by transcoding to text 
+and/or binary if necessary, or doing neither if it can handle the abstract 
+syntax more directly.
+For example, the framework could surface a stream of "raw" low-level events
+common to both formats.
+
+> [!NOTE]
+> It would also be valuable if the DSL can be extended to intentionally focus on
+> the encoder by providing AST fragments and expecting certain bytes.
+> I can imagine that gets tricky given the variety of encoding options available.
+> Perhaps we could have DSL clauses that direct specific encoding choices, so that
+> we can expect specific byte sequences.
 
 
 ## Ion versions
 
 The examples above illustrate the `ion_1_0` and `ion_1_1` entry points.
-In addition, the `ion_1_x` form declares behavior common to _both_ 1.0 and 1.1.
+These are derived forms, shorthand for the common extensions to a more primitive
+starting point: an empty document.  Here's how that is expressed:
 
 ```
-(ion_1_x (text "1::true")
-         (signals "Invalid annotation"))
+(document (produces))
 ```
 
-To be more specific, `(ion_1_0 _form_ ...)` behaves like:
+The `document` clause is the true root of all tests.
+It starts a test case with an empty document, no IVM, no bytes of any kind.
+The body of the clause is either an expectation or some extensions with more
+data.
+The example above simply says that an empty Ion document produces no data.
+
+To make a more meaningful test, we must add some input to the document:
 
 ```
-(each (text)              // Text input with no IVM
-      (text "$ion_1_0")
-      (binary "E00100EA")
-      (then _form_ ...))
+(document (then (text "null.int") (denotes (null int))))
+```
+
+Here, the input document is an eight-byte text document containing exactly the
+given characters, and the test expects the implementation to produce a null `int`.
+
+The `ion_1_*` clauses are shorthands for extending the empty document with Ion 
+version markers.
+To be more specific, `(ion_1_0 _form_ ...)` is equivalent to:
+
+```
+(document
+  (then (ivm 1 0) _form_ ...))
 ```
 
 `(ion_1_1 _form_ ...)` is equivalent to:
 
 ```
-(each (text "$ion_1_1")
-      (binary "E00101EA")
-      (then _form_ ...))
+(document
+  (then (ivm 1 1) _form_ ...))
 ```
 
-`(ion_1_x _form_ ...)` is equivalent to:
+Finally, `(ion_1_x _form_ ...)` is equivalent to:
+
 ```
-(each (text)
-      (text "$ion_1_0")
-      (binary "E00100EA")
-      (text "$ion_1_1")
-      (binary "E00101EA")
-      (then _form_ ...))
+(document
+  (then (ivm 1 0) _form_ ...)
+  (then (ivm 1 1) _form_ ...))
 ```
 
+This combination declares behavior common to _both_ 1.0 and 1.1.
+
+```
+(ion_1_x (text "1::true")
+         (signals "Invalid annotation"))
+```
 
 When this test suite is used by an implementation that only supports 1.0,
 it must ignore any `ion_1_1` clauses, and interpret `ion_1_x` the same as
@@ -561,7 +601,8 @@ type.
 These rules describe the overall shape of test cases:
 
 ```ebnf
-test ::=  "("  "ion_1_0"  name-string?  fragment*  continuation  ")"
+test ::=  "("  "document" name-string?             continuation  ")"
+       |  "("  "ion_1_0"  name-string?  fragment*  continuation  ")"
        |  "("  "ion_1_1"  name-string?  fragment*  continuation  ")"
        |  "("  "ion_1_x"  name-string?  fragment*  continuation  ")"
 
@@ -569,6 +610,7 @@ name-string ::= string
 
 fragment ::=  "("  "text"      string*  ")"
            |  "("  "binary"    bytes*   ")"
+           |  "("  "ivm"       int int  ")"
            |  "("  "toplevel"  ast*     ")"
            |  "("  "encoding"  ast*     ")"
            |  "("  "mactab"    ast*     ")"
