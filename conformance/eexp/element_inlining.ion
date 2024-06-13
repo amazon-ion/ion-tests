@@ -1,0 +1,20 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Inlining of multiple return values into container elements.
+
+
+(ion_1_1
+  (each (toplevel [1, 2, ('#$:values'), 3, 4])
+        (toplevel [1, ('#$:values' 2), ('#$:values' 3), 4])
+        (toplevel [1, ('#$:values' 2 3), 4])
+        (toplevel [('#$:values' 1 2 3 4)])
+        (produces [1, 2, 3, 4]))
+  (each (toplevel (1 2 ('#$:values') 3 4))
+        (toplevel (1 ('#$:values' 2) ('#$:values' 3) 4))
+        (toplevel (1 ('#$:values' 2 3) 4))
+        (toplevel ( ('#$:values' 1 2 3 4) ))
+        (produces (1 2 3 4))))
+
+// TODO Inlining into structs.
+//   We don't have a way for `toplevel` to express things like { (:foo) }

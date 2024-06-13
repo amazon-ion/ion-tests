@@ -1,0 +1,15 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Inlining of multiple return values into E-expression arguments.
+
+
+(ion_1_1 "Results of nested E-expressions are inlined into rest arguments"
+  (each (toplevel ('#$:make_list' 1 2 ('#$:values') 3 4))
+        (toplevel ('#$:make_list' 1 ('#$:values' 2 3) 4))
+        (toplevel ('#$:make_list' ('#$:values' 1 2 3 4)))
+        (produces [1, 2, 3, 4]))
+  (each (toplevel ('#$:make_sexp' 1 2 ('#$:values') 3 4))
+        (toplevel ('#$:make_sexp' 1 ('#$:values' 2 3) 4))
+        (toplevel ('#$:make_sexp' ('#$:values' 1 2 3 4)))
+        (produces (1 2 3 4))))

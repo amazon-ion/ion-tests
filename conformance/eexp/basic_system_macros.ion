@@ -1,0 +1,91 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+// void
+
+(ion_1_1
+  (each (toplevel 1 ('#$:$ion:void') 2)
+        (toplevel 1 ('#$:$ion:0')    2)
+        (toplevel 1 ('#$:void')      2)
+        (produces 1                  2)))
+
+// TODO should this stay true?
+(ion_1_1
+  (toplevel 1 ('#$:$ion:void' true ('#$:void' false)) 2)
+  (produces 1 2))
+
+
+// values
+
+(ion_1_1
+  (each (toplevel 1 ('#$:$ion:values') 2)
+        (toplevel 1 ('#$:$ion:1')      2)
+        (toplevel 1 ('#$:values')      2)
+        (produces 1                    2))
+  (each (toplevel 1 ('#$:$ion:values' a) 2)
+        (toplevel 1 ('#$:$ion:1'      a) 2)
+        (toplevel 1 ('#$:values'      a) 2)
+        (produces 1                   a  2))
+  (each (toplevel 1 ('#$:$ion:values' a b) 2)
+        (toplevel 1 ('#$:$ion:1'      a b) 2)
+        (toplevel 1 ('#$:values'      a b) 2)
+        (produces 1                   a b  2)))
+
+
+// make_string
+
+// TODO Error when argument isn't text
+
+(ion_1_1
+  (each (toplevel ('#$:make_string'))
+        (toplevel ('#$:make_string' ""))
+        (toplevel ('#$:make_string' ''))
+        (produces ""))
+  // accepts both strings and symbols
+  (each (toplevel ('#$:make_string' "a" "b"))
+        (toplevel ('#$:make_string'  a   b ))
+        (toplevel ('#$:make_string' "a"  b ))
+        (toplevel ('#$:make_string'  a  "b"))
+        (produces "ab"))
+  // null.string and null.symbol act like ""
+  (each (toplevel ('#$:make_string' null.string "ab" null.symbol ""))
+        (toplevel ('#$:make_string' "a" null.string 'b' null.symbol))
+        (toplevel ('#$:make_string' null.symbol "a" null.string "b"))
+        (produces "ab")))
+
+
+// make_symbol
+
+// TODO Error when argument isn't text
+
+(ion_1_1
+  (each (toplevel ('#$:make_symbol'))
+        (toplevel ('#$:make_symbol' ""))
+        (toplevel ('#$:make_symbol' ''))
+        (produces ''))
+  // accepts both strings and symbols
+  (each (toplevel ('#$:make_symbol' "a" "b"))
+        (toplevel ('#$:make_symbol'  a   b ))
+        (toplevel ('#$:make_symbol' "a"  b ))
+        (toplevel ('#$:make_symbol'  a  "b"))
+        (produces 'ab'))
+  // null.string and null.symbol act like ""
+  (each (toplevel ('#$:make_symbol' null.string "ab" null.symbol ""))
+        (toplevel ('#$:make_symbol' "a" null.string 'b' null.symbol))
+        (toplevel ('#$:make_symbol' null.symbol "a" null.string "b"))
+        (produces 'ab')))
+
+
+// make_list
+
+(ion_1_1
+  (toplevel ('#$:$ion:make_list') ('#$:$ion:make_list' 1 2))
+  (produces [] [1, 2]))
+
+
+// make_sexp
+
+(ion_1_1
+  (toplevel ('#$:$ion:make_sexp') ('#$:$ion:make_sexp' 1 2))
+  (produces () (1 2)))
