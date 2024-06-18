@@ -1,0 +1,55 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Simple test-cases for bootstrapping the conformance DSL.
+
+(document (denotes))
+(document (produces))
+
+(document null.string (denotes))
+(document null.string (produces))
+
+(document (then (denotes)))
+(document (each (denotes)))
+
+(document (then null.string (denotes)))
+(document (each null.string (denotes)))
+
+
+(ion_1_0 (denotes))
+(ion_1_0 (produces))
+
+(ion_1_0 null.string (denotes))
+(ion_1_0 null.string (produces))
+
+(ion_1_0 (then (denotes)))
+(ion_1_0 (each (denotes)))
+
+(ion_1_0 (then null.string (denotes)))
+(ion_1_0 (each null.string (denotes)))
+
+
+(ion_1_1 (denotes))
+(ion_1_1 (produces))
+
+(ion_1_1 null.string (denotes))
+(ion_1_1 null.string (produces))
+
+(ion_1_1 (then (denotes)))
+(ion_1_1 (each (denotes)))
+
+(ion_1_1 (then null.string (denotes)))
+(ion_1_1 (each null.string (denotes)))
+
+
+(ion_1_x (denotes))
+(ion_1_x (produces))
+
+(ion_1_x null.string (denotes))
+(ion_1_x null.string (produces))
+
+(ion_1_x (then (denotes)))
+(ion_1_x (each (denotes)))
+
+(ion_1_x (then null.string (denotes)))
+(ion_1_x (each null.string (denotes)))
