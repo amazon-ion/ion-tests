@@ -227,16 +227,23 @@ starting point: an empty document.  Here's how that is expressed:
 (document (produces))
 ```
 
+This example  simply says that an empty Ion document produces no data.
+
 The `document` clause is the true root of all tests.
-It starts a test case with an empty document, no IVM, no bytes of any kind.
-The body of the clause is either an expectation or some extensions with more
-data.
-The example above simply says that an empty Ion document produces no data.
+It starts a test case with an empty document: no IVM, no bytes of any kind.
+The body of the clause acts the same as a `then` clause, so the trivial
+example is equivalent to:
+
+```
+(document (then (produces)))
+```
+
 
 To make a more meaningful test, we must add some input to the document:
 
 ```
-(document (then (text "null.int") (denotes (null int))))
+(document (text "null.int") 
+          (denotes (null int)))
 ```
 
 Here, the input document is an eight-byte text document containing exactly the
@@ -601,7 +608,7 @@ type.
 These rules describe the overall shape of test cases:
 
 ```ebnf
-test ::=  "("  "document" name-string?             continuation  ")"
+test ::=  "("  "document" name-string?  fragment*  continuation  ")"
        |  "("  "ion_1_0"  name-string?  fragment*  continuation  ")"
        |  "("  "ion_1_1"  name-string?  fragment*  continuation  ")"
        |  "("  "ion_1_x"  name-string?  fragment*  continuation  ")"
@@ -623,8 +630,8 @@ expectation  ::=  "("  "produces"  datum*        ")"       // "datum" is any val
                |  "("  "and"       expectation+  ")"
                |  "("  "not"       expectation   ")"
 
-extension    ::=  "("  "then"  name-string?  fragment+  continuation  ")"
-               |  "("  "each"  name-string?  fragment+  continuation  ")"
+extension    ::=  "("  "then"  name-string?  fragment*  continuation  ")"
+               |  "("  "each"  name-string?  fragment*  continuation  ")"
 
 bytes  ::=  int      // In the range 0..255
          |  string   // Containing hexadecimal digits and whitespace
@@ -639,8 +646,8 @@ in the Ion data model, or an error condition.
 
 At entry to every clause, there exists a well-defined (non-empty) set of
 (potentially empty) abstract documents.
-The outermost clauses `ion_1_0`, `ion_1_1`, and `ion_1_x` provide the initial
-set of documents to be extended by nested clauses.
+The outermost clauses `document`, `ion_1_0`, `ion_1_1`, and `ion_1_x` provide 
+the initial set of documents to be extended by nested clauses.
 Each *fragment* appends some top-level content to each document in progress.
 Note that at each step, all documents are well-formed.
 
@@ -648,6 +655,9 @@ Fragments are always followed by a _continuation_, which either extends the
 current document(s) with one or more _extension_s, or verifies that they meet an
 expectation, ending that branch of the test tree.
 
+When an extension has no fragments, the continuation is applied to the current
+document set.  In other words, the extension acts as if it had a single empty
+`toplevel` fragment, which does not change the current documents.
 
 These rules describe Ion data-model results for use in the `denotes` expectation:
 
