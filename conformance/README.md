@@ -667,7 +667,7 @@ model-value     ::=  model-content  |  annotated
 model-content   ::=  bool
                   |  int
                   |  string
-                  |  "("  "Null"      model-type       ")"
+                  |  "("  "Null"      model-type?      ")"
                   |  "("  "Bool"      bool             ")"
                   |  "("  "Int"       int              ")"
                   |  "("  "Float"     model-float      ")"
@@ -680,6 +680,19 @@ model-content   ::=  bool
                   |  "("  "Struct"    model-field*     ")"
                   |  "("  "Blob"      bytes*           ")"
                   |  "("  "Clob"      bytes*           ")"
+
+model-type      ::=  "bool"
+                  |  "int"
+                  |  "float"
+                  |  "decimal"
+                  |  "timestamp"
+                  |  "string"
+                  |  "symbol"
+                  |  "list"
+                  |  "sexp"
+                  |  "struct"
+                  |  "blob"
+                  |  "clob"
 
 codepoint       ::=  int                                   // in the range 0..0x10FFFF
 
