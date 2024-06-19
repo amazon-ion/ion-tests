@@ -243,7 +243,7 @@ To make a more meaningful test, we must add some input to the document:
 
 ```
 (document (text "null.int") 
-          (denotes (null int)))
+          (denotes (Null int)))
 ```
 
 Here, the input document is an eight-byte text document containing exactly the
@@ -297,8 +297,8 @@ form that expresses the Ion data model in more primitive terms.
 
 ```
 (ion_1_0 (text "(symval 1.2) a::b::null.bool")
-         (denotes (sexp (symbol "symval") (decimal 12 -1))
-                  (annot (null bool) "a" "b")))
+         (denotes (Sexp (Symbol "symval") (Decimal 12 -1))
+                  (Annot (Null bool) "a" "b")))
 ```
 
 This example uses new expression forms denoting `symbol`, `decimal`, and `null`
@@ -318,8 +318,8 @@ keyword symbols with strings:
 
 ```
 ["ion_1_0", ["text", "(symval 1.2) a::b::null.bool"],
-            ["denotes", ["sexp", ["symbol", "symval"], ["decimal", 12, -1]]
-                        ["annot", [null, "bool"], "a", "b"]]]
+            ["denotes", ["Sexp", ["Symbol", "symval"], ["Decimal", 12, -1]]
+                        ["Annot", ["Null", "bool"], "a", "b"]]]
 ```
 
 This works because every DSL clause has the shape “sexp starting with a keyword
@@ -344,7 +344,7 @@ expectations such as these:
          (each (text "$ion")
                (text "$1")
                (text "$10")
-               (denotes (symbol "$ion"))))  // Or, equivalently: (produces $ion)
+               (denotes (Symbol "$ion"))))  // Or, equivalently: (produces $ion)
 ```
 
 When text is unknown for a SID, equivalence depends on whether the SID maps into
@@ -356,7 +356,7 @@ In the former case, all unknown symbols are equivalent to `$0`:
          (each (text "$0")
                (text "$10")
                (text "$11")
-               (denotes (symbol 0))))
+               (denotes (Symbol 0))))
 ```
 
 Here we use a variant of the `symbol` model using an integer SID rather than a
@@ -368,8 +368,8 @@ the same local address in the same-named symbol table:
 ```
 (ion_1_0 (text '''$ion_symbol_table::{imports:[{name:"not found", max_id:2}]}''')
          (text "$10 $11")
-         (denotes (symbol ("not found" 1))
-                  (symbol ("not found" 2))))
+         (denotes (Symbol ("not found" 1))
+                  (Symbol ("not found" 2))))
 ```
 
 Here the `symbol` is modeled as a pair of symtab-name and local address.
@@ -387,7 +387,7 @@ At present, the following forms are accepted:
   * `'#$0'` denotes symbol zero.
   * Symbols of the form `'#$name#ddd'`, where _name_ is not empty and _ddd_ is
     one or more digits, denotes an unknown symbol at address _ddd_ of symtab
-    _name_.  In other words, it denotes `(symbol ("name" ddd))`.
+    _name_.  In other words, it denotes `(Symbol ("name" ddd))`.
   * All other symbols starting with `#$` must signal an erroneous test case.
 
 Per these rules, we can rewrite the above test cases as:
@@ -664,23 +664,35 @@ These rules describe Ion data-model results for use in the `denotes` expectation
 ```ebnf
 model-value     ::=  model-content  |  annotated
 
-model-content   ::=  null.null
-                  |  bool
+model-content   ::=  bool
                   |  int
                   |  string
-                  |  "("  "null"      model-type       ")"
-                  |  "("  "bool"      bool             ")"
-                  |  "("  "int"       int              ")"
-                  |  "("  "float"     model-float      ")"
-                  |  "("  "decimal"   model-decimal    ")"
-                  |  "("  "timestamp" model-timestamp  ")"
-                  |  "("  "string"    codepoint*       ")"
-                  |  "("  "symbol"    model-symtok     ")"
-                  |  "("  "list"      model-value*     ")"
-                  |  "("  "sexp"      model-value*     ")"
-                  |  "("  "struct"    model-field*     ")"
-                  |  "("  "blob"      bytes*           ")"
-                  |  "("  "clob"      bytes*           ")"
+                  |  "("  "Null"      model-type?      ")"
+                  |  "("  "Bool"      bool             ")"
+                  |  "("  "Int"       int              ")"
+                  |  "("  "Float"     model-float      ")"
+                  |  "("  "Decimal"   model-decimal    ")"
+                  |  "("  "Timestamp" model-timestamp  ")"
+                  |  "("  "String"    codepoint*       ")"
+                  |  "("  "Symbol"    model-symtok     ")"
+                  |  "("  "List"      model-value*     ")"
+                  |  "("  "Sexp"      model-value*     ")"
+                  |  "("  "Struct"    model-field*     ")"
+                  |  "("  "Blob"      bytes*           ")"
+                  |  "("  "Clob"      bytes*           ")"
+
+model-type      ::=  "bool"
+                  |  "int"
+                  |  "float"
+                  |  "decimal"
+                  |  "timestamp"
+                  |  "string"
+                  |  "symbol"
+                  |  "list"
+                  |  "sexp"
+                  |  "struct"
+                  |  "blob"
+                  |  "clob"
 
 codepoint       ::=  int                                   // in the range 0..0x10FFFF
 
@@ -747,7 +759,7 @@ Here, the `denotes` expectation becomes valuable:
 
 ```
 ["ion_1_x", ["text", "(1 2.3)"],
-            ["denotes", ["sexp", ["int", 1], ["decimal", 23, -1]]]]
+            ["denotes", ["Sexp", ["Int", 1], ["Decimal", 23, -1]]]]
 ```
 
 The inner clauses should align with the formal data model in the denotational

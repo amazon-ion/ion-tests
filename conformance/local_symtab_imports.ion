@@ -40,19 +40,19 @@
         (produces a))
   (then (toplevel $ion_symbol_table::{imports:[{name:"absent", max_id:2}, {name:"abcs"}]}
                   '#$10' '#$11' '#$12')
-        (denotes (symbol (absent "absent" 1)) (symbol (absent "absent" 2)) (symbol "a")))
+        (denotes (Symbol (absent "absent" 1)) (Symbol (absent "absent" 2)) (Symbol "a")))
   (then (toplevel $ion_symbol_table::{imports:[{name:"empty", version:2, max_id:3},
                                                {name:"abcs"}]}
                   '#$10' '#$11' '#$12' '#$13')
-        (denotes (symbol (absent "empty" 1))
-                 (symbol (absent "empty" 2))
-                 (symbol (absent "empty" 3))
-                 (symbol "a")))
+        (denotes (Symbol (absent "empty" 1))
+                 (Symbol (absent "empty" 2))
+                 (Symbol (absent "empty" 3))
+                 (Symbol "a")))
   (then (toplevel $ion_symbol_table::{imports:[{name:"mnop", version:2, max_id:2},
                                                {name:"abcs"}]}
                   '#$10' '#$11' '#$12')
         // mnop v2 doesn't exist, so we should get truncated v4, which has a gap
-        (denotes (symbol (absent "mnop" 1)) (symbol "n") (symbol "a"))))
+        (denotes (Symbol (absent "mnop" 1)) (Symbol "n") (Symbol "a"))))
 
 
 (ion_1_0 "Exact-match imports"
