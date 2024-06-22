@@ -1,10 +1,23 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(ion_1_x "IVMs don't appear in output data"
-  (toplevel '#$ion_1_0' null '#$ion_1_1' null)
-  (produces null null))
+(document "IVMs don't appear in output data"
+  (each (text      "$ion_1_0")
+        (binary    "E0  01 00   EA")
+        (ivm             1 0)
+        (toplevel '#$ion_1_0')
+        (then (toplevel 1)
+              (each (text      "$ion_1_0")
+                    (binary    "E0  01 00   EA")
+                    (ivm             1 0)
+                    (toplevel '#$ion_1_0')
+                    (then (toplevel 2)
+                      (denotes (Int 1) (Int 2)))))))
 
-(ion_1_x "Invalid IVM version"
-  (toplevel null '#$ion_12_34')
-  (signals "Unsupported Ion version: 12.34"))
+
+(document "Invalid IVM version"
+  (each (text      "$ion_12_34")
+        (binary    "E0   0C 22   EA")
+        (ivm             12 34)
+        (toplevel '#$ion_12_34')
+        (signals "Unsupported Ion version: 12.34")))
