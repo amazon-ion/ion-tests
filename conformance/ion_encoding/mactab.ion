@@ -1,0 +1,32 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+(ion_1_1 "top-level macro_table"
+
+  (then "can be empty"
+    (toplevel $ion_encoding::((macro_table))
+              ('#$:$ion:values' 1 2))
+    (produces 1 2))
+
+  (then "can install $ion"
+    (each (encoding (macro_table $ion))
+          (encoding (macro_table $ion $ion))
+      (then "and addresses work"
+        (toplevel ('#$:1' 1 2))
+        (produces 1 2))
+      (then "but local references are ambiguous"
+         (toplevel ('#$:values' 17))
+            // FIXME [MAC-ID] This should work the reference is unambiguous.
+            (signals "Ambiguous macro-ref: :values"))))
+           //(produces 17)
+
+  (then "rejects unbound module name"
+    (each (encoding (macro_table M))
+          (encoding (macro_table ''))
+          (signals "Module not in scope:")))
+
+  (then "rejects invalid module name"
+    (each (encoding (macro_table "M"))
+          (encoding (macro_table 1))
+          (signals "Expected a symbol:"))))
