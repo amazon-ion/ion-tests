@@ -1,0 +1,50 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Tests interpretation of core AST-forms in `toplevel` and `produces`.
+// In particular check that "delayed SIDs" like '#$1' work right.
+
+
+(ion_1_x
+  (then "empty document"
+    (toplevel)
+    (produces))
+
+  (then "null"
+    (toplevel null.null a::null '#$1'::null)
+    (produces null.null a::null $ion ::null))
+
+  (then "bool"
+    (toplevel null.bool a::null.bool true '#$1'::false)
+    (produces null.bool a::null.bool true $ion ::false))
+
+  (then "int"
+    (toplevel null.int a::null.int 0 1 a::'#$1'::2)
+    (produces null.int a::null.int 0 1 a::$ion ::2))
+
+  // TODO decimal, float
+
+  (then "string"
+    (toplevel null.string a::null.string "" "queen" '#$1'::"king")
+    (produces null.string a::null.string "" "queen" $ion ::"king"))
+
+  (then "symbol"
+    (toplevel null.symbol a::null.symbol '' danny '#$1' '#$1'::'#$4')
+    (produces null.symbol a::null.symbol '' danny $ion   $ion::name))
+
+
+  (then "list"
+    (toplevel null.list a::null.list '#$1'::[] [[], 1, danny, '#$1'])
+    (produces null.list a::null.list $ion ::[] [[], 1, danny, $ion]))
+
+  (then "sexp"
+    (toplevel null.sexp a::null.sexp '#$1'::() (() 1 danny '#$1'))
+    (produces null.sexp a::null.sexp $ion ::() (() 1 danny $ion)))
+
+
+  (then "struct"
+    (toplevel null.struct a::null.struct '#$1'::{} {a:1, b: danny, a:'#$1', c:{}})
+    (produces null.struct a::null.struct $ion ::{} {a:$ion, c:{}, a:1, b:danny}))
+
+  // TODO timestamp, blob, clob
+)

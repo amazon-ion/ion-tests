@@ -1,0 +1,20 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Simple inputs that fit within the JSON data model
+
+
+(ion_1_x "Primitive denotations"
+  (toplevel null   true false -1 0 1 "" "str")
+  (denotes  (Null) true false -1 0 1 "" "str"))
+
+(ion_1_x (toplevel [])         (denotes (List)))
+(ion_1_x (toplevel ())         (denotes (Sexp)))
+(ion_1_x (toplevel [1, ("a")]) (denotes (List 1 (Sexp "a"))))
+(ion_1_x (toplevel (1  ["a"])) (denotes (Sexp 1 (List "a"))))
+
+
+
+(ion_1_x "Struct denotations"
+  (toplevel {} {a:1} {a:1, b:2})
+  (denotes (Struct) (Struct ("a" 1)) (Struct ((text 0x62 /* "b" */) 2)("a" 1))))

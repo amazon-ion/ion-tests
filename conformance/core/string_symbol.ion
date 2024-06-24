@@ -1,0 +1,11 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+(ion_1_x "Symbol denotations"
+  (then (toplevel '' symbol 'null')
+        (denotes (Symbol (text)) (Symbol "symbol") (Symbol (text 110 117 108 108)))))
+
+(ion_1_x "String denotations"
+  (then (toplevel "" "a\x62\u0063")
+        (denotes (String) (String 97 0x62 99))))
