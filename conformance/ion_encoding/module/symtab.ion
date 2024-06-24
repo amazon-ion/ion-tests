@@ -1,0 +1,54 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+(ion_1_1
+  (each (encoding (module M))
+        (encoding (module M (symbol_table)))
+        (encoding (module M (symbol_table [])))
+        (encoding (module M (symbol_table null.list)))
+        (then (toplevel '#$12')
+              (signals "Invalid symbol address:"))))
+
+(ion_1_1
+  (each (encoding (module M (symbol_table ["a", "b"]))
+                  (symbol_table M))
+        (encoding (module M (symbol_table ["a"] ["b"]))
+                  (symbol_table M))
+        (encoding (module M (symbol_table ["a"] [] ["b"]))
+                  (symbol_table M))
+        (encoding (module M (symbol_table ["a"] null.list ["b"]))
+                  (symbol_table M))
+        (then (toplevel '#$12' '#$13')
+              (produces a b))
+        (then (toplevel '#$14')
+              (signals "Invalid symbol address:"))))
+
+(ion_1_1 "A module can be installed twice in the local symbol table"
+  (encoding (module M (symbol_table ["a"]))
+            (symbol_table M M))
+  (then (toplevel '#$12' '#$13')
+        (produces a a))
+  (then (toplevel '#$14')
+        (signals "Invalid symbol address:")))
+
+(ion_1_1
+  (each (encoding (module M (symbol_table null.sexp)))
+        (encoding (module M (symbol_table ())))
+        (encoding (module M (symbol_table ("a" "b"))))
+        (encoding (module M (symbol_table ["a"] ("b"))))
+        (signals "Unexpected element in `symbol_table`")))
+
+
+// Retention
+
+(ion_1_1
+  (toplevel $ion_encoding::((load A "abcs" 1))
+            $ion_encoding::((retain A)
+                            (module I (symbol_table ["i"]))
+                            (symbol_table A))
+            '#$12'
+            $ion_encoding::((retain I A A)
+                            (symbol_table I A))
+            '#$12' '#$13')
+  (produces a i a))
