@@ -1,0 +1,42 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+(ion_1_1 "Loading shared symtabs into a module"
+  (then
+    (encoding (module M
+                (load N "abcs" 2)
+                (symbol_table ["m"] N))
+              (symbol_table M))
+    (then (toplevel '#$12' '#$14')
+          (produces m b))
+    (then (toplevel '#$15')
+          (signals "Invalid symbol address:")))
+
+  (then "can shadow the enclosing name"
+    (encoding (module M
+                (load M "abcs" 2)        // Note same name
+                (symbol_table ["m"] M))
+              (symbol_table M))
+    (then (toplevel '#$12' '#$14')
+          (produces m b))
+    (then (toplevel '#$15')
+          (signals "Invalid symbol address:")))
+
+  (then "can shadow a previous load"
+    (encoding (module M
+                (load N "abcs" 1)
+                (load N "mnop" 1)        // Shadows previous
+                (symbol_table N))
+              (symbol_table M))
+    (then (toplevel '#$12')
+          (produces m))
+    (then (toplevel '#$13')
+          (signals "Invalid symbol address:")))
+
+  (then "is not visible to top-level"
+    (encoding (module M
+                (load N "abcs" 1)
+                (symbol_table N))
+              (symbol_table N))
+    (signals "Module not in scope: N")))
