@@ -1,0 +1,54 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Very simple macro definition and E-expression invocation
+
+
+// Ensure that malformed templates are signaled when they are encountered,
+// not delayed until the module is installed or macro is invoked.
+(ion_1_1
+  (encoding (module M (macro_table (macro m () ()))))
+  (signals "Malformed template:"))
+
+
+(ion_1_1 "The most trivial invocation"
+  (mactab (macro m () "m"))
+  (then (toplevel ('#$:m'))
+        (produces "m"))
+  (each (toplevel ('#$:m' 1))
+        (toplevel ('#$:m' 1 2))
+        (signals "Too many arguments")))
+
+
+(ion_1_1 "Inovocation by address"
+  (mactab (macro M1 () "M1")
+          (macro M2 () "M2")
+          $ion)
+  (then (toplevel ('#$:0') ('#$:1') ('#$:M:0') ('#$:M:1') [('#$:2'), ('#$:M:2')])
+        (produces "M1"     "M2"     "M1"       "M2"       [/*void*/   /*void*/ ]))
+  (each (toplevel ('#$:0'))
+        (toplevel ('#$:M:0'))
+        (produces "M1"))
+  (each (toplevel ('#$:1'))
+        (toplevel ('#$:M:1'))
+        (produces "M2"))
+  (each "invocations of :void at user address"
+        (toplevel ('#$:2'))
+        (toplevel ('#$:M:2'))
+        (produces)))
+
+
+(ion_1_1 "items not in macro_table are not accessible"
+  (encoding (module M (macro_table (macro mac () 1)))
+            (macro_table))
+  (each (toplevel ('#$:M:mac'))
+        (toplevel ('#$:M:0'))
+        (signals "Module not in scope: M"))
+  (then (toplevel ('#$:mac'))
+        (signals "No such macro: :mac"))
+  (then (toplevel ('#$:0'))
+        (signals "Invalid macro address: :0")))
+
+
+// TODO test addresses when there's multiple modules.
+// TODO more tests for out-of-bounds macro addresses

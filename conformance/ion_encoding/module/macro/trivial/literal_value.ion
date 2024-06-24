@@ -1,0 +1,29 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Literal template expressions
+// TODO float decimal timestap blob clob
+
+
+(ion_1_1
+  (encoding (module M
+              (macro_table
+                (macro nul          () null.null)
+                (macro nul_ann      () n::null)
+                (macro bol          () true)
+                (macro bol_ann_null () bool::null.bool)
+                (macro int          () 76)
+                (macro int_ann_null () inttt::null.int)
+                (macro str          () "string")
+                (macro str_null     () null.string)
+                (macro str_ann      () a::"string")
+                (macro str_ann_null () b::c::null.string)))
+            (macro_table M))
+  (toplevel ('#$:nul') ('#$:nul_ann')
+            ('#$:bol') ('#$:bol_ann_null')
+            ('#$:int') ('#$:int_ann_null')
+            ('#$:str') ('#$:str_null') ('#$:str_ann') ('#$:str_ann_null'))
+  (produces null n::null
+            true bool::null.bool
+            76 inttt::null.int
+            "string" null.string a::"string" b::c::null.string))
