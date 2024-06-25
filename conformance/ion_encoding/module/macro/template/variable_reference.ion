@@ -6,7 +6,8 @@
   (then (mactab (macro val (v) v))
         (toplevel ('#$:val' a) ('#$:val' b))
         (produces a b))
-  (then (mactab (macro _ (v) x))
+  (then "with unbound variable"
+        (mactab (macro _ (v) x))
         (signals "Unbound variable: x")))
 
 (ion_1_1 "Multiple parameters"
@@ -15,8 +16,10 @@
   (then (toplevel ('#$:first'  a "b")
                   ('#$:second' c "d"))
         (produces a "d"))
-  (each (toplevel ('#$:first'))
+  (each "invoked with too few arguments"
+        (toplevel ('#$:first'))
         (toplevel ('#$:first' 1))
         (signals "Too few arguments"))
-  (then (toplevel ('#$:first' 1 2 3))
+  (then "invoked with too many arguments"
+        (toplevel ('#$:first' 1 2 3))
         (signals "Too many arguments")))
