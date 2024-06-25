@@ -57,25 +57,34 @@
 
 // Retention
 
-(ion_1_1 "Module name bindings are dropped when not retained"
-  (toplevel $ion_encoding::((load A "abcs" 1)
-                            (symbol_table ["l1"] A))
-            $ion_encoding::((symbol_table ["l2"] A))) // No `retains` clause
-  (signals "Module not in scope: A"))
+(ion_1_1
+  (encoding (load A "abcs" 1)
+            (load M "mnop" 3)
+            (symbol_table ["l1"] A))
 
-(ion_1_1 "Retain * preserves all module name bindings"
-  (toplevel $ion_encoding::((load A "abcs" 1)
-                            (load M "mnop" 3)
-                            (symbol_table ["l1"] A))
-            '#$12' '#$13'
-            $ion_encoding::((retain *)
-                            (symbol_table ["l2"] M A))
-            '#$12' '#$13' '#$16')
-  (produces l1 a l2 m a))
+  (then "Module name bindings are dropped when not retained"
+    (encoding // No `retains` clause
+              (symbol_table ["l2"] A))
+    (signals "Module not in scope: A"))
 
-(ion_1_1 "Retain can be selective"
-  (toplevel $ion_encoding::((load A "abcs" 1)
-                            (load M "mnop" 3))
-            $ion_encoding::((retain A)
-                            (symbol_table M)))
-  (signals "Module not in scope: M"))
+  (then "Retain * preserves all module name bindings"
+    (toplevel '#$12' '#$13')
+    (encoding (retain *)
+              (symbol_table ["l2"] M A))
+    (toplevel '#$12' '#$13' '#$16')
+    (produces l1 a l2 m a))
+
+  (then "Retain can be selective"
+    (then (encoding (retain A)
+                    (symbol_table A))
+          (toplevel '#$12')
+          (produces a))
+    (then (encoding (retain A)
+                    (symbol_table M))
+          (signals "Module not in scope: M")))
+
+  (then "Retain can have repeated name"
+    (encoding (retain A A)
+              (symbol_table A))
+    (toplevel '#$12')
+    (produces a)))
