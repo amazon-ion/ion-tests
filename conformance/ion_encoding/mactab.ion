@@ -23,10 +23,13 @@
 
   (then "rejects unbound module name"
     (each (encoding (macro_table M))
-          (encoding (macro_table ''))
+          (encoding (macro_table $ion M))
           (signals "Module not in scope:")))
 
   (then "rejects invalid module name"
-    (each (encoding (macro_table "M"))
+    (each (encoding (macro_table ''))
+          (encoding (macro_table null.symbol))
+          (encoding (macro_table '#$0'))      // TODO test absent shared symbol
+          (encoding (macro_table "M"))
           (encoding (macro_table 1))
-          (signals "Expected a symbol:"))))
+          (signals "Invalid module name:"))))
