@@ -33,7 +33,7 @@
 
 // Module name shadowing
 
-(ion_1_1
+(ion_1_1 "Reused local name shadows previous binding"
   (toplevel $ion_encoding::((load m "mnop" 4)
                             (load m "mnop" 3)
                             (symbol_table m ["x"])))
@@ -57,19 +57,23 @@
 
 // Retention
 
-(ion_1_1
+(ion_1_1 "Module name bindings are dropped when not retained"
   (toplevel $ion_encoding::((load A "abcs" 1)
                             (symbol_table ["l1"] A))
             $ion_encoding::((symbol_table ["l2"] A))) // No `retains` clause
   (signals "Module not in scope: A"))
 
-(ion_1_1
-  (toplevel $ion_encoding::((load A "abcs" 1) (symbol_table ["l1"] A))
-            $ion_encoding::((retain *)        (symbol_table ["l2"] A))
-            '#$12' '#$13')
-  (produces l2 a))
+(ion_1_1 "Retain * preserves all module name bindings"
+  (toplevel $ion_encoding::((load A "abcs" 1)
+                            (load M "mnop" 3)
+                            (symbol_table ["l1"] A))
+            '#$12' '#$13'
+            $ion_encoding::((retain *)
+                            (symbol_table ["l2"] M A))
+            '#$12' '#$13' '#$16')
+  (produces l1 a l2 m a))
 
-(ion_1_1
+(ion_1_1 "Retain can be selective"
   (toplevel $ion_encoding::((load A "abcs" 1)
                             (load M "mnop" 3))
             $ion_encoding::((retain A)
