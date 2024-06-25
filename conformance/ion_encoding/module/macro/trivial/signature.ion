@@ -3,20 +3,24 @@
 
 
 (ion_1_1 "Macro signature syntax errors"
-  (each (mactab (macro _ []        0))
+  (each "signature must be a non-null sexp"
+        (mactab (macro _ []        0))
         (mactab (macro _ p         0))
         (mactab (macro _ null.sexp 0))
         (signals "Signature must be a non-null sexp"))
-  (each (mactab (macro _ (null)         0))
+  (each "unexpected element in param-spec"
+        (mactab (macro _ (null)         0))
         (mactab (macro _ (null.symbol)  0))
         (mactab (macro _ (n ())         0))
         (mactab (macro _ (n 1)          0))
         (signals "Unexpected element in param-spec:"))
-  (each (mactab (macro _ ('')     0))
+  (each "invalid parameter name"
+        (mactab (macro _ ('')     0))
         (mactab (macro _ (%)      0))
         (mactab (macro _ (+)      0))
         (mactab (macro _ (v ...)  0))
         (signals "Invalid parameter name:"))
-  (each (mactab (macro _ (mac::n)   0))
+  (each "unknown macro for macro-shaped parameter"
+        (mactab (macro _ (mac::n)   0))
         (mactab (macro _ (p mac::n) 0))
         (signals "No such macro: mac")))

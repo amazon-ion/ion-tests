@@ -12,8 +12,8 @@
     (mactab (macro m () (noSuchMacro)))
     (signals "No such macro: noSuchMacro"))
  (then "cannot self-reference"
-   (mactab (macro m () (noSuchMacro)))
-   (signals "No such macro: noSuchMacro")))
+   (mactab (macro m () (m)))
+   (signals "No such macro: m")))
 
 
 (ion_1_1 "Malformed macro references"

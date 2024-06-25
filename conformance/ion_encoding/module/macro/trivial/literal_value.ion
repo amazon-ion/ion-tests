@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Literal template expressions
-// TODO float decimal timestap blob clob
+// TODO float decimal timestamp blob clob
 
 
-(ion_1_1
+(ion_1_1 "template expressions containing only literal values"
   (encoding (module M
               (macro_table
                 (macro nul          () null.null)
