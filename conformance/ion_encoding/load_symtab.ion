@@ -1,0 +1,98 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+// Exact-match imports
+
+(ion_1_1
+  (toplevel $ion_encoding::((load abc "abcs" 1)
+                            (symbol_table abc)))
+  (then (toplevel '#$12')
+        (produces a))
+  (then (toplevel '#$13')
+        (signals "Invalid symbol address:")))
+
+(ion_1_1
+  (toplevel $ion_encoding::((load mno "mnop" 3)
+                            (load abc "abcs" 1)
+                            (symbol_table abc mno)))
+  (then (toplevel '#$12' '#$13' '#$15')
+        (produces a m o))
+  (then (toplevel '#$16')
+        (signals "Invalid symbol address:")))
+
+(ion_1_1 "load rejects invalid module name"
+    (each (encoding (load ''          "abcs" 1))
+          (encoding (load null.symbol "abcs" 1))
+          (encoding (load '#$0'       "abcs" 1))  // TODO test absent shared symbol
+          (encoding (load "M"         "abcs" 1))
+          (encoding (load 1           "abcs" 1))
+          (signals "Invalid module name:")))
+
+
+// Absent shared symbol
+
+(ion_1_1 "Shared symbols without text are treated as unique"
+  (toplevel $ion_encoding::((load mno "mnop" 4)     // v4 has gap in first slot
+                            (symbol_table mno)))
+  (then (toplevel '#$12' '#$13')
+        (denotes (Symbol (absent "mnop" 1)) (Symbol "n"))))
+
+
+// Module name shadowing
+
+(ion_1_1 "Reused local name shadows previous binding"
+  (toplevel $ion_encoding::((load m "mnop" 4)
+                            (load m "mnop" 3)
+                            (symbol_table m ["x"])))
+  (then (toplevel '#$12' '#$13' '#$14' '#$15')
+        (produces m n o x))
+  (then (toplevel '#$16')
+        (signals "Invalid symbol address:")))
+
+
+// Mix and match imported and local symbols
+
+(ion_1_1
+  (toplevel $ion_encoding::((load mno "mnop" 3)
+                            (load abc "abcs" 1)
+                            (symbol_table ["l1", "l2"] abc ["l3"] mno ["l4"])))
+  (then (toplevel '#$12' '#$13' '#$14' '#$15' '#$16' '#$17' '#$18' '#$19')
+        (produces l1 l2 a l3 m n o l4))
+  (then (toplevel '#$20')
+        (signals "Invalid symbol address:")))
+
+
+// Retention
+
+(ion_1_1
+  (encoding (load A "abcs" 1)
+            (load M "mnop" 3)
+            (symbol_table ["l1"] A))
+
+  (then "Module name bindings are dropped when not retained"
+    (encoding // No `retains` clause
+              (symbol_table ["l2"] A))
+    (signals "Module not in scope: A"))
+
+  (then "Retain * preserves all module name bindings"
+    (toplevel '#$12' '#$13')
+    (encoding (retain *)
+              (symbol_table ["l2"] M A))
+    (toplevel '#$12' '#$13' '#$16')
+    (produces l1 a l2 m a))
+
+  (then "Retain can be selective"
+    (then (encoding (retain A)
+                    (symbol_table A))
+          (toplevel '#$12')
+          (produces a))
+    (then (encoding (retain A)
+                    (symbol_table M))
+          (signals "Module not in scope: M")))
+
+  (then "Retain can have repeated name"
+    (encoding (retain A A)
+              (symbol_table A))
+    (toplevel '#$12')
+    (produces a)))
