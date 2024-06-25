@@ -29,6 +29,13 @@
         (produces a b)))
 
 
+(ion_1_0 "IVM resets the current symtab"
+  (toplevel $ion_symbol_table::{symbols:["a"]})
+  (ivm 1 0)
+  (toplevel '#$10')
+  (signals "Invalid symbol address:"))
+
+
 (ion_1_0 "Out-of-bounds symbol reference fails"
   (then "without local symtab"
         (each (toplevel   '#$10')
