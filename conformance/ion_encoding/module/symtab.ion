@@ -48,7 +48,7 @@
                             (module I (symbol_table ["i"]))
                             (symbol_table A))
             '#$12'
-            $ion_encoding::((retain I A A)
+            $ion_encoding::((retain I A)
                             (symbol_table I A))
             '#$12' '#$13')
   (produces a i a))
