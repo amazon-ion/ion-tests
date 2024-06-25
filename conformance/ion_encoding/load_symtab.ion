@@ -32,8 +32,8 @@
 
 // Absent shared symbol
 
-(ion_1_1
-  (toplevel $ion_encoding::((load mno "mnop" 4)
+(ion_1_1 "Shared symbols without text are treated as unique"
+  (toplevel $ion_encoding::((load mno "mnop" 4)     // v4 has gap in first slot
                             (symbol_table mno)))
   (then (toplevel '#$12' '#$13')
         (denotes (Symbol (absent "mnop" 1)) (Symbol "n"))))
