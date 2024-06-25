@@ -21,6 +21,14 @@
   (then (toplevel '#$16')
         (signals "Invalid symbol address:")))
 
+(ion_1_1 "load rejects invalid module name"
+    (each (encoding (load ''          "abcs" 1))
+          (encoding (load null.symbol "abcs" 1))
+          (encoding (load '#$0'       "abcs" 1))  // TODO test absent shared symbol
+          (encoding (load "M"         "abcs" 1))
+          (encoding (load 1           "abcs" 1))
+          (signals "Invalid module name:")))
+
 
 // Absent shared symbol
 
