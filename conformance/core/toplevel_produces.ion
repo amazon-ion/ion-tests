@@ -5,7 +5,7 @@
 // In particular check that "delayed SIDs" like '#$1' work right.
 
 
-(ion_1_x
+(ion_1_x "check interpretation of core AST-forms in toplevel and produces"
   (then "empty document"
     (toplevel)
     (produces))
