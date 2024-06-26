@@ -15,11 +15,9 @@
       (then "and addresses work"
         (toplevel ('#$:1' 1 2))
         (produces 1 2))
-      (then "but local references are ambiguous"
-         (toplevel ('#$:values' 17))
-            // FIXME [MAC-ID] This should work the reference is unambiguous.
-            (signals "Ambiguous macro-ref: :values"))))
-           //(produces 17)
+      (then "and local names work"
+        (toplevel ('#$:values' 17))
+        (produces 17))))
 
   (then "rejects unbound module name"
     (each (encoding (macro_table M))
