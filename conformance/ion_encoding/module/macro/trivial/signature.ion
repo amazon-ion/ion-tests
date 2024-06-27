@@ -1,0 +1,32 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+(ion_1_1 "Macro signature syntax errors"
+  (each "invalid macro name"
+        (mactab (macro ''          () 0))
+        (mactab (macro %           () 0))
+        (mactab (macro null.symbol () 0))
+        (mactab (macro '#$0'       () 0)) // TODO absent shared symbol
+        (mactab (macro "M"         () 0))
+        (mactab (macro 1           () 0))
+        (signals "Invalid macro name:"))
+  (each "signature must be a non-null sexp"
+        (mactab (macro _ []        0))
+        (mactab (macro _ p         0))
+        (mactab (macro _ null.sexp 0))
+        (signals "Signature must be a non-null sexp"))
+  (each "invalid parameter name"
+        (mactab (macro _ ('')          0))
+        (mactab (macro _ (%)           0))
+        (mactab (macro _ ('#$0')       0))
+        (mactab (macro _ (null.symbol) 0))
+        (mactab (macro _ ("M")         0))
+        (mactab (macro _ (null)        0))
+        (mactab (macro _ (1)           0))
+        (mactab (macro _ (())          0))
+        (signals "Invalid parameter name:"))
+  (each "unknown macro for macro-shaped parameter"
+        (mactab (macro _ (mac::n)   0))
+        (mactab (macro _ (p mac::n) 0))
+        (signals "No such macro: mac")))
