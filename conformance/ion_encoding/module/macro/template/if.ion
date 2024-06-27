@@ -1,0 +1,116 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+(ion_1_1 "if_void"
+
+  (then "happy path"
+    (mactab (macro m (v*)
+              (if_void v true false)))
+    (toplevel ('#$:m') ('#$:m' 1) ('#$:m' 1 2) ('#$:m' 1 2 3))
+    (produces true     false      false        false))
+
+  (then "then-clause isn't evaluated unless selected"
+    (mactab (macro m (p*)
+              (if_void p (make_string null) false)))
+    (then (toplevel ('#$:m'))
+          (signals "Not a text value"))
+    (then (toplevel ('#$:m' 1))
+          (produces false)))
+
+  (then "else-clause isn't evaluated unless selected"
+    (mactab (macro m (p*)
+              (if_void p true (make_string null))))
+    (then (toplevel ('#$:m'))
+          (produces true))
+    (then (toplevel ('#$:m' 1))
+          (signals "Not a text value")))
+
+    (each "arity errors are caught at compile-time"
+      (mactab (macro m () (if_void)))
+      (mactab (macro m () (if_void 1)))
+      (mactab (macro m () (if_void 1 2)))
+      (mactab (macro m () (if_void 1 2 3 4)))
+      (signals "Malformed if_void form"))
+
+    (each "malformed subexpressions are cought at compile-time"
+      (mactab (macro m () (if_void (literal) 2 3)))
+      (mactab (macro m () (if_void 1 (literal) 3)))
+      (mactab (macro m () (if_void 1 2 (literal))))
+      (signals "Malformed literal clause")))
+
+
+(ion_1_1 "if_single"
+
+  (then "happy path"
+    (mactab (macro m (v*)
+              (if_single v true false)))
+    (toplevel ('#$:m') ('#$:m' 1) ('#$:m' 1 2) ('#$:m' 1 2 3))
+    (produces false    true       false        false))
+
+  (then "then-clause isn't evaluated unless selected"
+    (mactab (macro m (p*)
+              (if_single p (make_string null) false)))
+    (then (toplevel ('#$:m'))
+          (produces false))
+    (then (toplevel ('#$:m' 1))
+          (signals "Not a text value")))
+
+  (then "else-clause isn't evaluated unless selected"
+    (mactab (macro m (p*)
+              (if_single p true (make_string null))))
+    (then (toplevel ('#$:m'))
+          (signals "Not a text value"))
+    (then (toplevel ('#$:m' 1))
+          (produces true)))
+
+  (each "arity errors are caught at compile-time"
+    (mactab (macro m () (if_single)))
+    (mactab (macro m () (if_single 1)))
+    (mactab (macro m () (if_single 1 2)))
+    (mactab (macro m () (if_single 1 2 3 4)))
+    (signals "Malformed if_single form"))
+
+  (each "malformed subexpressions are caught at compile-time"
+    (mactab (macro m () (if_single (literal) 2 3)))
+    (mactab (macro m () (if_single 1 (literal) 3)))
+    (mactab (macro m () (if_single 1 2 (literal))))
+    (signals "Malformed literal clause")))
+
+
+(ion_1_1 "if_multi"
+
+  (then "happy path"
+    (mactab (macro m (v*)
+              (if_multi v true false)))
+    (toplevel ('#$:m') ('#$:m' 1) ('#$:m' 1 2) ('#$:m' 1 2 3))
+    (produces false    false      true         true))
+
+  (then "then-clause isn't evaluated unless selected"
+    (mactab (macro m (p*)
+              (if_multi p (make_string null) false)))
+    (then (toplevel ('#$:m'))
+          (produces false))
+    (then (toplevel ('#$:m' 1 2))
+          (signals "Not a text value")))
+
+  (then "else-clause isn't evaluated unless selected"
+    (mactab (macro m (p*)
+              (if_multi p true (make_string null))))
+    (then (toplevel ('#$:m'))
+          (signals "Not a text value"))
+    (then (toplevel ('#$:m' 1 2))
+          (produces true)))
+
+  (each "arity errors are caught at compile-time"
+    (mactab (macro m () (if_multi)))
+    (mactab (macro m () (if_multi 1)))
+    (mactab (macro m () (if_multi 1 2)))
+    (mactab (macro m () (if_multi 1 2 3 4)))
+    (signals "Malformed if_multi form"))
+
+  (each "malformed subexpressions are caught at compile-time"
+    (mactab (macro m () (if_multi (literal) 2 3)))
+    (mactab (macro m () (if_multi 1 (literal) 3)))
+    (mactab (macro m () (if_multi 1 2 (literal))))
+    (signals "Malformed literal clause")))
