@@ -1,0 +1,45 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
+(ion_1_1 "List quasi-literals"
+  (then "with no variables"
+        (mactab (macro n  () a::null.list)
+                (macro e  () b::[])
+                (macro v1 () [1])
+                (macro v2 () [1, c::2]))
+        (toplevel ('#$:n')      ('#$:e')  ('#$:v1')  ('#$:v2'))
+        (produces a::null.list  b::[]     [1]        [1, c::2]))
+
+  (then "with bound variable"
+        (mactab (macro m1 (v)       a::[1, v, 2])
+                (macro m2 (v r*)    [1, [v], 2, r, 3]))
+        (toplevel ('#$:m1' a)   ('#$:m2' a)     ('#$:m2' [a] r1 r2))
+        (produces a::[1, a, 2]  [1, [a], 2, 3]  [1, [[a]], 2, r1, r2, 3]))
+
+  (then "with unbound variable"
+        (mactab (macro _ () [1, 2, v]))
+        (signals "Unbound variable: v")))
+
+
+(ion_1_1 "Struct quasi-literals"
+  (then "with no variables"
+        (mactab (macro n  () a::null.struct)
+                (macro e  () b::{})
+                (macro f1 () {n: (literal v)})
+                (macro f2 () {n: (literal v), n:2}))
+        (toplevel ('#$:n')       ('#$:e') ('#$:f1') ('#$:f2'))
+        (produces a::null.struct b::{}   {n:v}     {n:2, n:v}))
+
+  (then "with variable in field-value position can return non-singular results"
+        (mactab (macro m (v*) {n:v}))
+        (toplevel ('#$:m') ('#$:m' 1) ('#$:m' 1 2) ('#$:m' ('#$:values' 1 2)))
+        (produces {}       {n:1}      {n:2, n:1}   {n:1, n:2}))
+
+  (then (mactab (macro m (v*) {n1:v, n2:v}))
+        (toplevel ('#$:m') ('#$:m' 1)   ('#$:m' 1 2))
+        (produces {}       {n1:1, n2:1} {n1:2, n2:1, n2:2, n1:1}))
+
+  (then "with unbound variable"
+        (mactab (macro _ () {n: v}))
+        (signals "Unbound variable: v")))
