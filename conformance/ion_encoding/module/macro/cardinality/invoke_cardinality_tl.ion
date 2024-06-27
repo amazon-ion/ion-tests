@@ -1,0 +1,145 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Tests covering cardinality and grouping in template language (TL) macro invocations.
+
+
+(ion_1_1 "! parameters"
+  (then "arity checks at compile time"
+    (each (mactab (macro m  (v)    1)
+                  (macro m1 ()     (m)))
+          (mactab (macro m  (p q)  1)
+                  (macro m1 ()     (m 1)))
+          (signals "Too few arguments"))
+    (each (mactab (macro m  (v)  1)
+                  (macro m1 ()   (m 1 2)))
+          (signals "Too many arguments"))
+    (each (mactab (macro m  (v)  1)
+                  (macro m1 ()   (m (;))))
+          (signals "Unexpected argument group")))
+
+  (then "normal invocation"
+    (mactab (macro m  (v!) v)
+            (macro m1 (v*) (m v)))
+    (each (toplevel ('#$:m1'))
+          (signals "No value provided for parameter"))
+    (each (toplevel ('#$:m1' 1))
+          (produces 1))
+    (each (toplevel ('#$:m1' 1 2))
+          (signals "More than one value provided for parameter"))))
+
+
+
+(ion_1_1 "? parameters"
+  (then "arity cheks at compile time"
+    (each (mactab (macro m  (v?) 1)
+                  (macro m1 ()   (m 1 2)))
+          (signals "Too many arguments"))
+    (each (mactab (macro m  (v?)  1)
+                  (macro m1 ()   (m (; /*valid*/ (; /*invalid*/)))))
+          (signals "Unexpected argument group")))
+
+  (then "normal invocation"
+    (mactab (macro m  (v?) v)
+            (macro m1 ()   (m))
+            (macro m2 ()   (m (;)))
+            (macro m3 (v*) (m v))
+            (macro m4 (v*) (m (; v))))
+    (each (toplevel ('#$:m1'))
+          (toplevel ('#$:m2'))
+          (toplevel ('#$:m3'))
+          (toplevel ('#$:m4'))
+          (produces))
+    (each (toplevel ('#$:m3' 1))
+          (toplevel ('#$:m4' 1))
+          (produces 1))
+    (each (toplevel ('#$:m3' 1 2))
+          (toplevel ('#$:m4' 1 2))
+          (signals "More than one value provided for parameter"))))
+
+
+
+(ion_1_1 "* parameters"
+  (then "arity cheks at compile time"
+    (then (mactab (macro m  (v*) v)
+                  (macro m1 ()   (m 1 (;))))
+          (signals "Unexpected argument group"))
+    (then (mactab (macro m  (v*) v)
+                  (macro m1 ()   (m (; 1 (; 2)))))
+          (signals "Unexpected argument group")))
+
+  (then "normal invocation"
+    (mactab (macro m  (v*) v)
+            (macro m1 ()   (m))
+            (macro m2 ()   (m (;)))
+            (macro m3 (v*) (m v))
+            (macro m4 (v*) (m (; v)))
+            (macro m5 (v*) (m (; (values v)))))
+    (each (toplevel ('#$:m1'))
+          (toplevel ('#$:m2'))
+          (toplevel ('#$:m3'))
+          (toplevel ('#$:m4'))
+          (toplevel ('#$:m5'))
+          (produces))
+    (each (toplevel ('#$:m3' 1))
+          (toplevel ('#$:m4' 1))
+          (toplevel ('#$:m5' 1))
+          (produces 1))
+    (each (toplevel ('#$:m3' 1 2))
+          (toplevel ('#$:m4' 1 2))
+          (toplevel ('#$:m5' 1 2))
+          (produces 1 2)))
+
+  (then "implicit rest invocation"
+    (mactab (macro m  (v*) v)
+            (macro m1 (v*) (m v 9)))
+    (each (toplevel ('#$:m1'))
+          (produces 9))
+    (each (toplevel ('#$:m1' 1))
+          (produces 1 9))
+    (each (toplevel ('#$:m1' 1 2))
+          (produces 1 2 9))))
+
+
+
+(ion_1_1 "+ parameters"
+  (then "arity cheks at compile time"
+    (then (mactab (macro m  (v+) v)
+                  (macro m1 ()   (m)))
+          (signals "Too few arguments"))
+    (then (mactab (macro m  (v+) v)
+                  (macro m1 ()   (m 1 (;))))
+          (signals "Unexpected argument group"))
+    (then (mactab (macro m  (v+) v)
+                  (macro m1 ()   (m (; 1 (; 2)))))
+          (signals "Unexpected argument group")))
+
+  (then "normal invocation"
+    (then (mactab (macro m  (v+) v)
+                  (macro m1 ()   (m (;)))    // TODO:[PLUS-GROUP] Is this allowed?
+                  (macro m2 (v*) (m v))
+                  (macro m3 (v*) (m (; v)))
+                  (macro m4 (v*) (m (; (values v)))))
+          (each (toplevel ('#$:m1'))
+                (toplevel ('#$:m2'))
+                (toplevel ('#$:m3'))
+                (toplevel ('#$:m4'))
+                (signals "No value provided for parameter"))
+          (each (toplevel ('#$:m2' 1))
+                (toplevel ('#$:m3' 1))
+                (toplevel ('#$:m4' 1))
+                (produces 1))
+          (each (toplevel ('#$:m2' 1 2))
+                (toplevel ('#$:m3' 1 2))
+                (toplevel ('#$:m4' 1 2))
+                (produces 1 2))))
+
+  (then "implicit rest invocation"
+      (mactab (macro m  (v+) v)
+              (macro m1 (v*) (m v 9)))
+      (each (toplevel ('#$:m1'))
+            (produces 9))
+      (each (toplevel ('#$:m1' 1))
+            (produces 1 9))
+      (each (toplevel ('#$:m1' 1 2))
+            (produces 1 2 9))))
