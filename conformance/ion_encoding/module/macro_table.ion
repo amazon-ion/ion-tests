@@ -1,0 +1,36 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Trivial macro_table in inline module; no macro definitions
+
+
+(ion_1_1 "It is possible to construct an empty macro table"
+  (each (toplevel $ion_encoding::((module M (macro_table))))
+        (encoding (module M (macro_table)))
+        (mactab)
+        (produces)))
+
+(ion_1_1 "Unresolvable qualified macro name in E-Expression is an error"
+  (encoding (module M (macro_table))
+            (macro_table M))
+  (toplevel ('#$:M:mac'))
+  (signals "No such macro: :M:mac"))
+
+(ion_1_1 "Pass-through of visible module mactab"
+  (encoding (module M (macro_table $ion))
+            (macro_table M))
+  (each (toplevel ('#$:M:make_symbol' "sah" weet))
+        (toplevel ('#$:M:3'           "sah" weet))
+        (produces sahweet)))
+
+
+// Macro addresses
+
+(ion_1_1 "It should be possible to reference macros by name and ID, with and without qualification"
+  (encoding (module M (macro_table $ion))
+            (macro_table M))
+  (each
+    (toplevel ('#$:make_symbol' ('#$:values' "a" b) ('#$:void' x) c))
+    (toplevel ('#$:M:3'         ('#$:M:1'    "a" b) ('#$:M:0'  x) c))
+    (toplevel ('#$:3'           ('#$:1'      "a" b) ('#$:0'    x) c))
+    (produces abc)))
