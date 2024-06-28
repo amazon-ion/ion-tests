@@ -7,7 +7,8 @@
 (ion_1_1 "! parameters"
   (mactab
     (macro m (v!) v))
-  (each (toplevel ('#$:m'))
+  (then "signals an error when invoked with too few arguments"
+        (toplevel ('#$:m'))
         (signals "Too few arguments"))
   (each (toplevel ('#$:m' ('#$:')))
         (toplevel ('#$:m' ('#$:' 1)))

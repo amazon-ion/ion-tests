@@ -31,7 +31,7 @@
 
 
 (ion_1_1 "? parameters"
-  (then "arity cheks at compile time"
+  (then "arity checks at compile time"
     (each (mactab (macro m  (v?) 1)
                   (macro m1 ()   (m 1 2)))
           (signals "Too many arguments"))
@@ -60,7 +60,7 @@
 
 
 (ion_1_1 "* parameters"
-  (then "arity cheks at compile time"
+  (then "arity checks at compile time"
     (then (mactab (macro m  (v*) v)
                   (macro m1 ()   (m 1 (;))))
           (signals "Unexpected argument group"))
@@ -103,7 +103,7 @@
 
 
 (ion_1_1 "+ parameters"
-  (then "arity cheks at compile time"
+  (then "arity checks at compile time"
     (then (mactab (macro m  (v+) v)
                   (macro m1 ()   (m)))
           (signals "Too few arguments"))
