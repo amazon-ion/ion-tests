@@ -4,7 +4,7 @@
 
 (ion_1_1 "if_void"
 
-  (then "happy path"
+  (then "returns the correct subexpression"
     (mactab (macro m (v*)
               (if_void v true false)))
     (toplevel ('#$:m') ('#$:m' 1) ('#$:m' 1 2) ('#$:m' 1 2 3))
@@ -12,7 +12,7 @@
 
   (then "then-clause isn't evaluated unless selected"
     (mactab (macro m (p*)
-              (if_void p (make_string null) false)))
+              (if_void p (make_string {}) false)))
     (then (toplevel ('#$:m'))
           (signals "Not a text value"))
     (then (toplevel ('#$:m' 1))
@@ -20,7 +20,7 @@
 
   (then "else-clause isn't evaluated unless selected"
     (mactab (macro m (p*)
-              (if_void p true (make_string null))))
+              (if_void p true (make_string {}))))
     (then (toplevel ('#$:m'))
           (produces true))
     (then (toplevel ('#$:m' 1))
@@ -33,7 +33,7 @@
       (mactab (macro m () (if_void 1 2 3 4)))
       (signals "Malformed if_void form"))
 
-    (each "malformed subexpressions are cought at compile-time"
+    (each "malformed subexpressions are caught at compile-time"
       (mactab (macro m () (if_void (literal) 2 3)))
       (mactab (macro m () (if_void 1 (literal) 3)))
       (mactab (macro m () (if_void 1 2 (literal))))
@@ -42,7 +42,7 @@
 
 (ion_1_1 "if_single"
 
-  (then "happy path"
+  (then "returns the correct subexpression"
     (mactab (macro m (v*)
               (if_single v true false)))
     (toplevel ('#$:m') ('#$:m' 1) ('#$:m' 1 2) ('#$:m' 1 2 3))
@@ -50,7 +50,7 @@
 
   (then "then-clause isn't evaluated unless selected"
     (mactab (macro m (p*)
-              (if_single p (make_string null) false)))
+              (if_single p (make_string {}) false)))
     (then (toplevel ('#$:m'))
           (produces false))
     (then (toplevel ('#$:m' 1))
@@ -58,7 +58,7 @@
 
   (then "else-clause isn't evaluated unless selected"
     (mactab (macro m (p*)
-              (if_single p true (make_string null))))
+              (if_single p true (make_string {}))))
     (then (toplevel ('#$:m'))
           (signals "Not a text value"))
     (then (toplevel ('#$:m' 1))
@@ -80,7 +80,7 @@
 
 (ion_1_1 "if_multi"
 
-  (then "happy path"
+  (then "returns the correct subexpression"
     (mactab (macro m (v*)
               (if_multi v true false)))
     (toplevel ('#$:m') ('#$:m' 1) ('#$:m' 1 2) ('#$:m' 1 2 3))
@@ -88,7 +88,7 @@
 
   (then "then-clause isn't evaluated unless selected"
     (mactab (macro m (p*)
-              (if_multi p (make_string null) false)))
+              (if_multi p (make_string {}) false)))
     (then (toplevel ('#$:m'))
           (produces false))
     (then (toplevel ('#$:m' 1 2))
@@ -96,7 +96,7 @@
 
   (then "else-clause isn't evaluated unless selected"
     (mactab (macro m (p*)
-              (if_multi p true (make_string null))))
+              (if_multi p true (make_string {}))))
     (then (toplevel ('#$:m'))
           (signals "Not a text value"))
     (then (toplevel ('#$:m' 1 2))
