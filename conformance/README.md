@@ -631,7 +631,9 @@ expectation  ::=  "("  "produces"  datum*        ")"       // "datum" is any val
                |  "("  "not"       expectation   ")"
 
 extension    ::=  "("  "then"  name-string?  fragment*  continuation  ")"
-               |  "("  "each"  name-string?  fragment*  continuation  ")"
+               |  "("  "each"  each-branch*  continuation  ")"
+
+each-branch  ::=  name-string?  fragment
 
 bytes  ::=  int      // In the range 0..255
          |  string   // Containing hexadecimal digits and whitespace
