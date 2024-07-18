@@ -1,0 +1,152 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Tests covering cardinality and grouping in E-expression macro invocations.
+
+
+(ion_1_1 "! parameters"
+  (mactab
+    (macro m (v!) v))
+  (then "signals an error when invoked with too few arguments"
+        (toplevel ('#$:m'))
+        (signals "Too few arguments"))
+  (each (toplevel ('#$:m' ('#$:')))
+        (toplevel ('#$:m' ('#$:' 1)))
+        (toplevel ('#$:m' ('#$:' 1) 2))             // Hidden: too many args
+        (toplevel ('#$:m' ('#$:' 1 2)))
+        (signals "Unexpected argument group"))
+  (each (toplevel ('#$:m' ('#$:void')))
+        (signals "No value provided for parameter"))
+  (each (toplevel ('#$:m' ('#$:values' 1 2)))
+        (signals "More than one value provided for parameter"))
+  (each (toplevel ('#$:m' 1 2))
+        (toplevel ('#$:m' ('#$:void') 2))       // Hidden: no value
+        (toplevel ('#$:m' ('#$:values' 1 2) 2)) // Hidden: more than one value
+        (signals "Too many arguments")))
+
+
+(ion_1_1 "? parameters"
+  (then (mactab
+          (macro m (v?) v))
+        (each (toplevel ('#$:m'))
+              (toplevel ('#$:m' ('#$:')))
+              (toplevel ('#$:m' ('#$:values')))
+              (produces))
+        (each (toplevel ('#$:m' 1))
+              (toplevel ('#$:m' ('#$:' 1)))   // TODO should this be allowed? No group in binary
+              (toplevel ('#$:m' ('#$:values' 1)))
+              (produces 1))
+        (each (toplevel ('#$:m' ('#$:values' 1 2)))
+              (signals "More than one value provided for parameter"))
+        (each (toplevel ('#$:m' 1 2))
+              (toplevel ('#$:m' 1 ('#$:values')))
+              (toplevel ('#$:m' ('#$:' 1 2) 3))
+              (toplevel ('#$:m' ('#$:values') 1))
+              (signals "Too many arguments")))
+  (then (mactab
+          (macro m (v? w) [v, w]))
+        (each (toplevel ('#$:m'))
+              (toplevel ('#$:m' 2))
+              (signals "Too few arguments"))
+        (each (toplevel ('#$:m' ('#$:') 2))
+              (toplevel ('#$:m' ('#$:values') 2))
+              (produces [2]))
+        (each (toplevel ('#$:m' 1 2))
+              (toplevel ('#$:m' ('#$:' 1) 2))
+              (toplevel ('#$:m' ('#$:values' 1) 2))
+              (produces [1, 2]))
+        (each (toplevel ('#$:m' ('#$:' 1 2) 3))
+              (toplevel ('#$:m' ('#$:values' 1 2) 3))
+              (signals "More than one value provided for parameter"))
+        (each (toplevel ('#$:m' 1 2 3))
+              (toplevel ('#$:m' 1 2 ('#$:values')))
+              (signals "Too many arguments"))))
+
+
+(ion_1_1 "+ parameters"
+
+  (then (mactab
+          (macro m (v+) v))
+        (then (toplevel ('#$:m'))
+              (signals "Too few arguments"))
+        (each (toplevel ('#$:m' ('#$:')))        // TODO:[PLUS-GROUP] Wrong error?
+              (toplevel ('#$:m' ('#$:values')))
+              (signals "No value provided for parameter"))
+        (each (toplevel ('#$:m' 1))
+              (toplevel ('#$:m' ('#$:' 1)))
+              (toplevel ('#$:m' ('#$:values' 1)))
+              (toplevel ('#$:m' 1 ('#$:values')))    // Implicit rest
+              (toplevel ('#$:m' ('#$:values') 1))
+              (produces 1))
+        (each (toplevel ('#$:m' ('#$:' 1 2)))
+              (toplevel ('#$:m' ('#$:values' 1 2)))
+              (toplevel ('#$:m' 1 2))                // Implicit rest
+              (produces 1 2))
+        (each (toplevel ('#$:m' ('#$:') 1))
+              (signals "Too many arguments")))
+
+  (then (mactab
+          (macro m (v+ w) [v, w]))
+        (each (toplevel ('#$:m'))
+              (toplevel ('#$:m' 1))
+              (signals "Too few arguments"))
+        (each (toplevel ('#$:m' ('#$:') 2))
+              (toplevel ('#$:m' ('#$:values') 2))
+              (toplevel ('#$:m' 1 ('#$:values')))
+              (signals "No value provided for parameter"))
+        (each (toplevel ('#$:m' 1 x))
+              (toplevel ('#$:m' ('#$:' 1) x))
+              (toplevel ('#$:m' ('#$:values' 1) x))
+              (produces [1, x]))
+        (each (toplevel ('#$:m' ('#$:' 1 2) x))
+              (toplevel ('#$:m' ('#$:values' 1 2) x))
+              (produces [1, 2, x]))
+        (each (toplevel ('#$:m' 1 2 3))
+              (toplevel ('#$:m' ('#$:' 1 2) 3 4))
+              (signals "Too many arguments"))))
+
+
+(ion_1_1 "* parameters"
+
+  (then (mactab
+          (macro m (v*) v))
+        (each (toplevel ('#$:m'))
+              (toplevel ('#$:m' ('#$:')))
+              (toplevel ('#$:m' ('#$:values')))
+              (produces))
+        (each (toplevel ('#$:m' 1))
+              (toplevel ('#$:m' ('#$:' 1)))
+              (toplevel ('#$:m' ('#$:values' 1)))
+              (toplevel ('#$:m' ('#$:values') 1))   // Implicit rest
+              (toplevel ('#$:m' 1 ('#$:values')))
+              (produces 1))
+        (each (toplevel ('#$:m' ('#$:' 1 2)))
+              (toplevel ('#$:m' ('#$:values' 1 2)))
+              (toplevel ('#$:m' 1 2))
+              (toplevel ('#$:m' ('#$:values' 1) ('#$:values' 2)))
+              (produces 1 2))
+        (each (toplevel ('#$:m' ('#$:') 1))
+              (signals "Too many arguments")))
+
+  (then (mactab
+          (macro m (v* w) [v, w]))
+        (each (toplevel ('#$:m'))
+              (toplevel ('#$:m' 1))
+              (signals "Too few arguments"))
+        (each (toplevel ('#$:m' 1 ('#$:values')))
+              (signals "No value provided for parameter"))
+        (each (toplevel ('#$:m' ('#$:') x))
+              (toplevel ('#$:m' ('#$:values') x))
+              (produces [x]))
+        (each (toplevel ('#$:m' 1 x))
+              (toplevel ('#$:m' ('#$:' 1) x))
+              (toplevel ('#$:m' ('#$:values' 1) x))
+              (produces [1, x]))
+        (each (toplevel ('#$:m' ('#$:' 1 2) x))
+              (toplevel ('#$:m' ('#$:values' 1 2) x))
+              (produces [1, 2, x]))
+        (each (toplevel ('#$:m' 1 2 3))
+              (toplevel ('#$:m' ('#$:') 1 2))
+              (toplevel ('#$:m' ('#$:values') 1 2))
+              (toplevel ('#$:m' 1 ('#$:values') 2))
+              (signals "Too many arguments"))))
