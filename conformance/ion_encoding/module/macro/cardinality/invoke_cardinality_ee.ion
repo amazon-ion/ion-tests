@@ -63,7 +63,7 @@
               (signals "Too many arguments"))))
 
 
-(ion_1_1 "* parameters"
+(ion_1_1 "+ parameters"
 
   (then (mactab
           (macro m (v+) v))
@@ -106,7 +106,7 @@
               (signals "Too many arguments"))))
 
 
-(ion_1_1 "+ parameters"
+(ion_1_1 "* parameters"
 
   (then (mactab
           (macro m (v*) v))
