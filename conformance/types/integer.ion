@@ -1,0 +1,418 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(document "the integer zero"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (bytes "20")
+                      (bytes "21 00")
+                      (bytes "22 00 00")
+                      (bytes "24 00 00 00 00")
+                      (bytes "28 00 00 00 00 00 00 00 00")
+                      (bytes "2D 00 00 00 00 00 00 00 00 00 00 00 00 00")
+                      "with length as varuint"
+                      (bytes "2E 80")
+                      (bytes "2E 81 00")
+                      (bytes "2E 82 00 00")
+                      (bytes "2E 84 00 00 00 00")
+                      (bytes "2E 88 00 00 00 00 00 00 00 00")
+                      (bytes "2E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00")
+                      (denotes 0)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in opcode"
+                      (bytes "60")
+                      (bytes "61 00")
+                      (bytes "62 00 00")
+                      (bytes "63 00 00 00")
+                      (bytes "64 00 00 00 00")
+                      (bytes "65 00 00 00 00 00")
+                      (bytes "66 00 00 00 00 00 00")
+                      (bytes "67 00 00 00 00 00 00 00")
+                      (bytes "68 00 00 00 00 00 00 00 00")
+                      "with length in flexuint"
+                      (bytes "F6 01")
+                      (bytes "F6 03 00")
+                      (bytes "F6 05 00 00")
+                      (bytes "F6 07 00 00 00")
+                      (bytes "F6 09 00 00 00 00")
+                      (bytes "F6 0B 00 00 00 00 00")
+                      (bytes "F6 0D 00 00 00 00 00 00")
+                      (bytes "F6 0F 00 00 00 00 00 00 00")
+                      (bytes "F6 11 00 00 00 00 00 00 00 00")
+                      (bytes "F6 13 00 00 00 00 00 00 00 00 00")
+                      (bytes "F6 15 00 00 00 00 00 00 00 00 00 00")
+                      (denotes 0)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "using base10"
+                      (text "0")
+                      (text "-0")
+                      "using base16"
+                      (text "0x0")
+                      (text "-0x0")
+                      "using base2"
+                      (text "0b0")
+                      (text "-0b0")
+                      "with overpadded zeros"
+                      (text "0x00")
+                      (text "0x0000000")
+                      (text "0b00")
+                      (text "0b0000000")
+                      (denotes 0))))
+
+(document "a positive integer"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (bytes "21 01")
+                      (bytes "22 00 01")
+                      (bytes "24 00 00 00 01")
+                      (bytes "28 00 00 00 00 00 00 00 01")
+                      (bytes "2D 00 00 00 00 00 00 00 00 00 00 00 00 01")
+                      "with length as varuint"
+                      (bytes "2E 81 01")
+                      (bytes "2E 82 00 01")
+                      (bytes "2E 84 00 00 00 01")
+                      (bytes "2E 88 00 00 00 00 00 00 00 01")
+                      (bytes "2E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01")
+                      (denotes 1)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in opcode"
+                      (bytes "61 01")
+                      (bytes "62 01 00")
+                      (bytes "63 01 00 00")
+                      (bytes "64 01 00 00 00")
+                      (bytes "65 01 00 00 00 00")
+                      (bytes "66 01 00 00 00 00 00")
+                      (bytes "67 01 00 00 00 00 00 00")
+                      (bytes "68 01 00 00 00 00 00 00 00")
+                      "with length in flexuint"
+                      (bytes "F6 03 01")
+                      (bytes "F6 05 01 00")
+                      (bytes "F6 07 01 00 00")
+                      (bytes "F6 09 01 00 00 00")
+                      (bytes "F6 0B 01 00 00 00 00")
+                      (bytes "F6 0D 01 00 00 00 00 00")
+                      (bytes "F6 0F 01 00 00 00 00 00 00")
+                      (bytes "F6 11 01 00 00 00 00 00 00 00")
+                      (bytes "F6 13 01 00 00 00 00 00 00 00 00")
+                      (bytes "F6 15 01 00 00 00 00 00 00 00 00 00")
+                      (denotes 1)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "using base10"
+                      (text "1")
+                      "using base16"
+                      (text "0x1")
+                      "using base2"
+                      (text "0b1")
+                      "with overpadded zeros"
+                      (text "0x01")
+                      (text "0x0000001")
+                      (text "0b01")
+                      (text "0b0000001")
+                      (denotes 1))))
+
+(document "a negative integer"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (bytes "31 01")
+                      (bytes "32 00 01")
+                      (bytes "34 00 00 00 01")
+                      (bytes "38 00 00 00 00 00 00 00 01")
+                      (bytes "3D 00 00 00 00 00 00 00 00 00 00 00 00 01")
+                      "with length as varuint"
+                      (bytes "3E 81 01")
+                      (bytes "3E 82 00 01")
+                      (bytes "3E 84 00 00 00 01")
+                      (bytes "3E 88 00 00 00 00 00 00 00 01")
+                      (bytes "3E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01")
+                      (denotes -1)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in opcode"
+                      (bytes "61 FF")
+                      (bytes "62 FF FF")
+                      (bytes "63 FF FF FF")
+                      (bytes "64 FF FF FF FF")
+                      (bytes "65 FF FF FF FF FF")
+                      (bytes "66 FF FF FF FF FF FF")
+                      (bytes "67 FF FF FF FF FF FF FF")
+                      (bytes "68 FF FF FF FF FF FF FF FF")
+                      "with length in flexuint"
+                      (bytes "F6 03 FF")
+                      (bytes "F6 05 FF FF")
+                      (bytes "F6 07 FF FF FF")
+                      (bytes "F6 09 FF FF FF FF")
+                      (bytes "F6 0B FF FF FF FF FF")
+                      (bytes "F6 0D FF FF FF FF FF FF")
+                      (bytes "F6 0F FF FF FF FF FF FF FF")
+                      (bytes "F6 11 FF FF FF FF FF FF FF FF")
+                      (bytes "F6 13 FF FF FF FF FF FF FF FF FF")
+                      (bytes "F6 15 FF FF FF FF FF FF FF FF FF FF")
+                      (denotes -1)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "using base10"
+                      (text "-1")
+                      "using base16"
+                      (text "-0x1")
+                      "using base2"
+                      (text "-0b1")
+                      "with overpadded zeros"
+                      (text "-0x01")
+                      (text "-0x0000001")
+                      (text "-0b01")
+                      (text "-0b0000001")
+                      (denotes -1))))
+
+(document "a medium positive integer" // multiple digits/bytes
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (bytes "22 1C 4D")
+                      (bytes "24 00 00 1C 4D")
+                      (bytes "28 00 00 00 00 00 00 1C 4D")
+                      (bytes "2D 00 00 00 00 00 00 00 00 00 00 00 1C 4D")
+                      "with length as varuint"
+                      (bytes "2E 82 1C 4D")
+                      (bytes "2E 84 00 00 1C 4D")
+                      (bytes "2E 88 00 00 00 00 00 00 1C 4D")
+                      (bytes "2E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1C 4D")
+                      (denotes 7245)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in opcode"
+                      (bytes "62 4D 1C")
+                      (bytes "63 4D 1C 00")
+                      (bytes "64 4D 1C 00 00")
+                      (bytes "65 4D 1C 00 00 00")
+                      (bytes "66 4D 1C 00 00 00 00")
+                      (bytes "67 4D 1C 00 00 00 00 00")
+                      (bytes "68 4D 1C 00 00 00 00 00 00")
+                      "with length in flexuint"
+                      (bytes "F6 05 4D 1C")
+                      (bytes "F6 07 4D 1C 00")
+                      (bytes "F6 09 4D 1C 00 00")
+                      (bytes "F6 0B 4D 1C 00 00 00")
+                      (bytes "F6 0D 4D 1C 00 00 00 00")
+                      (bytes "F6 0F 4D 1C 00 00 00 00 00")
+                      (bytes "F6 11 4D 1C 00 00 00 00 00 00")
+                      (bytes "F6 13 4D 1C 00 00 00 00 00 00 00")
+                      (bytes "F6 15 4D 1C 00 00 00 00 00 00 00 00")
+                      (denotes 7245)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "using base10"
+                      (text "7245")
+                      "using base16"
+                      (text "0x1C4D")
+                      (text "0x1c4d")
+                      (text "0X1C4D")
+                      (text "0X1c4d")
+                      "using base2"
+                      (text "0b1110001001101")
+                      (text "0B1110001001101")
+                      "with overpadded zeros"
+                      (text "0x01C4D")
+                      (text "0x0000001C4D")
+                      (text "0b01110001001101")
+                      (text "0b0000001110001001101")
+                      "with underscores for spacing"
+                      (text "7_245")
+                      (text "7_2_4_5")
+                      (text "0x1_C4D")
+                      (text "0x1_C_4_D")
+                      (text "0b00011100_01001101")
+                      (text "0b0_0_0_1_1_1_0_0_0_1_0_0_1_1_0_1")
+                      (denotes 7245))))
+
+(document "a medium negative integer" // multiple digits/bytes
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (bytes "32 1C 4D")
+                      (bytes "34 00 00 1C 4D")
+                      (bytes "38 00 00 00 00 00 00 1C 4D")
+                      (bytes "3D 00 00 00 00 00 00 00 00 00 00 00 1C 4D")
+                      "with length as varuint"
+                      (bytes "3E 82 1C 4D")
+                      (bytes "3E 84 00 00 1C 4D")
+                      (bytes "3E 88 00 00 00 00 00 00 1C 4D")
+                      (bytes "3E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1C 4D")
+                      (denotes -7245)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in opcode"
+                      (bytes "62 B3 E3")
+                      (bytes "63 B3 E3 FF")
+                      (bytes "64 B3 E3 FF FF")
+                      (bytes "65 B3 E3 FF FF FF")
+                      (bytes "66 B3 E3 FF FF FF FF")
+                      (bytes "67 B3 E3 FF FF FF FF FF")
+                      (bytes "68 B3 E3 FF FF FF FF FF FF")
+                      "with length in flexuint"
+                      (bytes "F6 05 B3 E3")
+                      (bytes "F6 07 B3 E3 FF")
+                      (bytes "F6 09 B3 E3 FF FF")
+                      (bytes "F6 0B B3 E3 FF FF FF")
+                      (bytes "F6 0D B3 E3 FF FF FF FF")
+                      (bytes "F6 0F B3 E3 FF FF FF FF FF")
+                      (bytes "F6 11 B3 E3 FF FF FF FF FF FF")
+                      (bytes "F6 13 B3 E3 FF FF FF FF FF FF FF")
+                      (bytes "F6 15 B3 E3 FF FF FF FF FF FF FF FF")
+                      (denotes -7245)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "using base10"
+                      (text "-7245")
+                      "using base16"
+                      (text "-0x1C4D")
+                      (text "-0x1c4d")
+                      (text "-0X1C4D")
+                      (text "-0X1c4d")
+                      "using base2"
+                      (text "-0b1110001001101")
+                      (text "-0B1110001001101")
+                      "with overpadded zeros"
+                      (text "-0x01C4D")
+                      (text "-0x0000001C4D")
+                      (text "-0b01110001001101")
+                      (text "-0b0000001110001001101")
+                      "with underscores for spacing"
+                      (text "-7_245")
+                      (text "-7_2_4_5")
+                      (text "-0x1_C4D")
+                      (text "-0x1_C_4_D")
+                      (text "-0b00011100_01001101")
+                      (text "-0b0_0_0_1_1_1_0_0_0_1_0_0_1_1_0_1")
+                      (denotes -7245))))
+
+(document "a very large positive integer" // i.e. more than 64 bits
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (bytes "29 12 34 56 78 9A BC DE F0 12")
+                      (bytes "2D 00 00 00 00 12 34 56 78 9A BC DE F0 12")
+                      "with length as varuint"
+                      (bytes "2E 89 12 34 56 78 9A BC DE F0 12")
+                      (bytes "2E 90 00 00 00 00 00 00 00 12 34 56 78 9A BC DE F0 12")
+                      (denotes 335812727670730321938)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in flexuint"
+                      (bytes "F6 13 12 F0 DE BC 9A 78 56 34 12")
+                      (bytes "F6 15 12 F0 DE BC 9A 78 56 34 12 00")
+                      (bytes "F6 17 12 F0 DE BC 9A 78 56 34 12 00 00")
+                      (denotes 335812727670730321938)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "using base10"
+                      (text "335812727670730321938")
+                      "using base16"
+                      (text "0x123456789ABCDEF012")
+                      "using base2"
+                      (text "0b000100100011010001010110011110001001101010111100110111101111000000010010")
+                      "with overpadded zeros"
+                      (text "0x0123456789ABCDEF012")
+                      (text "0x000000123456789ABCDEF012")
+                      (text "0b0000100100011010001010110011110001001101010111100110111101111000000010010")
+                      (text "0b000000000100100011010001010110011110001001101010111100110111101111000000010010")
+                      (denotes 335812727670730321938))))
+
+(document "a very large negative integer" // i.e. more than 64 bits
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (bytes "39 12 34 56 78 9A BC DE F0 12")
+                      (bytes "3D 00 00 00 00 12 34 56 78 9A BC DE F0 12")
+                      "with length as varuint"
+                      (bytes "3E 89 12 34 56 78 9A BC DE F0 12")
+                      (bytes "3E 90 00 00 00 00 00 00 00 12 34 56 78 9A BC DE F0 12")
+                      (denotes -335812727670730321938)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in flexuint"
+                      (bytes "F6 13 EE 0F 21 43 65 87 A9 CB ED")
+                      (bytes "F6 15 EE 0F 21 43 65 87 A9 CB ED FF")
+                      (bytes "F6 17 EE 0F 21 43 65 87 A9 CB ED FF FF")
+                      (denotes -335812727670730321938)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "using base10"
+                      (text "-335812727670730321938")
+                      "using base16"
+                      (text "-0x123456789ABCDEF012")
+                      "using base2"
+                      (text "-0b000100100011010001010110011110001001101010111100110111101111000000010010")
+                      "with overpadded zeros"
+                      (text "-0x0123456789ABCDEF012")
+                      (text "-0x000000123456789ABCDEF012")
+                      (text "-0b0000100100011010001010110011110001001101010111100110111101111000000010010")
+                      (text "-0b000000000100100011010001010110011110001001101010111100110111101111000000010010")
+                      (denotes -335812727670730321938))))
+
+(ion_1_x "in Ion text, an integer with leading zeros is invalid"
+         (each (text "00")
+               (text "-00")
+               (text "053")
+               (text "00000053")
+               (text "-054")
+               (text "-00000054")
+               (text "00x5F")
+               (text "00b1001")
+               (signals "invalid leading zero")))
+
+(ion_1_0 "integer zero encoded with type code 3 is invalid"
+         (each (bytes "30")
+               (bytes "31 00")
+               (bytes "32 00 00")
+               (bytes "34 00 00 00 00")
+               (bytes "38 00 00 00 00 00 00 00 00")
+               (bytes "3D 00 00 00 00 00 00 00 00 00 00 00 00 00 00")
+               (bytes "3E 80")
+               (bytes "3E 81 00")
+               (bytes "3E 82 00 00")
+               (bytes "3E 84 00 00 00 00")
+               (bytes "3E 88 00 00 00 00 00 00 00 00")
+               (bytes "3E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00")
+               (signals "int zero may not be negative")))
+
+(ion_1_x "an integer with an unexpected non-numeric character should raise an error"
+         (each "an unexpected non-numeric character"
+               (text "1a")
+               (text "0xx1")
+               (text "0x1g")
+               (text "1a")
+               (text "1a")
+               (text "0c10")
+               (text "0b1a")
+               (text "0bb1010")
+               "spacing underscores in the wrong location"
+               (text "0x_1")
+               (text "0b_1")
+               "consecutive underscores"
+               (text "-6____0")
+               (text "-0x3____c")
+               (text "-0b00__11__11__00")
+               (signals "numeric value followed by invalid character")))
+
+// TODO: Should we test that incomplete binary integers signal an error? (i.e. EOF is reached before the end of the value.)

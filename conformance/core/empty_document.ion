@@ -53,3 +53,19 @@
 
 (ion_1_x (then null.string (denotes)))
 (ion_1_x (each null.string (denotes)))
+
+// With empty fragments
+
+(ion_1_0 (bytes) (produces))
+(ion_1_1 (bytes) (produces))
+(ion_1_x (bytes) (produces))
+
+(document (text) (produces))
+(ion_1_0 (text) (produces))
+(ion_1_1 (text) (produces))
+(ion_1_x (text) (produces))
+
+(document (toplevel) (produces))
+(ion_1_0 (toplevel) (produces))
+(ion_1_1 (toplevel) (produces))
+(ion_1_x (toplevel) (produces))

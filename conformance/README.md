@@ -196,15 +196,15 @@ binary before processing.
 We say "effectively" because the implementation is not _required_ to do such
 transcoding; that is not the behavior under test.
 It may be easier and/or faster to skip that, as long as the observable results
-are equivalent: the effect on the encoding context, the data produced, and any 
+are equivalent: the effect on the encoding context, the data produced, and any
 errors signaled.
 
 When all fragments are abstract (that is, there are no `text` or `binary`
 fragments on the path to an expectation), it is assumed that the test case is
 not intended to verify the behavior of the Ion parser/decoder, but rather the
 expansion process that happens after parsing completes.
-The implementation may verify the test accordingly, by transcoding to text 
-and/or binary if necessary, or doing neither if it can handle the abstract 
+The implementation may verify the test accordingly, by transcoding to text
+and/or binary if necessary, or doing neither if it can handle the abstract
 syntax more directly.
 For example, the framework could surface a stream of "raw" low-level events
 common to both formats.
@@ -242,14 +242,14 @@ example is equivalent to:
 To make a more meaningful test, we must add some input to the document:
 
 ```
-(document (text "null.int") 
+(document (text "null.int")
           (denotes (Null int)))
 ```
 
 Here, the input document is an eight-byte text document containing exactly the
 given characters, and the test expects the implementation to produce a null `int`.
 
-The `ion_1_*` clauses are shorthands for extending the empty document with Ion 
+The `ion_1_*` clauses are shorthands for extending the empty document with Ion
 version markers.
 To be more specific, `(ion_1_0 _form_ ...)` is equivalent to:
 
@@ -648,7 +648,7 @@ in the Ion data model, or an error condition.
 
 At entry to every clause, there exists a well-defined (non-empty) set of
 (potentially empty) abstract documents.
-The outermost clauses `document`, `ion_1_0`, `ion_1_1`, and `ion_1_x` provide 
+The outermost clauses `document`, `ion_1_0`, `ion_1_1`, and `ion_1_x` provide
 the initial set of documents to be extended by nested clauses.
 Each *fragment* appends some top-level content to each document in progress.
 Note that at each step, all documents are well-formed.
@@ -751,7 +751,7 @@ in JSON. For example:
 ```
 ["ion_1_1", ["each",
                ["text", "1"],
-               ["bytes", 0x51],
+               ["bytes", 0x61, 0x01],
                ["toplevel", 1],
                ["produces", 1]]]
 ```
