@@ -2,22 +2,22 @@ $ion_1_1
 
 {
   'a list': [1, 2, 3],
-  'a list with voids': [1, (:none), 2, (:none), 3, (:none)],
+  'a list with nones': [1, (:none), 2, (:none), 3, (:none)],
 }
 
 {
   'an empty list': [],
-  'a list with only voids': [(:none), (:none)],
+  'a list with only nones': [(:none), (:none)],
 }
 
 {
   'a sexp': (1 2 3),
-  'a sexp with voids': (1 (:none) 2 (:none) 3 (:none)),
+  'a sexp with nones': (1 (:none) 2 (:none) 3 (:none)),
 }
 
 {
   'an empty sexp': (),
-  'a sexp with only voids': ((:none) (:none)),
+  'a sexp with only nones': ((:none) (:none)),
 }
 
 {
@@ -28,7 +28,7 @@ $ion_1_1
 
 {
   'an empty struct': {},
-  'a struct with only voids': {(:none), (:none)},
+  'a struct with only nones': {(:none), (:none)},
   'a struct with only none fields': { a: (:none), b: (:none) },
 }
 
