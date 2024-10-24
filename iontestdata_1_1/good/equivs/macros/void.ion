@@ -2,34 +2,34 @@ $ion_1_1
 
 {
   'a list': [1, 2, 3],
-  'a list with voids': [1, (:void), 2, (:void), 3, (:void)],
+  'a list with voids': [1, (:none), 2, (:none), 3, (:none)],
 }
 
 {
   'an empty list': [],
-  'a list with only voids': [(:void), (:void)],
+  'a list with only voids': [(:none), (:none)],
 }
 
 {
   'a sexp': (1 2 3),
-  'a sexp with voids': (1 (:void) 2 (:void) 3 (:void)),
+  'a sexp with voids': (1 (:none) 2 (:none) 3 (:none)),
 }
 
 {
   'an empty sexp': (),
-  'a sexp with only voids': ((:void) (:void)),
+  'a sexp with only voids': ((:none) (:none)),
 }
 
 {
   'a struct': { a: 1 },
-  'a struct with void macro': { a: 1, (:void) },
-  'a struct with void field value': { a: 1, b: (:void) },
+  'a struct with none macro': { a: 1, (:none) },
+  'a struct with none field value': { a: 1, b: (:none) },
 }
 
 {
   'an empty struct': {},
-  'a struct with only voids': {(:void), (:void)},
-  'a struct with only void fields': { a: (:void), b: (:void) },
+  'a struct with only voids': {(:none), (:none)},
+  'a struct with only none fields': { a: (:none), b: (:none) },
 }
 
 embedded_documents::{
@@ -37,9 +37,9 @@ embedded_documents::{
     '''
     $ion_1_1
     ''',
-  'void macro at the top level':
+  'none macro at the top level':
     '''
     $ion_1_1
-    (:void)
+    (:none)
     ''',
 }

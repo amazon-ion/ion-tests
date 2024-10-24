@@ -1,6 +1,6 @@
 $ion_1_1
-[ (:void) ]
-[ (:void), ]
-[ a, (:void) ]
-[ (:void), b ]
-[ (:void), (:void), c ]
+[ (:none) ]
+[ (:none), ]
+[ a, (:none) ]
+[ (:none), b ]
+[ (:none), (:none), c ]

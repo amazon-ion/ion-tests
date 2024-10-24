@@ -15,12 +15,12 @@
         (toplevel ('#$:m' ('#$:' 1) 2))             // Hidden: too many args
         (toplevel ('#$:m' ('#$:' 1 2)))
         (signals "Unexpected argument group"))
-  (each (toplevel ('#$:m' ('#$:void')))
+  (each (toplevel ('#$:m' ('#$:none')))
         (signals "No value provided for parameter"))
   (each (toplevel ('#$:m' ('#$:values' 1 2)))
         (signals "More than one value provided for parameter"))
   (each (toplevel ('#$:m' 1 2))
-        (toplevel ('#$:m' ('#$:void') 2))       // Hidden: no value
+        (toplevel ('#$:m' ('#$:none') 2))       // Hidden: no value
         (toplevel ('#$:m' ('#$:values' 1 2) 2)) // Hidden: more than one value
         (signals "Too many arguments")))
 

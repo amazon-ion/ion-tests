@@ -30,7 +30,7 @@
   (encoding (module M (macro_table $ion))
             (macro_table M))
   (each
-    (toplevel ('#$:make_symbol' ('#$:values' "a" b) ('#$:void' x) c))
+    (toplevel ('#$:make_symbol' ('#$:values' "a" b) ('#$:none' x) c))
     (toplevel ('#$:M:3'         ('#$:M:1'    "a" b) ('#$:M:0'  x) c))
     (toplevel ('#$:3'           ('#$:1'      "a" b) ('#$:0'    x) c))
     (produces abc)))

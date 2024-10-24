@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-// void
+// none
 
 (ion_1_1
-  (each (toplevel 1 ('#$:$ion:void') 2)
+  (each (toplevel 1 ('#$:$ion:none') 2)
         (toplevel 1 ('#$:$ion:0')    2)
-        (toplevel 1 ('#$:void')      2)
+        (toplevel 1 ('#$:none')      2)
         (produces 1                  2)))
 
 // TODO should this stay true?
 (ion_1_1
-  (toplevel 1 ('#$:$ion:void' true ('#$:void' false)) 2)
+  (toplevel 1 ('#$:$ion:none' true ('#$:none' false)) 2)
   (produces 1 2))
 
 
