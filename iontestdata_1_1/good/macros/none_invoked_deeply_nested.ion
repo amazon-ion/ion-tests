@@ -1,0 +1,25 @@
+$ion_1_1
+[
+  [[ (:none) ]],
+  [( (:none) )],
+  [{ (:none) }],
+  [{ a: (:none) }],
+  [(:values (:none) )],
+  ([ (:none) ]),
+  (( (:none) )),
+  ({ (:none) }),
+  ({ a: (:none) }),
+  ((:values (:none) )),
+  { a: [ (:none) ] },
+  { a: ( (:none) ) },
+  { a: { (:none) } },
+  { a: { a: (:none) } },
+  {(:values (:none) )},
+  {
+    a: [(:none)],
+    b: [{c:(:none)}],
+    d: { e: ((:none))},
+    f: [([(:none)])],
+    g: (:none),
+  },
+]

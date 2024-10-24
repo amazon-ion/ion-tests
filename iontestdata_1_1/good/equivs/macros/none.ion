@@ -1,0 +1,45 @@
+$ion_1_1
+
+{
+  'a list': [1, 2, 3],
+  'a list with nones': [1, (:none), 2, (:none), 3, (:none)],
+}
+
+{
+  'an empty list': [],
+  'a list with only nones': [(:none), (:none)],
+}
+
+{
+  'a sexp': (1 2 3),
+  'a sexp with nones': (1 (:none) 2 (:none) 3 (:none)),
+}
+
+{
+  'an empty sexp': (),
+  'a sexp with only nones': ((:none) (:none)),
+}
+
+{
+  'a struct': { a: 1 },
+  'a struct with none macro': { a: 1, (:none) },
+  'a struct with none field value': { a: 1, b: (:none) },
+}
+
+{
+  'an empty struct': {},
+  'a struct with only nones': {(:none), (:none)},
+  'a struct with only none fields': { a: (:none), b: (:none) },
+}
+
+embedded_documents::{
+  'a document with no values':
+    '''
+    $ion_1_1
+    ''',
+  'none macro at the top level':
+    '''
+    $ion_1_1
+    (:none)
+    ''',
+}

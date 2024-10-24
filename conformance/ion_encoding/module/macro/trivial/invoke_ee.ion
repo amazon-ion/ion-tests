@@ -24,14 +24,14 @@
           (macro M2 () "M2")
           $ion)
   (then (toplevel ('#$:0') ('#$:1') ('#$:M:0') ('#$:M:1') [('#$:2'), ('#$:M:2')])
-        (produces "M1"     "M2"     "M1"       "M2"       [/*void*/   /*void*/ ]))
+        (produces "M1"     "M2"     "M1"       "M2"       [/*none*/   /*none*/ ]))
   (each (toplevel ('#$:0'))
         (toplevel ('#$:M:0'))
         (produces "M1"))
   (each (toplevel ('#$:1'))
         (toplevel ('#$:M:1'))
         (produces "M2"))
-  (each "invocations of :void at user address"
+  (each "invocations of :none at user address"
         (toplevel ('#$:2'))
         (toplevel ('#$:M:2'))
         (produces)))
