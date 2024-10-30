@@ -636,7 +636,7 @@ extension    ::=  "("  "then"  name-string?  fragment*  continuation  ")"
 each-branch  ::=  name-string?  fragment
 
 bytes  ::=  int      // In the range 0..255
-         |  string   // Containing hexadecimal digits and whitespace
+         |  string   // Containing hexadecimal digit pairs with optional whitespace
 ```
 
 TODO: Explain `ast`

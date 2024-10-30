@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Checks the syntax of the conformance test files against an ISL grammar for the conformance DSL.
+
+# This requires at least ion-cli@0.8.0 for the `-R` option.
+# We have to include the `--no-auto-decompress` flag because there's an issue that prevents Ion CLI from
+# correctly reading files that start with a line comment.
+# See: https://github.com/amazon-ion/ion-cli/issues/162
+ion schema -X validate --no-auto-decompress -RE -f conformance/grammar.isl test_file conformance/**/*.ion
