@@ -1,0 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// values can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// values has one parameter that accept zero-to-many arguments and produces its input

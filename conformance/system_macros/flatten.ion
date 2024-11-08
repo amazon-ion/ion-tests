@@ -1,0 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// flatten can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// the argument values may be zero or more non-null lists and s-expressions
+// flatten expands to a stream whose elements are the concatenated elements of all its arguments
+// annotations on the argument (list and sexp) values are silently dropped

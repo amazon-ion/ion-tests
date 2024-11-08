@@ -1,0 +1,12 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// delta can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// the arguments of delta must be non-null integers
+// the "initial" argument is required
+// the "delta" argument can be zero or more values
+// any annotations on the arguments are silently dropped
+// the output of delta is defined as follows:
+//    output₀ = initial + delta₀
+//    outputₙ₊₁ = outputₙ + deltaₙ₊₁

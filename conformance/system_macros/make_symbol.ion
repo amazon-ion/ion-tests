@@ -1,0 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// make_symbol can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// make_symbol creates a single unannotated symbol from zero or more text values
+// null values, unknown symbol text, and non-text values must signal an error
+// annotations on the argment values are silently dropped

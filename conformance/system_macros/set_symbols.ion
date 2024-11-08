@@ -1,0 +1,9 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// set_symbols can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// the argument values may be zero or more non-null text values
+// set_symbols does not have any side-effects on the macro table
+// set_symbols replaces the current symbol table with a new symbol table that consists of the arguments of set_symbols
+// annotations on any argument value should signal an error (because it's not allowed in the symbol table rather than because of any specific validation by the set_symbols macro)

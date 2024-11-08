@@ -3,7 +3,52 @@
 This directory contains conformance tests for Ion, expressed using a small,
 declarative domain-specific language.
 
+**Contents**
+ * `core/` – test cases for verifying the functionality of a conformance DSL runner
+ * `eexp/` – test cases for parsing/interpretation of e-expressions and their arguments
+ * `ion_encoding/` – test cases for encoding directives
+   * `module/`
+ * `system_macros/` – test cases for each of the system macros
+ * `types/` – test cases for the encodings of types in the Ion data model
+
+> [!WARNING]
 > This test suite and its DSL are **Work In Progress**.
+
+
+# Test Tiers
+
+The full DSL requires a complete Ion text parser at minimum (to read
+the DSL S-expressions), and some aspects require a writer or encoder as well.
+This raises the question of how we can lower the bar so that we can write tests
+that can be exercised for an in-progress Ion implementation earlier than that
+point.
+
+We intend to approach this problem by carefully partitioning the test files,
+and by expressing the earliest phases, that is the lowest-level test cases,
+can be converted to JSON using `ion to json` (see [`ion-cli`](https://github.com/amazon-ion/ion-cli)).
+For example,
+
+```
+["ion_1_1", ["each",
+               ["text", "1"],
+               ["bytes", 0x61, 0x01],
+               ["toplevel", 1],
+               ["produces", 1]]]
+```
+
+The next logical tiers would introduce basic symbols and sexps into the parser.
+Here, the `denotes` expectation becomes valuable:
+
+```
+["ion_1_x", ["text", "(1 2.3)"],
+            ["denotes", ["Sexp", ["Int", 1], ["Decimal", 23, -1]]]]
+```
+
+The inner clauses should align with the formal data model in the denotational
+semantics, which would (more or less) reduce the components to integers and
+strings.
+
+# The Test DSL
 
 At a high level, each test case in the DSL consists of an input document and an
 expectation that should be met when the document is evaluated by an Ion
@@ -734,39 +779,6 @@ annotated       ::=  "("  "annot"  model-content  model-symtok*  ")"
 The `model-content` forms `(string ...)` and `(symbol (text ...))` express text
 in terms of Unicode code points, which is needed to test parsing of escape
 sequences.
-
-
-# Test Tiers
-
-The full DSL requires a complete Ion text parser at minimum (to read
-the DSL S-expressions), and some aspects require a writer or encoder as well.
-This raises the question of how we can lower the bar so that we can write tests
-that can be exercised for an in-progress Ion implementation earlier than that
-point.
-
-We intend to approach this problem by carefully partitioning the test files,
-and by expressing the earliest phases, that is the lowest-level test cases,
-in JSON. For example:
-
-```
-["ion_1_1", ["each",
-               ["text", "1"],
-               ["bytes", 0x61, 0x01],
-               ["toplevel", 1],
-               ["produces", 1]]]
-```
-
-The next logical tiers would introduce basic symbols and sexps into the parser.
-Here, the `denotes` expectation becomes valuable:
-
-```
-["ion_1_x", ["text", "(1 2.3)"],
-            ["denotes", ["Sexp", ["Int", 1], ["Decimal", 23, -1]]]]
-```
-
-The inner clauses should align with the formal data model in the denotational
-semantics, which would (more or less) reduce the components to integers and
-strings.
 
 
 # WIP TODOs

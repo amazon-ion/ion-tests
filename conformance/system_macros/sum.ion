@@ -1,0 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// sum can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// the arguments of sum must be zero or more non-null integers
+// any annotations on the arguments are silently dropped
+// the output of sum is the sum of all its argument values

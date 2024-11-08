@@ -1,0 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// make_struct can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// the argument values may be zero or more non-null structs
+// make_struct creates a single unannotated struct whose fields are the concatenated fields of all its arguments
+// annotations on the argument values are silently dropped
