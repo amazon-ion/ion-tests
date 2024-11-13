@@ -6,4 +6,4 @@
 // the argument values may be zero or more non-null text values
 // add_symbols does not have any side-effects on the macro table
 // add_symbols should append its arguments to the symbol table of the default module
-// annotations on any argument value should signal an error (because it's not allowed in the symbol table rather than because of any specific validation by the set_symbols macro)
+// annotations on any argument value should signal an error (because it's not allowed in the symbol table rather than because of any specific validation by the add_symbols macro)

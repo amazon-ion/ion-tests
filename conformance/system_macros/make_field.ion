@@ -3,7 +3,7 @@
 
 // Test Cases:
 // make_field can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
-// the first argument must a non-null text value
+// the first argument must expand to a single non-null text value (`$0` is allowed)
 // annotations first argument are silently dropped
 // the second argument may be any expression
 // make_field expands to a single unannotated struct containing only field(s) with the first argument as the field name,

@@ -8,7 +8,7 @@
 // if any argument is null, it should signal an error
 // year must be from 0 to 9999 (inclusive)
 // month must be from 1 to 12 (inclusive)
-// if month  is present, year must also be present
+// if month is present, year must also be present
 // day must be from 1 to 28,29,30, or 31 (inclusive) depending on the month
 // if day is present, month must also be present
 // hour must be from 0 to 23 (inclusive)
