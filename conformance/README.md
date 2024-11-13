@@ -19,7 +19,7 @@ declarative domain-specific language.
 
 The full DSL requires a complete Ion text parser at minimum (to read
 the DSL S-expressions), and some aspects require a writer or encoder as well.
-This raises the question of how we can lower the bar so that we can write tests
+This raises the question of how we can lower the barrier to entry so that we can write tests
 that can be exercised for an in-progress Ion implementation earlier than that
 point.
 
