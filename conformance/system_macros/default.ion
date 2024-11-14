@@ -1,0 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// default can be invoked using any type of macro reference.
+// both arguments may be any expression or expression group
+// if the first argument is non-empty
+//    - `default` produces the first argument as its result
+//    - the second argument is not expanded
+// if the first argument is empty (i.e. none), `default` produces the second argument as its result

@@ -1,0 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// none can be invoked using any type of macro reference.
+// none accepts no arguments and produces nothing

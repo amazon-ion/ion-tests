@@ -1,0 +1,10 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// set_macros can be invoked using any type of macro reference.
+// the argument values may be zero or more macro definitions
+//    TODO: Could it also be a module or an export?
+// set_macros does not have any side-effects on the symbol table
+// set_macros replaces the current macro table with a new macro table that consists of the arguments of set_macros
+// annotations on any argument value should signal an error (because it's not allowed in the macro table rather than because of any specific validation by the set_macros macro)

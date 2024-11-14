@@ -1,0 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// make_sexp can be invoked using any type of macro reference.
+// the argument values may be zero or more non-null lists and s-expressions
+// make_sexp creates a single unannotated s-expression whose elements are the concatenated elements of all its arguments
+// annotations on the argument values are silently dropped

@@ -1,0 +1,12 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// `use` can be invoked using any type of macro reference.
+// the first parameter must have a single argument value that is a non-null, unannotated string
+// the second parameter may be absent or it may be a single value that is a non-null, unannotated, positive integer
+// if the second parameter is absent, it has an implicit default value of 1
+// if the <catalog_key, version> pair cannot be located, in the catalog, the reader should signal an error
+// invoking `use` should preserve all existing symbols and macros
+// invoking `use` should import the specified module and append its content to the default module's symbol table and macro table
+// `use` should not (re)define any existing stream-level module bindings
