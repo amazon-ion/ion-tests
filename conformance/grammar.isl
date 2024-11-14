@@ -17,6 +17,14 @@ type::{
 }
 
 type::{
+  name: text_input,
+  one_of: [
+    string,
+    { type: int, valid_values: range::[0x00, 0xFF]},
+  ]
+}
+
+type::{
   name: codepoint,
   type: int,
   valid_values: range::[0, 0x10FFFF]
@@ -163,12 +171,12 @@ type::{
 
 type::{
   name: text_clause,
-  ordered_elements: [ { valid_values: [text, "text"] }, { type: string, occurs: range::[0, max] }, ]
+  ordered_elements: [ { valid_values: [text, "text"] }, { type: text_input, occurs: range::[0, max] }, ]
 }
 
 type::{
   name: binary_clause,
-  ordered_elements: [ { valid_values: [binary, "binary", "bytes", bytes] }, { type: bytes, occurs: range::[0, max] }, ]
+  ordered_elements: [ { valid_values: [binary, "binary"] }, { type: bytes, occurs: range::[0, max] }, ]
 }
 
 // Expectations

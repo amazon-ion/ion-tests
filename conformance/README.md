@@ -615,7 +615,7 @@ test ::=  "("  "document" name-string?  fragment*  continuation  ")"
 
 name-string ::= string
 
-fragment ::=  "("  "text"      string*  ")"
+fragment ::=  "("  "text"      text_input*  ")"
            |  "("  "binary"    bytes*   ")"
            |  "("  "ivm"       int int  ")"
            |  "("  "toplevel"  ast*     ")"
@@ -635,8 +635,11 @@ extension    ::=  "("  "then"  name-string?  fragment*  continuation  ")"
 
 each-branch  ::=  name-string?  fragment
 
-bytes  ::=  int      // In the range 0..255
-         |  string   // Containing hexadecimal digit pairs with optional whitespace
+text_input   ::=  int      // In the range 0..255
+               |  string
+
+bytes        ::=  int      // In the range 0..255
+               |  string   // Containing hexadecimal digit pairs with optional whitespace
 ```
 
 TODO: Explain `ast`
