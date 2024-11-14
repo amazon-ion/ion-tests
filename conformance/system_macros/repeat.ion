@@ -1,0 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// repeat can be invoked using any type of macro reference.
+// repeat can repeat things the correct number of times
+// the number of repetitions must be a single expression that expands to one positive integer (i.e. an integer greater than zero)
+// the thing to be repeated must be at least one expression of any type

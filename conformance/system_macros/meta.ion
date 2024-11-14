@@ -1,0 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// meta can be invoked using any type of macro reference.
+// meta has one parameter that accepts zero-to-many argument expressions and always produces nothing

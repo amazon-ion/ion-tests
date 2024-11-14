@@ -1,0 +1,22 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// make_timestamp can be invoked using any type of macro reference.
+// make_timestamp creates a single unannotated timestamp
+// any annotations on the argment values are silently dropped
+// if any argument is null, it should signal an error
+// year must be from 0 to 9999 (inclusive)
+// month must be from 1 to 12 (inclusive)
+// if month is present, year must also be present
+// day must be from 1 to 28,29,30, or 31 (inclusive) depending on the month
+// if day is present, month must also be present
+// hour must be from 0 to 23 (inclusive)
+// if hour is present, minute and day must also be present
+// minute must be from 0 to 59 (inclusive)
+// if minute is present, hour must also be present
+// second must be a decimal value from +0 to 60 (exclusive) with any precision
+// if second is present, minute must also be present
+// offset minutes argument may not be present unless minutes is present.
+// if offset minutes is present, it must be in the range -1440 to 1440 (inclusive)
+// if offset minutes is absent, the resulting timestamp has unknown offset.

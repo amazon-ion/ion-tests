@@ -1,0 +1,25 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(ion_1_1 "parse_ion can be invoked"
+          (each "in text with an unqualified macro name"
+                (text ''' (:parse_ion "true") ''')
+                "in text with an unqualified macro address"
+                (text ''' (:16 "true") ''')
+                "in text with a qualified macro name"
+                (text ''' (:$ion::parse_ion "true") ''')
+                "in text with a qualified macro address"
+                (text ''' (:$ion::16 "true") ''')
+                "in binary with a system macro address"
+                (binary "EF 10 94 74 72 75 65")
+                "in binary with a user macro address"
+                (binary "10 94 74 72 75 65")
+                (produces true)))
+
+// parse_ion can read Ion 1.0 and Ion 1.1, text and binary
+
+// parse_ion always produces user values. See https://github.com/amazon-ion/ion-docs/issues/365 for complications to be resolved.
+
+// parse_ion requires exactly one argument
+
+// parse_ion argument must be a string or lob literal

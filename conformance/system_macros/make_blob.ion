@@ -1,0 +1,8 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Test Cases:
+// make_blob can be invoked using any type of macro reference.
+// make_blob creates a single unannotated blob from zero or more lob values
+// null values and non-lob values must signal an error
+// annotations on the argment values are silently dropped

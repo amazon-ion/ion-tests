@@ -1,9 +1,34 @@
 #!/bin/bash
+set -eu
 
 # Checks the syntax of the conformance test files against an ISL grammar for the conformance DSL.
 
-# This requires at least ion-cli@0.8.0 for the `-R` option.
-# We have to include the `--no-auto-decompress` flag because there's an issue that prevents Ion CLI from
-# correctly reading files that start with a line comment.
-# See: https://github.com/amazon-ion/ion-cli/issues/162
-ion schema -X validate --no-auto-decompress -RE -f conformance/grammar.isl test_file conformance/**/*.ion
+# This requires at least ion-cli@0.9.1 because a bugfix in ion-rust
+readonly ion_cli_min_version="ion 0.9.1"
+
+# Check the Ion CLI version so that we aren't erroneously passing because of an unfixed bug
+readonly ion_cli_version=$(printf "%s\n%s" "$ion_cli_min_version" "$(ion -V)" | sort --version-sort | head -n 1)
+
+if [[ "$ion_cli_version" != "$ion_cli_min_version" ]]; then
+  echo "This script requires $ion_cli_min_version; found $ion_cli_version"
+  exit 1
+fi
+
+readonly command=\
+'ion schema -X validate -RE -f conformance/grammar.isl test_file conformance/**/*.ion'
+
+# Macs come with older versions of bash which don't support globstar, so if we're on an older
+# version of bash, we'll attempt to use zsh instead, but we don't use zsh by default because
+# it doesn't come pre-installed on GitHub Actions runners
+if [ -z "${BASH_VERSION}" ] || [ "${BASH_VERSION%%.*}" -lt 4 ]; then
+  if which -s zsh; then
+    printf "bash version requirements not met; using zsh\n\n"
+    echo "$command" | zsh
+  else
+    echo "The check-syntax script requires either bash >=4.0.0 or zsh"
+    exit 1
+  fi
+else
+  shopt -s globstar
+  eval "$command"
+fi
