@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// add_symbols can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// add_symbols can be invoked using any type of macro reference.
 // the argument values may be zero or more non-null text values
 // add_symbols does not have any side-effects on the macro table
 // add_symbols should append its arguments to the symbol table of the default module

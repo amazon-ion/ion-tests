@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// make_field can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// make_field can be invoked using any type of macro reference.
 // the first argument must expand to a single non-null text value (`$0` is allowed)
 // annotations first argument are silently dropped
-// the second argument may be any expression
+// the second argument may be any single expression that expands to a single expression
 // make_field expands to a single unannotated struct containing only field(s) with the first argument as the field name,
-//     and the second argument value(s) as the field value(s).
+//     and the second argument value as the field value.

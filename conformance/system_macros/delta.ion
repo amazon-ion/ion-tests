@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// delta can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// delta can be invoked using any type of macro reference.
 // the arguments of delta must be non-null integers
 // the "initial" argument is required
 // the "delta" argument can be zero or more values

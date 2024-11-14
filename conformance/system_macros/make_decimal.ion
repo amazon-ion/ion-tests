@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// make_decimal can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// make_decimal can be invoked using any type of macro reference.
 // make_decimal creates a single unannotated decimal
 // the coefficient argument must be a non-null integer
 // the exponent argument must be a non-null integer

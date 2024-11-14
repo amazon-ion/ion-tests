@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// make_timestamp can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// make_timestamp can be invoked using any type of macro reference.
 // make_timestamp creates a single unannotated timestamp
 // any annotations on the argment values are silently dropped
 // if any argument is null, it should signal an error

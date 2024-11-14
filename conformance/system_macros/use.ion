@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// `use` can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// `use` can be invoked using any type of macro reference.
 // the first parameter must have a single argument value that is a non-null, unannotated string
 // the second parameter may be absent or it may be a single value that is a non-null, unannotated, positive integer
 // if the second parameter is absent, it has an implicit default value of 1

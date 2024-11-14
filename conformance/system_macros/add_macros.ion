@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// add_macros can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// add_macros can be invoked using any type of macro reference.
 // the argument values may be zero or more macro definitions
 // add_macros does not have any side-effects on the symbol table
 // add_macros should append its arguments to the macro table of the default module

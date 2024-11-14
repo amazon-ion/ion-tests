@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// set_macros can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// set_macros can be invoked using any type of macro reference.
 // the argument values may be zero or more macro definitions
 //    TODO: Could it also be a module or an export?
 // set_macros does not have any side-effects on the symbol table

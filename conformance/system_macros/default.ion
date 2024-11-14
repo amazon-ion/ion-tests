@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// default can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// default can be invoked using any type of macro reference.
 // both arguments may be any expression or expression group
 // if the first argument is non-empty
 //    - `default` produces the first argument as its result

@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// annotate can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// annotate can be invoked using any type of macro reference.
 // annotate adds annotations to a value
 // if the value has existing annotations, they are preserved and annotate prepends annotations to the existing annotations of the value
 // the first argument must be zero or more non-null text values ($0 is allowed)
-// the second argument must be a single expression
+// the second argument must be a single expression that also expands to a single expression

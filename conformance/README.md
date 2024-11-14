@@ -5,11 +5,11 @@ declarative domain-specific language.
 
 **Contents**
  * `core/` – test cases for verifying the functionality of a conformance DSL runner
+ * `data_model/` – test cases for the encodings of the Ion data model
  * `eexp/` – test cases for parsing/interpretation of e-expressions and their arguments
  * `ion_encoding/` – test cases for encoding directives
    * `module/`
  * `system_macros/` – test cases for each of the system macros
- * `types/` – test cases for the encodings of types in the Ion data model
 
 > [!WARNING]
 > This test suite and its DSL are **Work In Progress**.
@@ -24,8 +24,8 @@ that can be exercised for an in-progress Ion implementation earlier than that
 point.
 
 We intend to approach this problem by carefully partitioning the test files,
-and by expressing the earliest phases, that is the lowest-level test cases,
-can be converted to JSON using `ion to json` (see [`ion-cli`](https://github.com/amazon-ion/ion-cli)).
+and by expressing the earliest phases (the lowest-level test cases) in a subset of Ion that
+can be safely converted to JSON using `ion to json` (see [`ion-cli`](https://github.com/amazon-ion/ion-cli)).
 For example,
 
 ```

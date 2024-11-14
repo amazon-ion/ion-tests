@@ -2,5 +2,5 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Test Cases:
-// meta can be invoked by name, address, qualified address, qualified name, binary address, and binary system e-expression op code.
+// meta can be invoked using any type of macro reference.
 // meta has one parameter that accepts zero-to-many argument expressions and always produces nothing
