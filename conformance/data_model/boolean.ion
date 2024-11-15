@@ -1,0 +1,40 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(document "the boolean value false"
+          (each "in Ion 1.0 binary"
+                (binary "E0 01 00 EA 10")
+                "in Ion 1.0 text"
+                (text "false")
+                "in Ion 1.1 binary"
+                (binary "E0 01 01 EA 6F")
+                "in Ion 1.1 text"
+                (text "$ion_1_1 false")
+                (denotes false)))
+
+(document "the boolean value true"
+          (each "in Ion 1.0 binary"
+                (binary "E0 01 00 EA 11")
+                "in Ion 1.0 text"
+                (text "true")
+                "in Ion 1.1 binary"
+                (binary "E0 01 01 EA 6E")
+                "in Ion 1.1 text"
+                (text "$ion_1_1 true")
+                (denotes true)))
+
+(ion_1_0 "in Ion 1.0 binary, the boolean type id lower nibble may not be 2..E (inclusive)"
+         (each (binary 0x12)
+               (binary 0x13)
+               (binary 0x14)
+               (binary 0x15)
+               (binary 0x16)
+               (binary 0x17)
+               (binary 0x18)
+               (binary 0x19)
+               (binary 0x1A)
+               (binary 0x1B)
+               (binary 0x1C)
+               (binary 0x1D)
+               (binary 0x1E)
+               (signals "illegal type descriptor")))
