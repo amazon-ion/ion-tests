@@ -1,6 +1,39 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// meta can be invoked using any type of macro reference.
-// meta has one parameter that accepts zero-to-many argument expressions and always produces nothing
+// This covers _all_ happy cases because there are no arguments and there is no output.
+(ion_1_1 "meta can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:meta) ")
+               "in text with an unqualified macro address"
+               (text " (:21) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::meta) ")
+               "in text using qualified system macro address 21"
+               (text " (:$ion::21) ")
+               "in binary using system macro address 21"
+               (binary "EF 15 00")
+               "in binary with a user macro address"
+               (binary "15 00")
+               (produces /*nothing*/)))
+
+(ion_1_1 "meta produces nothing when its argument is"
+         (each "no values"
+               (text "(:meta)")
+               "a single value"
+               (text "(:meta 0)")
+               "multiple values"
+               (text "(:meta 1 2 3)")
+               "passed an empty expression group"
+               (text "(:meta (::))")
+               "passed an expression group with one value"
+               (text "(:meta (:: 0))")
+               "passed an expression group with multiple values"
+               (text "(:meta (:: 1 2 3))")
+               "passed an expression that produces nothing"
+               (text "(:meta (:meta))")
+               "passed an expression that produces one value"
+               (text "(:meta (:values 0))")
+               "passed an expression that produces multiple values"
+               (text "(:meta (:values 1 2 3))")
+               (produces /*nothing*/)))

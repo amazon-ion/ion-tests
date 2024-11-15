@@ -1,8 +1,62 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// repeat can be invoked using any type of macro reference.
-// repeat can repeat things the correct number of times
-// the number of repetitions must be a single expression that expands to one positive integer (i.e. an integer greater than zero)
-// the thing to be repeated must be at least one expression of any type
+(ion_1_1 "repeat can be invoked"
+         (each "in text with an unqualified macro name"
+               (text ''' (:repeat 1 1) ''')
+               "in text with an unqualified macro address"
+               (text ''' (:17 1 1) ''')
+               "in text with a qualified macro name"
+               (text ''' (:$ion::repeat 1 1) ''')
+               "in text with a qualified macro address"
+               (text ''' (:$ion::17 1 1) ''')
+               "in binary with a system macro address"
+               (binary "EF 11 01 61 01 61 01")
+               "in binary with a user macro address"
+               (binary "11 01 61 01 61 01")
+               (produces 1)))
+
+(ion_1_1 "repeat will repeat things the correct number of times"
+         (then (text "(:repeat 1 0)") (produces 0))
+         (then (text "(:repeat 2 0)") (produces 0 0))
+         (then (text "(:repeat 3 0)") (produces 0 0 0))
+         (then (text "(:repeat 4 0)") (produces 0 0 0 0))
+         (then (text "(:repeat 5 0)") (produces 0 0 0 0 0)))
+
+(ion_1_1 "repeat will ignore any annotations on the number of repetitions"
+         (then (text "(:repeat a::1 0)") (produces 0))
+         (then (text "(:repeat b::2 0)") (produces 0 0))
+         (then (text "(:repeat c::3 0)") (produces 0 0 0))
+         (then (text "(:repeat d::4 0)") (produces 0 0 0 0))
+         (then (text "(:repeat e::5 0)") (produces 0 0 0 0 0)))
+
+(ion_1_1 "repeat can repeat an expression group with multiple values"
+         (then (text "(:repeat 1 (:: 0 1))") (produces 0 1))
+         (then (text "(:repeat 2 (:: 0 1))") (produces 0 1 0 1))
+         (then (text "(:repeat 3 (:: 0 1))") (produces 0 1 0 1 0 1))
+         (then (text "(:repeat 4 (:: 0 1))") (produces 0 1 0 1 0 1 0 1)))
+
+(ion_1_1 "repeat can repeat an expression that produces multiple values"
+         (then (text "(:repeat 1 (:values 0 1))") (produces 0 1))
+         (then (text "(:repeat 2 (:values 0 1))") (produces 0 1 0 1))
+         (then (text "(:repeat 3 (:values 0 1))") (produces 0 1 0 1 0 1))
+         (then (text "(:repeat 4 (:values 0 1))") (produces 0 1 0 1 0 1 0 1)))
+
+(ion_1_1 "repeat signals an error when"
+         (each "the number of repeats is not an integer"
+               (text "(:repeat 1d0 0)")
+               (text "(:repeat 1e1 0)")
+               (text "(:repeat false 0)")
+               "the number of repeats is multiple values"
+               (text "(:repeat (:: 1 2) 0)")
+               "the number of repeats an expression the produces multiple values"
+               (text "(:repeat (:values 1 2) 0)")
+               "the number of repeats is negative"
+               (text "(:repeat -1 0)")
+               "the number of repeats is 0"
+               (text "(:repeat 0 0)")
+               "the expression to be repeated is empty"
+               (text "(:repeat 1)")
+               (text "(:repeat 1 (::))")
+               (text "(:repeat 1 (:none))")
+               (signals "invalid argument")))
