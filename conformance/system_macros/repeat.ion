@@ -16,12 +16,40 @@
                (binary "11 01 61 01 61 01")
                (produces 1)))
 
-(ion_1_1 "repeat will repeat things the correct number of times"
-         (then (text "(:repeat 1 0)") (produces 0))
-         (then (text "(:repeat 2 0)") (produces 0 0))
-         (then (text "(:repeat 3 0)") (produces 0 0 0))
-         (then (text "(:repeat 4 0)") (produces 0 0 0 0))
-         (then (text "(:repeat 5 0)") (produces 0 0 0 0 0)))
+(ion_1_1 "repeat can produce"
+         (then "a single expression"
+               (then "0 times" (text "(:repeat 0 0)") (produces))
+               (then "1 times" (text "(:repeat 1 0)") (produces 0))
+               (then "2 times" (text "(:repeat 2 0)") (produces 0 0))
+               (then "3 times" (text "(:repeat 3 0)") (produces 0 0 0))
+               (then "4 times" (text "(:repeat 4 0)") (produces 0 0 0 0))
+               (then "5 times" (text "(:repeat 5 0)") (produces 0 0 0 0 0)))
+         (then "an empty expression group"
+               (each (text "(:repeat 0 (::))")
+                     (text "(:repeat 1 (::))")
+                     (text "(:repeat 2 (::))")
+                     (text "(:repeat 3 (::))")
+                     (text "(:repeat 4 (::))")
+                     (produces /*nothing*/ )))
+         (then "an expression that produces no values"
+               (each (text "(:repeat 0 (:none))")
+                     (text "(:repeat 1 (:none))")
+                     (text "(:repeat 2 (:none))")
+                     (text "(:repeat 3 (:none))")
+                     (text "(:repeat 4 (:none))")
+                     (produces /*nothing*/ )))
+         (then "an expression group with multiple values"
+               (then "0 times" (text "(:repeat 0 (:: 0 1))") (produces))
+               (then "1 times" (text "(:repeat 1 (:: 0 1))") (produces 0 1))
+               (then "2 times" (text "(:repeat 2 (:: 0 1))") (produces 0 1 0 1))
+               (then "3 times" (text "(:repeat 3 (:: 0 1))") (produces 0 1 0 1 0 1))
+               (then "4 times" (text "(:repeat 4 (:: 0 1))") (produces 0 1 0 1 0 1 0 1)))
+         (then "an expression that produces multiple values"
+               (then "0 times" (text "(:repeat 0 (:values 0 1))") (produces))
+               (then "1 times" (text "(:repeat 1 (:values 0 1))") (produces 0 1))
+               (then "2 times" (text "(:repeat 2 (:values 0 1))") (produces 0 1 0 1))
+               (then "3 times" (text "(:repeat 3 (:values 0 1))") (produces 0 1 0 1 0 1))
+               (then "4 times" (text "(:repeat 4 (:values 0 1))") (produces 0 1 0 1 0 1 0 1))) )
 
 (ion_1_1 "repeat will ignore any annotations on the number of repetitions"
          (then (text "(:repeat a::1 0)") (produces 0))
@@ -29,18 +57,6 @@
          (then (text "(:repeat c::3 0)") (produces 0 0 0))
          (then (text "(:repeat d::4 0)") (produces 0 0 0 0))
          (then (text "(:repeat e::5 0)") (produces 0 0 0 0 0)))
-
-(ion_1_1 "repeat can repeat an expression group with multiple values"
-         (then (text "(:repeat 1 (:: 0 1))") (produces 0 1))
-         (then (text "(:repeat 2 (:: 0 1))") (produces 0 1 0 1))
-         (then (text "(:repeat 3 (:: 0 1))") (produces 0 1 0 1 0 1))
-         (then (text "(:repeat 4 (:: 0 1))") (produces 0 1 0 1 0 1 0 1)))
-
-(ion_1_1 "repeat can repeat an expression that produces multiple values"
-         (then (text "(:repeat 1 (:values 0 1))") (produces 0 1))
-         (then (text "(:repeat 2 (:values 0 1))") (produces 0 1 0 1))
-         (then (text "(:repeat 3 (:values 0 1))") (produces 0 1 0 1 0 1))
-         (then (text "(:repeat 4 (:values 0 1))") (produces 0 1 0 1 0 1 0 1)))
 
 (ion_1_1 "repeat signals an error when"
          (each "the number of repeats is not an integer"
@@ -53,10 +69,4 @@
                (text "(:repeat (:values 1 2) 0)")
                "the number of repeats is negative"
                (text "(:repeat -1 0)")
-               "the number of repeats is 0"
-               (text "(:repeat 0 0)")
-               "the expression to be repeated is empty"
-               (text "(:repeat 1)")
-               (text "(:repeat 1 (::))")
-               (text "(:repeat 1 (:none))")
                (signals "invalid argument")))

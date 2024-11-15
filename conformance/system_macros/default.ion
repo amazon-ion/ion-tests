@@ -47,10 +47,10 @@
          (then "an expression that produces nothing"
                (text "(:default (:values) (::))")
                (produces /*nothing*/))
-         (then "an expression that produces  a single value"
+         (then "an expression that produces a single value"
                (text "(:default (:values 1) (::))")
                (produces 1))
-         (then "an expression that produces  multiple values"
+         (then "an expression that produces multiple values"
                (text "(:default (:values 1 2 3) (::))")
                (produces 1 2 3)))
 
@@ -76,9 +76,9 @@
          (then "an expression that produces nothing"
                (text "(:default (::) (:values))")
                (produces /*nothing*/))
-         (then "an expression that produces  a single value"
+         (then "an expression that produces a single value"
                (text "(:default (::) (:values 1))")
                (produces 1))
-         (then "an expression that produces  multiple values"
+         (then "an expression that produces multiple values"
                (text "(:default (::) (:values 1 2 3))")
                (produces 1 2 3)))
