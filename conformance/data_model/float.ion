@@ -37,7 +37,7 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
          (then "a subnormal"
                (then "f32 value"
                      (binary "44 00 00 00 01")
-                     (denotes (Float "1.4e-45")))
+                     (denotes (Float "1e-45")))
                (then "f64 value"
                      (binary "48 00 00 00 00 00 00 00 01")
                      (denotes (Float "5e-324"))))
