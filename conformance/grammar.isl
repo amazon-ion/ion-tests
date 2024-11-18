@@ -254,10 +254,9 @@ type::{
 type::{
   name: model_float,
   type: string,
-  // optional '-', one or more digits, '.', zero or more digits, optional group of 'e' and one or more digits OR
-  //     optional '-', one or more digits, 'e', one or more digits OR
-  //     one of the non numeric float values
-  regex: "^-?\\d+[.]\\d*(e\\d+)?|-?\\d+e\\d+|[+-]inf|nan$"
+  // optional '-', one or more digits, optional '.', zero or more digits, 'e', optional '-', one or more digits
+  //     OR one of the non numeric float values
+  regex: "^(-?\\d+[.]?\\d*[eE]-?\\d+|[+-]inf|nan)$"
 }
 
 type::{

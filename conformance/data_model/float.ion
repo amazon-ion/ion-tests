@@ -17,34 +17,34 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
                (each "f0"  (binary "40")
                      "f32" (binary "44 00 00 00 00")
                      "f64" (binary "48 00 00 00 00 00 00 00 00")
-                     (denotes (Float "0.0"))))
+                     (denotes (Float "0e0"))))
          (then "negative zero encoded as"
                (each "f32" (binary "44 80 00 00 00")
                      "f64" (binary "48 80 00 00 00 00 00 00 00")
-                     (denotes (Float "-0.0"))))
+                     (denotes (Float "-0e0"))))
          (then "1.0 encoded as"
                (each "f32" (binary "44 3F 80 00 00")
                      "f64" (binary "48 3F F0 00 00 00 00 00 00")
-                     (denotes (Float "1.0"))))
+                     (denotes (Float "1e0"))))
          (then "-1.0 encoded as"
                (each "f32" (binary "44 BF 80 00 00")
                      "f64" (binary "48 BF F0 00 00 00 00 00 00")
-                     (denotes (Float "-1.0"))))
+                     (denotes (Float "-1e0"))))
          (then "an ordinary non-integral number encoded as"
                (each "f32" (binary "44 40 C4 00 00")
                      "f64" (binary "48 40 18 80 00 00 00 00 00")
-                     (denotes (Float "6.125"))))
+                     (denotes (Float "6.125e0"))))
          (then "a subnormal"
                (then "f32 value"
                      (binary "44 00 00 00 01")
-                     (denotes (Float "1.401298464324817E-45")))
+                     (denotes (Float "1.401298464324817e-45")))
                (then "f64 value"
                      (binary "48 00 00 00 00 00 00 00 01")
                      (denotes (Float "4.9406564584124654e-324"))))
          (then "a negative subnormal"
                (then "f32 value"
                      (binary "44 80 00 00 01")
-                     (denotes (Float "-1.401298464324817E-45")))
+                     (denotes (Float "-1.401298464324817e-45")))
                (then "f64 value"
                      (binary "48 80 00 00 00 00 00 00 01")
                      (denotes (Float "-4.9406564584124654e-324"))))
@@ -101,34 +101,34 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
                      "f16" (binary "6B 00 00")
                      "f32" (binary "6C 00 00 00 00")
                      "f64" (binary "6D 00 00 00 00 00 00 00 00")
-                     (denotes (Float "0.0"))))
+                     (denotes (Float "0e0"))))
          (then "negative zero encoded as"
                (each "f16" (binary "6B 00 80")
                      "f32" (binary "6C 00 00 00 80")
                      "f64" (binary "6D 00 00 00 00 00 00 00 80")
-                     (denotes (Float "-0.0"))))
+                     (denotes (Float "-0e0"))))
          (then "1.0 encoded as"
                (each "f16" (binary "6B 00 3C")
                      "f32" (binary "6C 00 00 80 3F")
                      "f64" (binary "6D 00 00 00 00 00 00 F0 3F")
-                     (denotes (Float "1.0"))))
+                     (denotes (Float "1e0"))))
          (then "-1.0 encoded as"
                (each "f16" (binary "6B 00 BC")
                      "f32" (binary "6C 00 00 80 BF")
                      "f64" (binary "6D 00 00 00 00 00 00 F0 BF")
-                     (denotes (Float "-1.0"))))
+                     (denotes (Float "-1e0"))))
          (then "an ordinary non-integral number encoded as"
                (each "f16" (binary "6B 20 46")
                      "f32" (binary "6C 00 00 C4 40")
                      "f64" (binary "6D 00 00 00 00 00 80 18 40")
-                     (denotes (Float "6.125"))))
+                     (denotes (Float "6.125e0"))))
          (then "a subnormal"
                (then "f16 value"
                      (binary "6B 01 00")
                      (denotes (Float "5.9604645e-8")))
                (then "f32 value"
                      (binary "6C 01 00 00 00")
-                     (denotes (Float "1.401298464324817E-45")))
+                     (denotes (Float "1.401298464324817e-45")))
                (then "f64 value"
                      (binary "6D 01 00 00 00 00 00 00 00")
                      (denotes (Float "4.9406564584124654e-324"))))
@@ -138,7 +138,7 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
                      (denotes (Float "-5.9604645e-8")))
                (then "f32 value"
                      (binary "6C 01 00 00 80")
-                     (denotes (Float "-1.401298464324817E-45")))
+                     (denotes (Float "-1.401298464324817e-45")))
                (then "f64 value"
                      (binary "6D 01 00 00 00 00 00 00 80")
                      (denotes (Float "-4.9406564584124654e-324"))))
@@ -182,6 +182,8 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
 (ion_1_x "in text, floats"
          (each "must have an e"
                (text "0e0")
+               "the e can be upper case"
+               (text "0E0")
                "can have a negative exponent"
                (text "0e-0")
                "can have a . (dot) before the e"
@@ -194,10 +196,10 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
                (text "0e00001")
                "can have underscores to group digits"
                (text "0.000_000_000_000_000_000_000_000e000_000_000_000_000_000_000_000_999_999_999_999_999_999_999_999")
-               (denotes (Float "0.0")))
+               (denotes (Float "0e0")))
          (then "can start with a - (minus sign)"
                (text "-1.0e0")
-               (denotes (Float "-1.0"))))
+               (denotes (Float "-1e0"))))
 
 (ion_1_x "in text, zero can have any exponent"
          (each (text "0e1")
@@ -210,7 +212,7 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
                (text "0e-4")
                (text "0e9999999999999999999999999")
                (text "0e-9999999999999999999999999")
-               (denotes (Float "0.0")))
+               (denotes (Float "0e0")))
          (each (text "-0e1")
                (text "-0e2")
                (text "-0e3")
@@ -221,7 +223,7 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
                (text "-0e-4")
                (text "-0e9999999999999999999999999")
                (text "-0e-9999999999999999999999999")
-               (denotes (Float "-0.0"))))
+               (denotes (Float "-0e0"))))
 
 (ion_1_x "in text, the float '1.0'"
          (each (text "1e0")
@@ -239,14 +241,64 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
                (text "100e-2")
                (text "1000e-3")
                (text "10000e-4")
-               (denotes (Float "1.0"))))
+               (denotes (Float "1e0"))))
 
 (ion_1_x "in text, float parsing has precedence over sexp operator rules"
          (then "+inf"                              (text  "(+inf)") (denotes (Sexp (Float "+inf"))))
          (then "-inf"                              (text  "(-inf)") (denotes (Sexp (Float "-inf"))))
-         (then "a negative number"                 (text  "(-1e0)") (denotes (Sexp (Float "-1.0"))))
-         (then "a fractional coefficient"          (text "(1.0e0)") (denotes (Sexp (Float  "1.0"))))
-         (then "a number with . (dot) preceding e" (text  "(1.e0)") (denotes (Sexp (Float  "1.0")))))
+         (then "a negative number"                 (text  "(-1e0)") (denotes (Sexp (Float "-1e0"))))
+         (then "a fractional coefficient"          (text "(1.0e0)") (denotes (Sexp (Float  "1e0"))))
+         (then "a number with . (dot) preceding e" (text  "(1.e0)") (denotes (Sexp (Float  "1e0")))))
+
+
+// the exact binary64 value is determined using IEEE-754 round-to-nearest mode with round-half-to-even as the tie-break
+(ion_1_x "in text, reading"
+         (then "a positive number"
+               (each "that should round to nearest (down)"
+                     (text "100000000000000016e0")
+                     (text "100000000000000023e0")
+                     (denotes (Float "100000000000000016e0")))
+               (each "that rounds up because of the half-even tie-breaker"
+                     (text "100000000000000024e0")
+                     "that rounds to nearest (up)"
+                     (text "100000000000000025e0")
+                     "that rounds to nearest (down)"
+                     (text "100000000000000039e0")
+                     "that rounds down because of the half-even tie-breaker"
+                     (text "100000000000000040e0")
+                     (denotes (Float "100000000000000032e0")))
+               (each "that rounds to nearest (up)"
+                     (text "100000000000000041e0")
+                     (text "100000000000000047e0")
+                     (denotes (Float "100000000000000048e0")))
+               (each "that rounds to infinity"
+                     // f64 max value is 1.7976931348623158E+308
+                     (text "1.7976931348623159e+308")
+                     (text "999999999999999999e9999999")
+                     (denotes (Float "+inf"))))
+         (then "a negative number"
+               (each "that should round to nearest (up)"
+                     (text "-100000000000000016e0")
+                     (text "-100000000000000023e0")
+                     (denotes (Float "-100000000000000016e0")))
+               (each "that rounds down because of the half-even tie-breaker"
+                     (text "-100000000000000024e0")
+                     "that rounds to nearest (down)"
+                     (text "-100000000000000025e0")
+                     "that rounds to nearest (up)"
+                     (text "-100000000000000039e0")
+                     "that rounds up because of the half-even tie-breaker"
+                     (text "-100000000000000040e0")
+                     (denotes (Float "-100000000000000032e0")))
+               (each "that rounds to nearest (down)"
+                     (text "-100000000000000041e0")
+                     (text "-100000000000000047e0")
+                     (denotes (Float "-100000000000000048e0")))
+               (each "that rounds to negative infinity"
+                     // f64 max negative value is -1.7976931348623158E+308
+                     (text "-1.7976931348623159e+308")
+                     (text "-999999999999999999e9999999")
+                     (denotes (Float "-inf")))))
 
 (ion_1_x "in text"
          (then "the coefficient must not have leading zeros"
