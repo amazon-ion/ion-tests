@@ -1,0 +1,288 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+/*
+TESTING NOTES:
+
+It is assumed that floats are largely handled by a standard library with reliable test covereage.
+Do not use this test suite as the only standard for any home-spun floating point number implementation.
+
+In IEEE 754 interchange formats, binary format NaNs are represented with the exponential field filled with ones (like
+infinity values), and ANY non-zero number in the significand field. These test cases use the quiet and signalling NaN
+encodings as specified in IEEE-754-2019, although there areother legal representations of NaN.
+ */
+
+(ion_1_0 "Ion 1.0 binary"
+         (then "zero encoded as"
+               (each "f0"  (binary "40")
+                     "f32" (binary "44 00 00 00 00")
+                     "f64" (binary "48 00 00 00 00 00 00 00 00")
+                     (denotes (Float "0.0"))))
+         (then "negative zero encoded as"
+               (each "f32" (binary "44 80 00 00 00")
+                     "f64" (binary "48 80 00 00 00 00 00 00 00")
+                     (denotes (Float "-0.0"))))
+         (then "1.0 encoded as"
+               (each "f32" (binary "44 3F 80 00 00")
+                     "f64" (binary "48 3F F0 00 00 00 00 00 00")
+                     (denotes (Float "1.0"))))
+         (then "-1.0 encoded as"
+               (each "f32" (binary "44 BF 80 00 00")
+                     "f64" (binary "48 BF F0 00 00 00 00 00 00")
+                     (denotes (Float "-1.0"))))
+         (then "an ordinary non-integral number encoded as"
+               (each "f32" (binary "44 40 C4 00 00")
+                     "f64" (binary "48 40 18 80 00 00 00 00 00")
+                     (denotes (Float "6.125"))))
+         (then "a subnormal"
+               (then "f32 value"
+                     (binary "44 00 00 00 01")
+                     (denotes (Float "1.401298464324817E-45")))
+               (then "f64 value"
+                     (binary "48 00 00 00 00 00 00 00 01")
+                     (denotes (Float "4.9406564584124654e-324"))))
+         (then "a negative subnormal"
+               (then "f32 value"
+                     (binary "44 80 00 00 01")
+                     (denotes (Float "-1.401298464324817E-45")))
+               (then "f64 value"
+                     (binary "48 80 00 00 00 00 00 00 01")
+                     (denotes (Float "-4.9406564584124654e-324"))))
+         (then "NaN encoded as"
+               (each "f32 qNaN" (binary "44 FF C0 00 01")
+                     "f32 sNaN" (binary "44 FF 80 00 01")
+                     "f64 qNaN" (binary "48 7F FC 00 00 00 00 00 00")
+                     "f64 sNaN" (binary "48 7F F8 00 00 00 00 00 00")
+                     (denotes (Float "nan"))))
+         (then "infinity encoded as"
+               (each "f32" (binary "44 7F 80 00 00")
+                     "f64" (binary "48 7F F0 00 00 00 00 00 00")
+                     (denotes (Float "+inf"))))
+         (then "negative infinity encoded as"
+               (each "f32" (binary "44 FF 80 00 00")
+                     "f64" (binary "48 FF F0 00 00 00 00 00 00")
+                     (denotes (Float "-inf")))))
+
+(ion_1_0 "Illegal Ion 1.0 type ids:"
+         (each "0x41" (binary "41 00")
+               "0x42" (binary "42 00 00")
+               "0x43" (binary "42 00 00 00")
+               "0x45" (binary "42 00 00 00 00 00")
+               "0x46" (binary "42 00 00 00 00 00 00")
+               "0x47" (binary "42 00 00 00 00 00 00 00")
+               "0x49" (binary "42 00 00 00 00 00 00 00 00 00")
+               "0x4A" (binary "42 00 00 00 00 00 00 00 00 00 00")
+               "0x4B" (binary "42 00 00 00 00 00 00 00 00 00 00 00")
+               "0x4C" (binary "42 00 00 00 00 00 00 00 00 00 00 00 00")
+               "0x4D" (binary "42 00 00 00 00 00 00 00 00 00 00 00 00 00")
+               "0x4E" (binary "42 00 00 00 00 00 00 00 00 00 00 00 00 00 00")
+               (signals "invalid typeid")))
+
+(ion_1_0 "Incomplete floats signal an error for unexpected EOF"
+         (each "type id 0x44"
+               (binary "44")
+               (binary "44 00")
+               (binary "44 00 00")
+               (binary "44 00 00 00")
+               "type id 0x48"
+               (binary "48")
+               (binary "48 00")
+               (binary "48 00 00")
+               (binary "48 00 00 00")
+               (binary "48 00 00 00 00")
+               (binary "48 00 00 00 00 00")
+               (binary "48 00 00 00 00 00 00")
+               (binary "48 00 00 00 00 00 00 00")
+               (signals "unexpected EOF")))
+
+(ion_1_1 "Ion 1.1 binary"
+         (then "zero encoded as"
+               (each "f0"  (binary "6A")
+                     "f16" (binary "6B 00 00")
+                     "f32" (binary "6C 00 00 00 00")
+                     "f64" (binary "6D 00 00 00 00 00 00 00 00")
+                     (denotes (Float "0.0"))))
+         (then "negative zero encoded as"
+               (each "f16" (binary "6B 00 80")
+                     "f32" (binary "6C 00 00 00 80")
+                     "f64" (binary "6D 00 00 00 00 00 00 00 80")
+                     (denotes (Float "-0.0"))))
+         (then "1.0 encoded as"
+               (each "f16" (binary "6B 00 3C")
+                     "f32" (binary "6C 00 00 80 3F")
+                     "f64" (binary "6D 00 00 00 00 00 00 F0 3F")
+                     (denotes (Float "1.0"))))
+         (then "-1.0 encoded as"
+               (each "f16" (binary "6B 00 BC")
+                     "f32" (binary "6C 00 00 80 BF")
+                     "f64" (binary "6D 00 00 00 00 00 00 F0 BF")
+                     (denotes (Float "-1.0"))))
+         (then "an ordinary non-integral number encoded as"
+               (each "f16" (binary "6B 20 46")
+                     "f32" (binary "6C 00 00 C4 40")
+                     "f64" (binary "6D 00 00 00 00 00 80 18 40")
+                     (denotes (Float "6.125"))))
+         (then "a subnormal"
+               (then "f16 value"
+                     (binary "6B 01 00")
+                     (denotes (Float "5.9604645e-8")))
+               (then "f32 value"
+                     (binary "6C 01 00 00 00")
+                     (denotes (Float "1.401298464324817E-45")))
+               (then "f64 value"
+                     (binary "6D 01 00 00 00 00 00 00 00")
+                     (denotes (Float "4.9406564584124654e-324"))))
+         (then "a negative subnormal"
+               (then "f16 value"
+                     (binary "6B 01 80")
+                     (denotes (Float "-5.9604645e-8")))
+               (then "f32 value"
+                     (binary "6C 01 00 00 80")
+                     (denotes (Float "-1.401298464324817E-45")))
+               (then "f64 value"
+                     (binary "6D 01 00 00 00 00 00 00 80")
+                     (denotes (Float "-4.9406564584124654e-324"))))
+         (then "NaN encoded as"
+               (each "f16 qNaN" (binary "6B 01 7E")
+                     "f16 sNaN" (binary "6B 01 7C")
+                     "f32 qNaN" (binary "6C 01 00 C0 FF")
+                     "f32 sNaN" (binary "6C 01 00 80 FF")
+                     "f64 qNaN" (binary "6D 00 00 00 00 00 00 FC 7F")
+                     "f64 sNaN" (binary "6D 00 00 00 00 00 00 F8 7F")
+                     (denotes (Float "nan"))))
+         (then "infinity encoded as"
+               (each "f16" (binary "6B 00 7C")
+                     "f32" (binary "6C 00 00 80 7F")
+                     "f64" (binary "6D 00 00 00 00 00 00 F0 7F")
+                     (denotes (Float "+inf"))))
+         (then "negative infinity encoded as"
+               (each "f16" (binary "6B 00 FC")
+                     "f32" (binary "6C 00 00 80 FF")
+                     "f64" (binary "6D 00 00 00 00 00 00 F0 FF")
+                     (denotes (Float "-inf")))))
+
+(ion_1_1 "Incomplete floats signal an error for unexpected EOF"
+         (each "opcode 6B"
+               (binary "6B 00")
+               "opcode 6C"
+               (binary "6C 00")
+               (binary "6C 00 00")
+               (binary "6C 00 00 00")
+               "opcode 6D"
+               (binary "6D")
+               (binary "6D 00")
+               (binary "6D 00 00")
+               (binary "6D 00 00 00")
+               (binary "6D 00 00 00 00")
+               (binary "6D 00 00 00 00 00")
+               (binary "6D 00 00 00 00 00 00")
+               (binary "6D 00 00 00 00 00 00 00")
+               (signals "unexpected EOF")))
+
+(ion_1_x "in text, floats"
+         (each "must have an e"
+               (text "0e0")
+               "can have a negative exponent"
+               (text "0e-0")
+               "can have a . (dot) before the e"
+               (text "0.e0")
+               "can have a fractional number before the e"
+               (text "0.0e0")
+               "can have any number of trailing zeros before the e"
+               (text "0.00000e0")
+               "can have leading zeros in the exponent"
+               (text "0e00001")
+               "can have underscores to group digits"
+               (text "0.000_000_000_000_000_000_000_000e000_000_000_000_000_000_000_000_999_999_999_999_999_999_999_999")
+               (denotes (Float "0.0")))
+         (then "can start with a - (minus sign)"
+               (text "-1.0e0")
+               (denotes (Float "-1.0"))))
+
+(ion_1_x "in text, zero can have any exponent"
+         (each (text "0e1")
+               (text "0e2")
+               (text "0e3")
+               (text "0e4")
+               (text "0e-1")
+               (text "0e-2")
+               (text "0e-3")
+               (text "0e-4")
+               (text "0e9999999999999999999999999")
+               (text "0e-9999999999999999999999999")
+               (denotes (Float "0.0")))
+         (each (text "-0e1")
+               (text "-0e2")
+               (text "-0e3")
+               (text "-0e4")
+               (text "-0e-1")
+               (text "-0e-2")
+               (text "-0e-3")
+               (text "-0e-4")
+               (text "-0e9999999999999999999999999")
+               (text "-0e-9999999999999999999999999")
+               (denotes (Float "-0.0"))))
+
+(ion_1_x "in text, the float '1.0'"
+         (each (text "1e0")
+               (text "1e-0")
+               (text "1.e0")
+               (text "1.0e0")
+               (text "1.00000e0")
+               (text "1e00")
+               (text "1e0000000")
+               (text "0.1e1")
+               (text "0.01e2")
+               (text "0.001e3")
+               (text "0.0001e4")
+               (text "10e-1")
+               (text "100e-2")
+               (text "1000e-3")
+               (text "10000e-4")
+               (denotes (Float "1.0"))))
+
+(ion_1_x "in text, float parsing has precedence over sexp operator rules"
+         (then "+inf"                              (text  "(+inf)") (denotes (Sexp (Float "+inf"))))
+         (then "-inf"                              (text  "(-inf)") (denotes (Sexp (Float "-inf"))))
+         (then "a negative number"                 (text  "(-1e0)") (denotes (Sexp (Float "-1.0"))))
+         (then "a fractional coefficient"          (text "(1.0e0)") (denotes (Sexp (Float  "1.0"))))
+         (then "a number with . (dot) preceding e" (text  "(1.e0)") (denotes (Sexp (Float  "1.0")))))
+
+(ion_1_x "in text"
+         (then "the coefficient must not have leading zeros"
+               (each (text "00.0e0")
+                     (text "01.0e0")
+                     (text "00e0")
+                     (signals "invalid leading zero")))
+
+         (then "the exponent must be an integer"
+               (each (text "1.2e3.4")
+                     (text "1.2e3e4")
+                     (text "1.2e+inf")
+                     (text "1.2e-inf")
+                     (text "1.2e0x1")
+                     (signals "syntax error")))
+
+         (then "an unexpected non-numeric character should raise an error"
+               (each "unexpected non-numeric character"
+                     (text "1.1e1a")
+                     "spacing underscores in the wrong location"
+                     (text "1_.2e3")
+                     (text "1._2e3")
+                     (text "1.2_e3")
+                     (text "1.2e_3")
+                     (text "1.2e3_")
+                     "consecutive underscores"
+                     (text "-6.0__1e1")
+                     "illegal leading plus"
+                     (text "+1.2e3")
+                     "extra . (dot) character"
+                     (text "1.2.3e4")
+                     (text "1..3e4")
+                     "there must be a number following the e"
+                     (text "1.0e")
+                     (text "1.e")
+                     (text "1e")
+                     "cannot start with a . (dot)"
+                     (text ".1e2")
+                     (signals "numeric value followed by invalid character"))))

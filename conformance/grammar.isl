@@ -238,7 +238,7 @@ type::{
     {ordered_elements:[{valid_values:[Null,"Null"]},     { type: model_type, occurs: optional }         ]},
     {ordered_elements:[{valid_values:[Bool,"Bool"]},     bool                                           ]},
     {ordered_elements:[{valid_values:[Int,"Int"]},       int                                            ]},
-    {ordered_elements:[{valid_values:[Float,"Float"]},   string                                         ]},
+    {ordered_elements:[{valid_values:[Float,"Float"]},   model_float                                    ]},
     model_decimal,
     model_timestamp,
     {ordered_elements:[{valid_values:[Symbol,"Symbol"]}, model_symtok                                   ]},
@@ -249,6 +249,15 @@ type::{
     {ordered_elements:[{valid_values:[Sexp,"Sexp"]},     { type: model_value, occurs: range::[0, max] } ]},
     {ordered_elements:[{valid_values:[Struct,"Struct"]}, { type: model_field, occurs: range::[0, max] } ]},
   ]
+}
+
+type::{
+  name: model_float,
+  type: string,
+  // optional '-', one or more digits, '.', zero or more digits, optional group of 'e' and one or more digits OR
+  //     optional '-', one or more digits, 'e', one or more digits OR
+  //     one of the non numeric float values
+  regex: "^-?\\d+[.]\\d*(e\\d+)?|-?\\d+e\\d+|[+-]inf|nan$"
 }
 
 type::{

@@ -780,6 +780,9 @@ The `model-content` forms `(string ...)` and `(symbol (text ...))` express text
 in terms of Unicode code points, which is needed to test parsing of escape
 sequences.
 
+Floating point number libraries can be inconsistent regarding the serialization of non-numeric float values.
+For the purpose of this conformance DSL, use `nan`, `+inf`, and `-inf` for the non-numeric values.
+
 
 # WIP TODOs
 
