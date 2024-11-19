@@ -33,7 +33,7 @@
 
 (ion_1_1 "the first argument can be"
          (then "a single value"
-               (text "(:default (::) 1)")
+               (text "(:default 1 (::))")
                (produces 1))
          (then "an empty expression group"
                (text "(:default (::) (::))")
