@@ -37,14 +37,14 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
          (then "a subnormal"
                (then "f32 value"
                      (binary "44 00 00 00 01")
-                     (denotes (Float "1e-45")))
+                     (denotes (Float "1.401298464324817e-45")))
                (then "f64 value"
                      (binary "48 00 00 00 00 00 00 00 01")
                      (denotes (Float "5e-324"))))
          (then "a negative subnormal"
                (then "f32 value"
                      (binary "44 80 00 00 01")
-                     (denotes (Float "-1e-45")))
+                     (denotes (Float "-1.401298464324817e-45")))
                (then "f64 value"
                      (binary "48 80 00 00 00 00 00 00 01")
                      (denotes (Float "-5e-324"))))
@@ -125,20 +125,20 @@ encodings as specified in IEEE-754-2019, although there areother legal represent
          (then "a subnormal"
                (then "f16 value"
                      (binary "6B 01 00")
-                     (denotes (Float "6e-8")))
+                     (denotes (Float "5.9604645e-8")))
                (then "f32 value"
                      (binary "6C 01 00 00 00")
-                     (denotes (Float "1e-45")))
+                     (denotes (Float "1.401298464324817e-45")))
                (then "f64 value"
                      (binary "6D 01 00 00 00 00 00 00 00")
                      (denotes (Float "5e-324"))))
          (then "a negative subnormal"
                (then "f16 value"
                      (binary "6B 01 80")
-                     (denotes (Float "-6e-8")))
+                     (denotes (Float "-5.9604645e-8")))
                (then "f32 value"
                      (binary "6C 01 00 00 80")
-                     (denotes (Float "-1e-45")))
+                     (denotes (Float "-1.401298464324817e-45")))
                (then "f64 value"
                      (binary "6D 01 00 00 00 00 00 00 80")
                      (denotes (Float "-5e-324"))))

@@ -750,8 +750,9 @@ model-symtok    ::=  string
 
 model-field     ::=  "("  model-symtok  model-value  ")"
 
-// TODO: Determine whether we can come up with anything better for model-float
-model-float     ::= string                                 // See https://amazon-ion.github.io/ion-docs/docs/float.html
+// All "denotes" values must be given with 64-bit precision, regardless of the value being tested because the Ion data
+// model uses 64 bit floats. See https://amazon-ion.github.io/ion-docs/docs/float.html
+model-float     ::= string
 
 model-decimal   ::= int int                                // coefficient + exponent
                   | "negative_0" int                       // negative zero coefficient + exponent
