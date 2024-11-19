@@ -56,9 +56,9 @@
 
 // With empty fragments
 
-(ion_1_0 (bytes) (produces))
-(ion_1_1 (bytes) (produces))
-(ion_1_x (bytes) (produces))
+(ion_1_0 (binary) (produces))
+(ion_1_1 (binary) (produces))
+(ion_1_x (binary) (produces))
 
 (document (text) (produces))
 (ion_1_0 (text) (produces))

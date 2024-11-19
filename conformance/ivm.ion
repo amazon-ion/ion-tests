@@ -3,12 +3,12 @@
 
 (document "IVMs don't appear in output data"
   (each (text      "$ion_1_0")
-        (bytes    "E0  01 00   EA")
+        (binary    "E0  01 00   EA")
         (ivm             1 0)
         (toplevel '#$ion_1_0')
         (then (toplevel 1)
               (each (text      "$ion_1_0")
-                    (bytes    "E0  01 00   EA")
+                    (binary    "E0  01 00   EA")
                     (ivm             1 0)
                     (toplevel '#$ion_1_0')
                     (then (toplevel 2)
@@ -17,7 +17,7 @@
 
 (document "Invalid IVM version"
   (each (text      "$ion_12_34")
-        (bytes    "E0   0C 22   EA")
+        (binary    "E0   0C 22   EA")
         (ivm             12 34)
         (toplevel '#$ion_12_34')
         (signals "Unsupported Ion version: 12.34")))
