@@ -1,0 +1,48 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// TODO:
+// * Ion 1.0 binary annotations
+// * In Ion 1.1 binary,
+//   * SID annotations
+//   * FlexSym annotations (inline, SID, and system symbols)
+// * In text (any version)
+//   * Text Annotations (quoted and unquoted, including quoted keywords)
+//   * Text SID Annotations
+//   * non-symbols cannot be used as annotations
+//   * specifically, annotations must be single quoted if they are quoted
+//   * operator symbols must be quoted to be used as an annotation, even in s-expressions
+//   * dangling annotations must signal an error
+// * In binary (any version)
+//   * Annotations cannot be applied to NOP
+// * In all encodings
+//   * Any number of annotations is allowed (in any encoding)
+//   * Annotations can be applied to any type of value (all prior tests should be annotating a small integer)
+//
+// Less common scenarios:
+// * Add a test case with multiple values that are annotated to help ensure that there's
+//   no leaking annotation state between values
+
+(ion_1_x "in text, unquoted keywords cannot be used as an annotation"
+         (each (text "true::0")
+               (text "false::0")
+               (text "null::0")
+               (text "null.null::0")
+               (text "null.bool::0")
+               (text "null.int::0")
+               (text "null.float::0")
+               (text "null.decimal::0")
+               (text "null.timestamp::0")
+               (text "null.string::0")
+               (text "null.symbol::0")
+               (text "null.blob::0")
+               (text "null.clob::0")
+               (text "null.list::0")
+               (text "null.sexp::0")
+               (text "null.struct::0")
+               (text "nan::0")
+               (text "+inf::0")
+               (text "-inf::0")
+               // For some implementations, this could also fail because it reads a value and
+               // then sees "::" with no preceding symbol token.
+               (signals "cannot use unquoted keyword as an annotation")))
