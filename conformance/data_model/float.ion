@@ -9,7 +9,7 @@ Do not use this test suite as the only standard for any home-spun floating point
 
 In IEEE 754 interchange formats, binary format NaNs are represented with the exponential field filled with ones (like
 infinity values), and ANY non-zero number in the significand field. These test cases use the quiet and signalling NaN
-encodings as specified in IEEE-754-2019, although there areother legal representations of NaN.
+encodings as specified in IEEE-754-2019, although there are other legal representations of NaN.
  */
 
 (ion_1_0 "Ion 1.0 binary"
