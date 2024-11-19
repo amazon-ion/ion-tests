@@ -1,6 +1,27 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// none can be invoked using any type of macro reference.
-// none accepts no arguments and produces nothing
+// This covers _all_ happy cases because there are no arguments and there is no output.
+(ion_1_1 "none can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:none) ")
+               "in text with an unqualified macro address"
+               (text " (:0) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::none) ")
+               "in text using qualified system macro address 0"
+               (text " (:$ion::0) ")
+               "in binary using system macro address 0"
+               (binary "EF 00")
+               "in binary with a user macro address"
+               (binary "00")
+               (produces /*nothing*/)))
+
+(ion_1_1 "none signals an error when"
+         (each "passed any expression value"
+               (text "(:none 0)")
+               "passed an empty expression group"
+               (text "(:none (::))")
+               "passed an expression that produces nothing"
+               (text "(:none (:none))")
+               (signals "unexpected argument")))

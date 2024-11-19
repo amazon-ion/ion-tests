@@ -1,10 +1,84 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// default can be invoked using any type of macro reference.
-// both arguments may be any expression or expression group
-// if the first argument is non-empty
-//    - `default` produces the first argument as its result
-//    - the second argument is not expanded
-// if the first argument is empty (i.e. none), `default` produces the second argument as its result
+(ion_1_1 "default can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:default 0 1) ")
+               "in text with an unqualified macro address"
+               (text " (:23 0 1) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::default 0 1) ")
+               "in text using qualified system macro address 23"
+               (text " (:$ion::23 0 1) ")
+               "in binary using system macro address 23"
+               (binary "EF 17 05 60 61 01")
+               "in binary with a user macro address"
+               (binary "17 05 60 61 01")
+               (produces 0)))
+
+(ion_1_1 "default produces"
+         (each "the first argument when the first argument is a single value"
+               (text " (:default 1 0) ")
+               "the second argument when the first argument is empty"
+               (text " (:default (::) 1) ")
+               (produces 1))
+         (then "nothing when both argument are empty"
+               (text "(:default)")
+               (produces /*nothing*/)))
+
+(ion_1_1 "when the first argument is non-empty, the second argument is not expanded"
+         // none with any argument should signal an error _iff_ it is evaluated
+         (text "(:default 1 (:none 123))")
+         (produces 1))
+
+(ion_1_1 "the first argument can be"
+         (then "a single value"
+               (text "(:default 1 (::))")
+               (produces 1))
+         (then "an empty expression group"
+               (text "(:default (::) (::))")
+               (produces /*nothing*/))
+         (then "an expression group with a single value"
+               (text "(:default (:: 1) (::))")
+               (produces 1))
+         (then "an expression group with multiple values"
+               (text "(:default (:: 1 2 3) (::))")
+               (produces 1 2 3))
+         (then "an expression that produces nothing"
+               (text "(:default (:values) (::))")
+               (produces /*nothing*/))
+         (then "an expression that produces a single value"
+               (text "(:default (:values 1) (::))")
+               (produces 1))
+         (then "an expression that produces multiple values"
+               (text "(:default (:values 1 2 3) (::))")
+               (produces 1 2 3)))
+
+(ion_1_1 "the second argument can be"
+         (then "nothing"
+               (text "(:default (::))")
+               (produces /*nothing*/))
+         (then "a single value"
+               (text "(:default (::) 1)")
+               (produces 1))
+         (then "multiple values"
+               (text "(:default (::) 1 2 3)")
+               (produces 1 2 3))
+         (then "an empty expression group"
+               (text "(:default (::) (::))")
+               (produces /*nothing*/))
+         (then "an expression group with a single value"
+               (text "(:default (::) (:: 1))")
+               (produces 1))
+         (then "an expression group with multiple values"
+               (text "(:default (::) (:: 1 2 3))")
+               (produces 1 2 3))
+         (then "an expression that produces nothing"
+               (text "(:default (::) (:values))")
+               (produces /*nothing*/))
+         (then "an expression that produces a single value"
+               (text "(:default (::) (:values 1))")
+               (produces 1))
+         (then "an expression that produces multiple values"
+               (text "(:default (::) (:values 1 2 3))")
+               (produces 1 2 3)))

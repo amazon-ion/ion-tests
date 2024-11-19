@@ -1,6 +1,40 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// values can be invoked using any type of macro reference.
-// values has one parameter that accept zero-to-many arguments and produces its input
+(ion_1_1 "values can be invoked"
+         (each "in text with an unqualified macro name"
+               (text ''' (:values 0) ''')
+               "in text with an unqualified macro address"
+               (text ''' (:1 0) ''')
+               "in text with a qualified macro name"
+               (text ''' (:$ion::values 0) ''')
+               "in text with a qualified macro address"
+               (text ''' (:$ion::1 0) ''')
+               "in binary with a system macro address"
+               (binary "EF 01 01 60")
+               "in binary with a user macro address"
+               (binary "01 01 60")
+               (produces 0)))
+
+(ion_1_1 "values produces its input when its argument"
+         (each "is elided"
+               (text " (:values)")
+               "is an empty expression group"
+               (text " (:values (::))")
+               "is an expression that evaluates to nothing"
+               (text " (:values (:values))")
+               (produces /*nothing*/))
+         (each "is a single value"
+               (text " (:values 0)")
+               "is an expression that evaluates to a single value"
+               (text " (:values (:values 0))")
+               "is an expression group with one value"
+               (text " (:values (:: 0))")
+               (produces 0))
+         (each "is multiple values"
+               (text " (:values 1 2 3)")
+               "is a single expression that evaluates to multiple values"
+               (text " (:values (:values 1 2 3))")
+               "is an expression containing multiple values"
+               (text " (:values (:: 1 2 3))")
+               (produces 1 2 3)))
