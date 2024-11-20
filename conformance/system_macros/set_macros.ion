@@ -1,10 +1,87 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// set_macros can be invoked using any type of macro reference.
-// the argument values may be zero or more macro definitions
-//    TODO: Could it also be a module or an export?
-// set_macros does not have any side-effects on the symbol table
-// set_macros replaces the current macro table with a new macro table that consists of the arguments of set_macros
-// annotations on any argument value should signal an error (because it's not allowed in the macro table rather than because of any specific validation by the set_macros macro)
+// TODO: set_macros can accept a module name (of a loaded module) as an argument?
+// TODO: set_macros can accept a module/macro export?
+
+(ion_1_1 "set_macros can be invoked"
+         (each "in text with an unqualified macro name"
+               (text "(:set_macros) ")
+               "in text with an unqualified macro address"
+               (text "(:13)")
+               "in text with a qualified macro name"
+               (text "(:$ion::set_macros)")
+               "in text with a qualified macro address 13"
+               (text "(:$ion::13)")
+               "in binary with a system macro address 13"
+               (binary "EF 0D 00")
+               "in binary with a user macro address"
+               (binary "0D 00")
+               (produces)))
+
+(ion_1_1 "set_macros can be invoked with a single macro"
+         (text "(:set_macros (macro x () X))")
+         (each "which can be invoked by name"
+               (text "(:x)")
+               "which can be invoked by address"
+               (text "(:0)")
+               (produces X))
+         (then "then set_macros can accept"
+               (then "an empty expression group"
+                     (text "(:$ion::set_macros)")
+                     (then "with no error and producing no user values"
+                           (produces))
+                     (then "and it removes existing macros"
+                           (text "(:x)")
+                           (signals "unknown macro")))
+               (then "a single macro"
+                     (text "(:$ion::set_macros (macro foo () 123))")
+                     (then "with no error and producing no user values"
+                           (produces))
+                     (then "and it removes existing macros"
+                           (text "(:x)")
+                           (signals "unknown macro"))
+                     (each "and it sets macro table with the new macro"
+                           (text "(:foo)")
+                           (text "(:0)")
+                           (produces 123)))
+               (then "multiple macros"
+                     (text '''(:$ion::set_macros (macro foo () 123)
+                                           (macro null () 456)
+                                           (macro bar () 789))''')
+                     (then "with no error and producing no user values"
+                           (produces))
+                     (then "and it removes existing macros"
+                           (text "(:x)")
+                           (signals "unknown macro"))
+                     (each "and it sets macro table with the new macros"
+                           (text "(:foo) (:1) (:bar)")
+                           (text "(:0) (:1) (:2)")
+                           (produces 123 456 789)))))
+
+(ion_1_1 "set_macros does not accept"
+         (each "nulls"
+               (text "(:set_macros null)")
+               (text "(:set_macros null.symbol)")
+               (text "(:set_macros null.sexp)")
+               "invalid macro definitions"
+               (text "(:set_macros a::(macro foo () 123))")
+               (text "(:set_macros (macro  $0 () 123))")
+               (text "(:set_macros (      foo () 123))")
+               (text "(:set_macros (macro     () 123))")
+               (text "(:set_macros (macro foo    123))")
+               (text "(:set_macros (macro foo ()    ))")
+               (signals "invalid argument")))
+
+(ion_1_1 "set_macros does not have any side-effects on the symbol table"
+         (text "(:set_symbols a b c)")
+         (then "[PRECONDITION] symbols are set as expected"
+               (then (toplevel '#$1' '#$2' '#$3') (produces a b c))
+               (then (toplevel '#$4') (signals "invalid SID")))
+         (each (text "(:set_macros)")
+               (text "(:set_macros (macro a () 123))")
+               (text "(:set_macros (macro a () 123) (macro b () 456))")
+               (then "no symbols are removed"
+                     (toplevel '#$1' '#$2' '#$3') (produces a b c))
+               (then "no symbols are added"
+                     (toplevel '#$4') (signals "invalid SID"))))

@@ -1,9 +1,87 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// add_macros can be invoked using any type of macro reference.
-// the argument values may be zero or more macro definitions
-// add_macros does not have any side-effects on the symbol table
-// add_macros should append its arguments to the macro table of the default module
-// annotations on any argument value should signal an error (because it's not allowed in the macro table rather than because of any specific validation by the add_macros macro)
+// TODO: add_macros can accept a module name (of a loaded module) as an argument?
+// TODO: add_macros can accept a module/macro export?
+
+(ion_1_1 "add_macros can be invoked"
+         (each "in text with an unqualified macro name"
+               (text "(:add_macros) ")
+               "in text with an unqualified macro address"
+               (text "(:14)")
+               "in text with a qualified macro name"
+               (text "(:$ion::add_macros)")
+               "in text with a qualified macro address 14"
+               (text "(:$ion::14)")
+               "in binary with a system macro address 14"
+               (binary "EF 0E 00")
+               "in binary with a user macro address"
+               (binary "0E 00")
+               (produces)))
+
+(ion_1_1 "add_macros can add a macro to the macro table"
+         (text "(:add_macros (macro x () X))")
+         (each "and it can be invoked by name"
+               (text "(:x)")
+               "and it can be invoked by address"
+               (text "(:0)")
+               (produces X))
+         (then "then add_macros can accept"
+               (then "an empty expression group"
+                     (text "(:add_macros)")
+                     (then "with no error and producing no user values"
+                           (produces))
+                     (then "and does not remove any macros"
+                           (text "(:x)")
+                           (produces X)))
+               (then "a single macro"
+                     (text "(:add_macros (macro foo () 123))")
+                     (then "with no error and producing no user values"
+                           (produces))
+                     (then "and does not remove any macros"
+                           (text "(:x)")
+                           (produces X))
+                     (each "and appends the new macro to the macro table"
+                           (text "(:foo)")
+                           (text "(:1)")
+                           (produces 123)))
+               (then "multiple macros"
+                     (text '''(:add_macros (macro foo () 123)
+                                           (macro null () 456)
+                                           (macro bar () 789))''')
+                     (then "with no error and producing no user values"
+                           (produces))
+                     (then "and does not remove any macros"
+                           (text "(:x)")
+                           (produces X))
+                     (each "and appends the new macros to the macro table"
+                           (text "(:foo) (:2) (:bar)")
+                           (text "(:1) (:2) (:3)")
+                           (produces 123 456 789)))))
+
+(ion_1_1 "add_macros does not accept"
+         (each "nulls"
+               (text "(:add_macros null)")
+               (text "(:add_macros null.symbol)")
+               (text "(:add_macros null.sexp)")
+               "invalid macro definitions"
+               (text "(:add_macros a::(macro foo () 123))")
+               (text "(:add_macros (macro  $0 () 123))")
+               (text "(:add_macros (      foo () 123))")
+               (text "(:add_macros (macro     () 123))")
+               (text "(:add_macros (macro foo    123))")
+               (text "(:add_macros (macro foo ()    ))")
+               (signals "invalid argument")))
+
+(ion_1_1 "add_macros does not have any side-effects on the symbol table"
+         (text "(:set_symbols a b c)")
+         (then "[PRECONDITION] symbols are set as expected"
+               (then (toplevel '#$1' '#$2' '#$3') (produces a b c))
+               (then (toplevel '#$4') (signals "invalid SID")))
+         (each (text "(:add_macros)")
+               (text "(:add_macros (macro a () 123))")
+               (text "(:add_macros (macro a () 123) (macro b () 456))")
+               (then "no symbols are removed"
+                     (toplevel '#$1' '#$2' '#$3') (produces a b c))
+               (then "no symbols are added"
+                     (toplevel '#$4') (signals "invalid SID"))))
