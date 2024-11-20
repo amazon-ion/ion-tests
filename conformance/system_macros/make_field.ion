@@ -1,10 +1,68 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// make_field can be invoked using any type of macro reference.
-// the first argument must expand to a single non-null text value (`$0` is allowed)
-// annotations first argument are silently dropped
-// the second argument may be any single expression that expands to a single expression
-// make_field expands to a single unannotated struct containing only field(s) with the first argument as the field name,
-//     and the second argument value as the field value.
+(ion_1_1 "make_field can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:make_field foo 0) ")
+               "in text with an unqualified macro address"
+               (text " (:22 foo 0) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::make_field foo 0) ")
+               "in text using qualified system macro address 22"
+               (text " (:$ion::22 foo 0) ")
+               "in binary using system macro address 22"
+               (binary "EF 16 FB 66 6F 6F 60")
+               "in binary with a user macro address"
+               (binary "16 FB 66 6F 6F 60")
+               (produces {foo: 0} )))
+
+(ion_1_1 "the first argument"
+         (then "can be"
+               (each "a string"
+                     (text ''' (:make_field "foo" 0) ''')
+                     "a symbol with known text"
+                     (text "(:make_field foo 0)")
+                     "an expression that produces text"
+                     (text "(:make_field (:values 'foo') 0)")
+                     "annotated"
+                     (text "(:make_field bar::foo 0)")
+                     (produces {foo:0} ))
+               (then "a symbol with unknown text"
+                     (text "(:make_field $0 1)")
+                     // Could be (produces {$0:1} ), but some implementations don't support $0 nicely.
+                     (denotes (Struct (0 1)))))
+         (then "cannot be"
+               (each "null"
+                     (text "(:make_field null 0)")
+                     "a null symbol"
+                     (text "(:make_field null.symbol 0)")
+                     "a null string"
+                     (text "(:make_field null.string 0)")
+                     "a non-text value"
+                     (text "(:make_field 123 0)")
+                     "empty expression group"
+                     (text "(:make_field (::) 0)")
+                     "nothing"
+                     (text "(:make_field (:none) 0)")
+                     (signals "invalid argument"))))
+
+(ion_1_1 "the second argument"
+         (then "can be"
+               (then "a single value"
+                     (text "(:make_field foo 0)")
+                     (produces {foo:0} ))
+               (then "an expression that produces a single value"
+                     (text "(:make_field foo (:values foo))")
+                     (produces {foo:0} )))
+         (then "cannot be"
+               (each "missing"
+                     (text "(:make_field foo)")
+                     "an empty expression group"
+                     (text "(:make_field foo (::))")
+                     "an expression that produces no values"
+                     (text "(:make_field foo (:none))")
+                     "an expression that produces multiple values"
+                     (text "(:make_field foo (:values 1 2 3))")
+                     "an expression group with multiple values"
+                     (text "(:make_field foo (:: 1 2 3))")
+                     (signals "invalid argument"))))

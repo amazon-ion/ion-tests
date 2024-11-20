@@ -1,22 +1,305 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// make_timestamp can be invoked using any type of macro reference.
-// make_timestamp creates a single unannotated timestamp
-// any annotations on the argment values are silently dropped
-// if any argument is null, it should signal an error
-// year must be from 0 to 9999 (inclusive)
-// month must be from 1 to 12 (inclusive)
-// if month is present, year must also be present
-// day must be from 1 to 28,29,30, or 31 (inclusive) depending on the month
-// if day is present, month must also be present
-// hour must be from 0 to 23 (inclusive)
-// if hour is present, minute and day must also be present
-// minute must be from 0 to 59 (inclusive)
-// if minute is present, hour must also be present
-// second must be a decimal value from +0 to 60 (exclusive) with any precision
-// if second is present, minute must also be present
-// offset minutes argument may not be present unless minutes is present.
-// if offset minutes is present, it must be in the range -1440 to 1440 (inclusive)
-// if offset minutes is absent, the resulting timestamp has unknown offset.
+(ion_1_1 "make_timestamp can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:make_timestamp 1) ")
+               "in text with an unqualified macro address"
+               (text " (:7 1) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::make_timestamp 1) ")
+               "in text using qualified system macro address 7"
+               (text " (:$ion::7 1) ")
+               "in binary using system macro address 7"
+               (binary "EF 07 00 00 01 00")
+               "in binary with a user macro address"
+               (binary "07 00 00 01 00")
+               (produces 0001T)))
+
+(ion_1_1 "make_timestamp produces a single, unannotated timestamp"
+         (then (text " (:make_timestamp 1) " ) (produces 0001T))
+         (then (text " (:make_timestamp 1 2) " ) (produces 0001-02T))
+         (then (text " (:make_timestamp 1 2 3) " ) (produces 0001-02-03T))
+         (then (text " (:make_timestamp 1 2 3 4 5) " ) (produces 0001-02-03T04:05-00:00))
+         (then (text " (:make_timestamp 1 2 3 4 5 6.) " ) (produces 0001-02-03T04:05:06-00:00))
+         (then (text " (:make_timestamp 1 2 3 4 5 6. 7) " ) (produces 0001-02-03T04:05:06+00:07)))
+
+(ion_1_1 "the arguments may have annotations, which are silently dropped"
+         (each (text " (:make_timestamp a::1 2 3 4 5 6. 7) " )
+               (text " (:make_timestamp 1 b::2 3 4 5 6. 7) " )
+               (text " (:make_timestamp 1 2 c::3 4 5 6. 7) " )
+               (text " (:make_timestamp 1 2 3 d::4 5 6. 7) " )
+               (text " (:make_timestamp 1 2 3 4 e::5 6. 7) " )
+               (text " (:make_timestamp 1 2 3 4 5 f::6. 7) " )
+               (text " (:make_timestamp 1 2 3 4 5 6. g::7) " )
+               (produces 0001-02-03T04:05:06+00:07)))
+
+(ion_1_1 "the year argument"
+         (each "may not be null"
+               (text " (:make_timestamp null 2 3 4 5 6. 7) ")
+               "may not be null.int"
+               (text " (:make_timestamp null.int 2 3 4 5 6. 7) ")
+               "may not be a float"
+               (text " (:make_timestamp 9e0 2 3 4 5 6. 7) ")
+               "may not be a decimal"
+               (text "(:make_timestamp 1.0)")
+               "may not be an empty expression group"
+               (text "(:make_timestamp (::))")
+               "may not be an expression that produces no values"
+               (text "(:make_timestamp (:none))")
+               "may not be multiple values"
+               (text " (:make_timestamp (:: 1 1) 2 3 4 5 6. 7) ")
+               (signals "invalid argument"))
+         (then "is encoded in binary as uint16"
+               (binary "EF 07" // System macro invocation
+                       "00 00" // Presence bitmap
+                       /* Y */ "0F 27")
+               (produces 9999T))
+         (then "must be greater than 0"
+               (then (text "(:make_timestamp 0)") (signals "invalid argument"))
+               (then (text "(:make_timestamp 1)") (produces 0001T)))
+         (then "must be less than or equal to 9999"
+               (then (text "(:make_timestamp 9999)") (produces 9999T))
+               (then (text "(:make_timestamp 10000)") (signals "invalid argument"))))
+
+(ion_1_1 "the month argument"
+         (each "must be be present if day is present"
+               (text "(:make_timestamp 2024 (::) 1)")
+               "may not be null"
+               (text " (:make_timestamp 1 null 3 4 5 6. 7) ")
+               "may not be null.int"
+               (text " (:make_timestamp 1 null.int 3 4 5 6. 7) ")
+               "may not be a float"
+               (text " (:make_timestamp 1 9e0 3 4 5 6. 7) ")
+               "may not be a decimal"
+               (text "(:make_timestamp 2024 1.0)")
+               "may not be multiple values"
+               (text " (:make_timestamp 1 (:: 2 2) 3 4 5 6. 7) ")
+               (signals "invalid argument"))
+         (then "is encoded in binary as uint8"
+               (binary "EF 07"
+                       "01 00"
+                       "0F 27" // Y Y
+                       "0C")
+               (produces 9999-12T))
+         (then "must be greater than 0"
+               (then (text "(:make_timestamp 2024 0)") (signals "invalid argument"))
+               (then (text "(:make_timestamp 2024 1)") (produces 2024-01T)))
+         (then "must be less than or equal to 12"
+               (then (text "(:make_timestamp 2024 12)") (produces 2024-12T))
+               (then (text "(:make_timestamp 2024 13)") (signals "invalid argument"))))
+
+(ion_1_1 "the day argument"
+         (then "must be present if hour and minute are present"
+               (text "(:make_timestamp 2024 2 (::) 12 30)")
+               (signals "invalid argument"))
+         (each "may not be null"
+               (text " (:make_timestamp 1 2 null 4 5 6. 7) ")
+               "may not be null.int"
+               (text " (:make_timestamp 1 2 null.int 4 5 6. 7) ")
+               "may not be a float"
+               (text " (:make_timestamp 1 2 3e0 4 5 6. 7) ")
+               "may not be a decimal"
+               (text "(:make_timestamp 2024 2 1.0)")
+               "may not be multiple values"
+               (text " (:make_timestamp 1 2 (:: 3 3) 4 5 6. 7) ")
+               (signals "invalid argument"))
+         (then "is encoded in binary as uint8"
+               (binary "EF 07"
+                       "05 00"
+                       "0F 27 0C" // Y Y M
+                       "1F")
+               (produces 9999-12-31T))
+         (then "must be greater than 0"
+               (then (text "(:make_timestamp 2024 2 0)") (signals "invalid argument"))
+               (then (text "(:make_timestamp 2024 2 1)") (produces 2024-02-01T)))
+         (then "must be less than or equal to 31 in months with 31 days"
+               (then (text "(:make_timestamp 2024  1 31)") (produces 2024-01-31T))
+               (then (text "(:make_timestamp 2024  3 31)") (produces 2024-03-31T))
+               (then (text "(:make_timestamp 2024  5 31)") (produces 2024-05-31T))
+               (then (text "(:make_timestamp 2024  7 31)") (produces 2024-07-31T))
+               (then (text "(:make_timestamp 2024  8 31)") (produces 2024-08-31T))
+               (then (text "(:make_timestamp 2024 10 31)") (produces 2024-10-31T))
+               (then (text "(:make_timestamp 2024 12 31)") (produces 2024-12-31T))
+               (each (text "(:make_timestamp 2024  1 32)")
+                     (text "(:make_timestamp 2024  3 32)")
+                     (text "(:make_timestamp 2024  5 32)")
+                     (text "(:make_timestamp 2024  7 32)")
+                     (text "(:make_timestamp 2024  8 32)")
+                     (text "(:make_timestamp 2024 10 32)")
+                     (text "(:make_timestamp 2024 12 32)")
+                     (signals "invalid argument")))
+         (then "must be less than or equal to 30 in months with 30 days"
+               (then (text "(:make_timestamp 2024  4 30)") (produces 2024-04-30T))
+               (then (text "(:make_timestamp 2024  6 30)") (produces 2024-06-30T))
+               (then (text "(:make_timestamp 2024  9 30)") (produces 2024-09-30T))
+               (then (text "(:make_timestamp 2024 11 30)") (produces 2024-11-30T))
+               (each (text "(:make_timestamp 2024  4 31)")
+                     (text "(:make_timestamp 2024  6 31)")
+                     (text "(:make_timestamp 2024  9 31)")
+                     (text "(:make_timestamp 2024 11 31)")
+                     (signals "invalid argument")))
+         (then "must be less than or equal to 29 for Februarys with 29 days"
+               (then (text "(:make_timestamp 2020  2 29)") (produces 2020-02-29T))
+               (then (text "(:make_timestamp 2024  2 29)") (produces 2024-02-29T))
+               (each (text "(:make_timestamp 2020  2 30)")
+                     (text "(:make_timestamp 2024  2 30)")
+                     (signals "invalid argument")))
+         (then "must be less than or equal to 28 for Februarys with 28 days"
+               (then (text "(:make_timestamp 2100  2 28)") (produces 2100-02-28T))
+               (then (text "(:make_timestamp 2023  2 28)") (produces 2023-02-28T))
+               (each (text "(:make_timestamp 2100  2 29)")
+                     (text "(:make_timestamp 2023  2 29)")
+                     (signals "invalid argument"))))
+
+(ion_1_1 "the hour argument"
+         (then "must be be present if minute is present"
+               (text "(:make_timestamp 2024 2 3 (::) 30)")
+               (signals "invalid argument"))
+         (each "may not be null"
+               (text " (:make_timestamp 1 2 3 null 5 6. 7) ")
+               "may not be null.int"
+               (text " (:make_timestamp 1 2 3 null.int 5 6. 7) ")
+               "may not be a float"
+               (text " (:make_timestamp 1 2 3 4e0 5 6. 7) ")
+               "may not be a decimal"
+               (text "(:make_timestamp 2024 2 3 1.0 30)")
+               "may not be multiple values"
+               (text " (:make_timestamp 1 2 3 (:: 4 4) 5 6. 7) ")
+               (signals "invalid argument"))
+         (then "must be greater than or equal to 0"
+               (then (text "(:make_timestamp 2024 2 3 -1 0)") (signals "invalid argument"))
+               (then (text "(:make_timestamp 2024 2 3 0 0)") (produces 2024-02-03T00:00-00:00)))
+         (then "must be less than 24"
+               (then (text "(:make_timestamp 2024 2 3 23 0)") (produces 2024-02-03T23:00-00:00)))
+               (then (text "(:make_timestamp 2024 2 3 24 0)") (signals "invalid argument")))
+
+(ion_1_1 "the minute argument"
+         (each "must be be present if hour is present"
+               (text "(:make_timestamp 2024 2 3 4 (::))")
+               "must be be present if second is present"
+               (text "(:make_timestamp 2024 2 3 (::) (::) 5.0)")
+               "may not be null"
+               (text " (:make_timestamp 1 2 3 4 null 6. 7) ")
+               "may not be null.int"
+               (text " (:make_timestamp 1 2 3 4 null.int 6. 7) ")
+               "may not be a float"
+               (text " (:make_timestamp 1 2 3 4 5e0 6. 7) ")
+               "may not be a decimal"
+               (text "(:make_timestamp 2024 2 3 4 1.0)")
+               "may not be multiple values"
+               (text " (:make_timestamp 1 2 3 4 (:: 5 5) 6. 7) ")
+               (signals "invalid argument"))
+         (then "must be greater than or equal to 0"
+               (then (text "(:make_timestamp 2024 2 3 4 -1)") (signals "invalid argument"))
+               (then (text "(:make_timestamp 2024 2 3 4  0)") (produces 2024-02-03T04:00-00:00)))
+         (then "must be less than 60"
+               (then (text "(:make_timestamp 2024 2 3 4 59)") (produces 2024-02-03T04:59-00:00))
+               (then (text "(:make_timestamp 2024 2 3 4 60)") (signals "invalid argument"))))
+
+(ion_1_1 "the hour and minute arguments are encoded in binary as uint8"
+         // We can't test the hour and minute arguments separately for this case
+         (binary "EF 07"
+                 "55 00"
+                 "0F 27 0C 1F" // Y Y M D
+                 "17 3B")
+         (produces 9999-12-31T23:59-00:00))
+
+(ion_1_1 "the seconds argument"
+         (each "may not be null"
+               (text " (:make_timestamp 1 2 3 4 5 null 7) ")
+               "may not be null.decimal"
+               (text " (:make_timestamp 1 2 3 4 5 null.decimal 7) ")
+               "may not be a float"
+               (text " (:make_timestamp 1 2 3 4 5 6e0 7) ")
+               "may not be an integer"
+               (text "(:make_timestamp 2024 2 3 4 5 6)")
+               "may not be multiple values"
+               (text " (:make_timestamp 1 2 3 4 5 (:: 6. 6.) 7) ")
+               (signals "invalid argument"))
+         (then "in binary"
+               (then "is a tagged value"
+                     (binary "EF 07"
+                             "55 01"
+                             "0F 27 0C 1F" // Y Y M D
+                             "17 3B"       // H m
+                             "70")
+                     (produces 9999-12-31T23:59:00-00:00))
+               (then "may not be a tagged integer"
+                     (binary "EF 07"
+                             "55 01"
+                             "0F 27 0C 1F" // Y Y M D
+                             "17 3B"       // H m
+                             "60")
+                     (signals "invalid argument")))
+         (then "must be a positive value"
+               (then (text "(:make_timestamp 2024 2 3 4 5 -0.1)")
+                     (signals "invalid argument"))
+               (each (text "(:make_timestamp 2024 2 3 4 5 -0.)")
+                     (text "(:make_timestamp 2024 2 3 4 5 0.)")
+                     (produces 2024-02-03T04:05:00-00:00)))
+         (then "must be less than 60"
+               (then (text "(:make_timestamp 2024 2 3 4 5 59.9)") (produces 2024-02-03T04:05:59.9-00:00))
+               (then (text "(:make_timestamp 2024 2 3 4 5 60.0)") (signals "invalid argument")) )
+         (then "can have any precision"
+               (then (text "(:make_timestamp 2024 2 3 4 5 0d10)") (produces 2024-02-03T04:05:00-00:00))
+               (then (text "(:make_timestamp 2024 2 3 4 5 3d1)") (produces 2024-02-03T04:05:30-00:00))
+               (then (text "(:make_timestamp 2024 2 3 4 5 6.)") (produces 2024-02-03T04:05:06-00:00))
+               (then (text "(:make_timestamp 2024 2 3 4 5 6.7)") (produces 2024-02-03T04:05:06.7-00:00))
+               (then (text "(:make_timestamp 2024 2 3 4 5 6.70)") (produces 2024-02-03T04:05:06.70-00:00))))
+
+(ion_1_1 "the offset argument"
+         (then "when absent, indicates unknown offset"
+               (text "(:make_timestamp 2024 2 3 4 5)")
+               (produces 2024-02-03T04:05-00:00))
+         (then "when zero, indicates utc offset"
+               (text "(:make_timestamp 2024 2 3 4 5 (::) 0)")
+               (produces 2024-02-03T04:05Z))
+         (each "may only be present if hour and minute are present"
+               (text "(:make_timestamp 2024 (::) (::) (::) (::) (::) 60)")
+               (text "(:make_timestamp 2024 2 (::) (::) (::) (::) 60)")
+               (text "(:make_timestamp 2024 2 3 (::) (::) (::) 60)")
+               "may not be null"
+               (text " (:make_timestamp 1 2 3 4 5 6. null) ")
+               "may not be null.int"
+               (text " (:make_timestamp 1 2 3 4 5 6. null.int) ")
+               "may not be a float"
+               (text " (:make_timestamp 1 2 3 4 5 6. 7e0) ")
+               "may not be a decimal"
+               (text "(:make_timestamp 2024 2 3 4 5 6.0 7.0)")
+               "may not be multiple values"
+               (text "(:make_timestamp 1 2 3 4 5 6. (:: 7 7))")
+               (signals "invalid argument"))
+         (then "is encoded in binary as an int16"
+               (then (binary "EF 07 55 05"
+                             "0F 27 0C 1E 17 3B 70"    // Y Y M D H m s
+                             "00 00")
+                     (produces 9999-12-30T23:59:00Z))
+               (then (binary "EF 07 55 05"
+                             "0F 27 0C 1E 17 3B 70"    // Y Y M D H m s
+                             "11 11")
+                     (produces 9999-12-30T23:59:00-00:01))
+               (then (binary "EF 07 55 05"
+                             "0F 27 0C 1E 17 3B 70"    // Y Y M D H m s
+                             "01 00")
+                     (produces 9999-12-30T23:59:00+00:01))
+               (then (binary "EF 07 55 05"
+                             "0F 27 0C 1F 17 3B 70"    // Y Y M D H m s
+                             "61 FA")
+                     (produces 9999-12-30T23:59:00-23:59))
+               (then (binary "EF 07 55 05"
+                             "0F 27 0C 1F 17 3B 70"    // Y Y M D H m s
+                             "9F 05")
+                     (produces 9999-12-30T23:59:00+23:59)))
+         (then "must be greater than -1440"
+               (then (text "(:make_timestamp 2024 2 3 4 5 (::) -1440)") (signals "invalid argument"))
+               (then (text "(:make_timestamp 2024 2 3 4 5 (::) -1439)") (produces 2024-02-03T04:05-23:59)))
+         (then "must be less than 1440"
+               (then (text "(:make_timestamp 2024 2 3 4 5 (::) 1439)") (produces 2024-02-03T04:05+23:59)))
+               (then (text "(:make_timestamp 2024 2 3 4 5 (::) 1440)") (signals "invalid argument"))
+         (then "may not cause the year, in UTC, to be less than 0001"
+               (text "(:make_timestamp 1 1 1 0 0 0. 1439)")
+               (signals "year cannot be less than 1"))
+         (then "may not cause the year, in UTC, to be more than 9999"
+               (text "(:make_timestamp 9999 12 31 23 59 0. -1439)")
+               (signals "year exceeds 9999")))

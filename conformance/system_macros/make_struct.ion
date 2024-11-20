@@ -1,8 +1,55 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// make_struct can be invoked using any type of macro reference.
-// the argument values may be zero or more non-null structs
-// make_struct creates a single unannotated struct whose fields are the concatenated fields of all its arguments
-// annotations on the argument values are silently dropped
+(ion_1_1 "make_struct can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:make_struct (::)) ")
+               "in text with an unqualified macro address"
+               (text " (:10 (::)) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::make_struct (::)) ")
+               "in text using qualified system macro address 10"
+               (text " (:$ion::10 (::)) ")
+               "in binary using system macro address 10"
+               (binary "EF 0A 00")
+               "in binary with a user macro address"
+               (binary "0A 00")
+               (produces {})))
+
+(ion_1_1 "make_struct creates a single, unannotated struct from"
+         (then "0 values"
+               (text "(:make_struct)")
+               (produces {}))
+         (each "one struct"
+               (text "(:make_struct {a:1, b:2, c:3})")
+               "multiple structs"
+               (text "(:make_struct {a:1, b:2} {b:3})")
+               (text "(:make_struct [1] [2] {b:3})")
+               (text "(:make_struct {} [1, 2, 3] {})")
+               (text "(:make_struct {} [1] {} [2] {} {b:3} {})")
+               "annotated struct values"
+               // Argument annotations are silently dropped.
+               (text "(:make_struct a::{} b::{a:1} c::{b:2} d::{c:3})")
+               (produces {a:1, b:2, c:3}))
+         (then "structs with repeated fields"
+               (text "(:make_struct {a:1} {a:1})")
+               (produces {a:1, a:1}))
+         (then "structs with repeated field names"
+               (text "(:make_struct {a:2} {a:3})")
+               (produces {a:2, a:3})))
+
+(ion_1_1 "the argument cannot be"
+         (each "null"
+               (text "(:make_struct null)")
+               (text "(:make_struct {a:1} null {b:2})")
+               "null.struct"
+               (text "(:make_struct null.struct)")
+               (text "(:make_struct {a:1} null.struct {b:2})")
+               "a non-struct value"
+               (text "(:make_struct {{ '''abc''' }})")
+               (text "(:make_struct {a:1} {{ '''abc''' }} {b:2})")
+               (text "(:make_struct 123)")
+               (text "(:make_struct {a:1} 123) {b:2}")
+               (text "(:make_struct (a 1) )")
+               (text "(:make_struct {a:1} (a 1) ) {b:2}")
+               (signals "invalid argument")))
