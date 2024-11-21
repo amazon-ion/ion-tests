@@ -28,7 +28,7 @@
                (produces X))
          (then "then add_macros can accept"
                (then "an empty expression group"
-                     (text "(:add_macros)")
+                     (text "(:add_macros (::))")
                      (then "with no error and producing no user values"
                            (produces))
                      (then "and does not remove any macros"

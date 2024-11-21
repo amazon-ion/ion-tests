@@ -28,7 +28,7 @@
                (produces X))
          (then "then set_macros can accept"
                (then "an empty expression group"
-                     (text "(:$ion::set_macros)")
+                     (text "(:$ion::set_macros (::))")
                      (then "with no error and producing no user values"
                            (produces))
                      (then "and it removes existing macros"
