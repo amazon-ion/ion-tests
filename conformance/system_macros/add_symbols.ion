@@ -71,7 +71,7 @@
                (text "(:add_symbols $256)")
                (signals "invalid argument")))
 
-(ion_1_1 "add_symbols does not have any side-effects on the symbol table"
+(ion_1_1 "add_symbols does not have any side-effects on the macro table"
          (text "(:set_macros (macro x () X))")
          (then "[PRECONDITION] macros are set as expected"
                (text "(:x) (:0)")
