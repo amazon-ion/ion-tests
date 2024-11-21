@@ -17,16 +17,17 @@
                (produces {})))
 
 (ion_1_1 "make_struct creates a single, unannotated struct from"
-         (then "0 values"
+         (each "0 values"
                (text "(:make_struct)")
+               "empty structs"
+               (text "(:make_struct {})")
+               (text "(:make_struct {} {} {})")
                (produces {}))
          (each "one struct"
                (text "(:make_struct {a:1, b:2, c:3})")
                "multiple structs"
                (text "(:make_struct {a:1, b:2} {b:3})")
-               (text "(:make_struct [1] [2] {b:3})")
-               (text "(:make_struct {} [1, 2, 3] {})")
-               (text "(:make_struct {} [1] {} [2] {} {b:3} {})")
+               (text "(:make_struct {} {a:1} {} {b:2} {} {b:3})")
                "annotated struct values"
                // Argument annotations are silently dropped.
                (text "(:make_struct a::{} b::{a:1} c::{b:2} d::{c:3})")
@@ -49,7 +50,11 @@
                (text "(:make_struct {{ '''abc''' }})")
                (text "(:make_struct {a:1} {{ '''abc''' }} {b:2})")
                (text "(:make_struct 123)")
-               (text "(:make_struct {a:1} 123) {b:2}")
+               (text "(:make_struct {a:1} 123 {b:2} )")
                (text "(:make_struct (a 1) )")
-               (text "(:make_struct {a:1} (a 1) ) {b:2}")
+               (text "(:make_struct [] )")
+               (text "(:make_struct () )")
+               (text "(:make_struct {a:1} (a 1) {b:2} )")
+               (text "(:make_struct {a:1} [] {b:2})")
+               (text "(:make_struct {a:1} () {b:2})")
                (signals "invalid argument")))

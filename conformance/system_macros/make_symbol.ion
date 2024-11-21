@@ -20,22 +20,22 @@
          (then "0 values"
                (text '''(:make_symbol)''')
                (produces ''))
-         (then "1 symbol"
+         (then "1 string"
                (text '''(:make_symbol "a")''')
                (produces a))
-         (then "2 symbols"
+         (then "2 strings"
                (text '''(:make_symbol "a" "b")''')
                (produces ab))
-         (then "3 symbols"
+         (then "3 strings"
                (text '''(:make_symbol "a" "b" "c")''')
                (produces abc))
-         (then "1 string"
+         (then "1 symbol"
                (text '''(:make_symbol a)''')
                (produces a))
-         (then "2 strings"
+         (then "2 symbols"
                (text '''(:make_symbol a b)''')
                (produces ab))
-         (then "3 strings"
+         (then "3 symbols"
                (text '''(:make_symbol a b c)''')
                (produces abc))
          (then "a mix of symbols and strings"
