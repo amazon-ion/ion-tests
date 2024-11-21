@@ -3,52 +3,74 @@
 
 (ion_1_1 "sum can be invoked"
          (each "in text with an unqualified macro name"
-               (text "(:sum)")
+               (text "(:sum 0 0)")
                "in text with an unqualified macro address"
-               (text "(:20)")
+               (text "(:20 0 0)")
                "in text with a qualified macro name"
-               (text "(:$ion::sum)")
+               (text "(:$ion::sum 0 0)")
                "in text with a qualified macro address"
-               (text "(:$ion::20)")
+               (text "(:$ion::20 0 0)")
                "in binary with a system macro address"
-               (binary "EF 14 00")
+               (binary "EF 14 60 60")
                "in binary with a user macro address"
-               (binary "14 00")
+               (binary "14 60 60")
                (produces 0)))
 
-(ion_1_1 "sum produces a single value that is the sum of"
-         (each "zero arguments"
-               (binary "EF 14 00")
-               (text "(:sum)")
-               (text "(:sum (::))")
-               (produces 0))
-         (then "one argument"
-               (binary "EF 14 01 03")
-               (text "(:sum 1)")
-               (produces 1))
-         (each "multiple arguments"
-               (binary "EF 14 02 09 61 08 61 07")
-               (text "(:sum 1 2 3 4 5)")
-               (text "(:sum 0 15)")
-               (text "(:sum 10 10 -2 -3)")
-               // Annotations are silently dropped
-               (text "(:sum a::1 b::2 c::3 d::4 e::5)")
-               (produces 15)))
+(ion_1_1 "sum produces a single, unannotated integer that is the sum of"
+         (each "two integers"
+               (text "(:sum -1  4)")
+               (text "(:sum  0  3)")
+               (text "(:sum  1  2)")
+               (text "(:sum  2  1)")
+               (text "(:sum  3  0)")
+               (text "(:sum  4 -1)")
+               "annotated integers"
+               (text "(:sum a::1 2)")
+               (text "(:sum 1 b::2)")
+               (text "(:sum a::1 b::2)")
+               // Values that produce an integer
+               (text "(:sum (:values 1) 2)")
+               (text "(:sum 1 (:values 2))")
+               // ...including other sums
+               (text "(:sum (:sum 1 1) 1)")
+               (text "(:sum 1 (:sum 1 1))")
+               (produces 3)))
+
+(ion_1_1 "sum is commutative"
+         (each (text "(:sum  1  0)") (text "(:sum  0  1)") (produces  1))
+         (each (text "(:sum -1  0)") (text "(:sum  0 -1)") (produces -1))
+         (each (text "(:sum -1  1)") (text "(:sum  1 -1)") (produces  0))
+         (each (text "(:sum  3  7)") (text "(:sum  7  3)") (produces 10))
+         (each (text "(:sum -3 -5)") (text "(:sum -5 -3)") (produces -8))
+         (each (text "(:sum -2  4)") (text "(:sum  4 -2)") (produces  2)))
 
 (ion_1_1 "arguments may not be"
          (each "any null"
-               (text "(:sum 1 null 2)")
-               (text "(:sum 1 null.int 2)")
-               (text "(:sum 1 null.float 2)")
-               (text "(:sum 1 null.decimal 2)")
+               (text "(:sum 1 null)")
+               (text "(:sum 1 null.int)")
+               (text "(:sum 1 null.float)")
+               (text "(:sum 1 null.decimal)")
+               (text "(:sum null 2)")
+               (text "(:sum null.int 2)")
+               (text "(:sum null.float 2)")
+               (text "(:sum null.decimal 2)")
                "a float"
-               (text "(:sum 1 3e1 2)")
+               (text "(:sum 1 3e1)")
+               (text "(:sum 3e1 2)")
                "a decimal"
-               (text "(:sum 1 3d1 2)")
+               (text "(:sum 1 3d1)")
+               (text "(:sum 3d1 2)")
                "a list of numbers"
-               (text "(:sum 1 [3, 4, 5] 2)")
+               (text "(:sum 1 [3])")
+               (text "(:sum [3] 2)")
+               (text "(:sum [1, 2])")
                "a sexp of numbers"
-               (text "(:sum 1 (3 4 5) 2)")
-               "a numeric string"
-               (text "(:sum 1 '''3''' 2)")
+               (text "(:sum 1 (3))")
+               (text "(:sum (3) 2)")
+               (text "(:sum (1 2))")
+               "a numeric text value"
+               (text '''(:sum 1 "3")''')
+               (text '''(:sum 1 '3')''')
+               (text '''(:sum "3" 2)''')
+               (text '''(:sum '3' 2)''')
                (signals "invalid argument")))

@@ -65,3 +65,20 @@
                "a numeric string"
                (text "(:delta 1 '''3''' 2)")
                (signals "invalid argument")))
+
+// Demonstrations of some interesting things you can do with delta.
+
+(ion_1_1 "delta and repeat can be combined to generate"
+         (mactab $ion_encoding (macro from_x_count_n_by_step (x n step) (.delta (.. (%x) (.repeat (%n) (%step))))))
+         (then "an increasing sequence"   (text "(:from_x_count_n_by_step 0 10  1)") (produces 0 1 2 3 4 5 6 7 8 9 10))
+         (then "a count-by-twos sequence" (text "(:from_x_count_n_by_step 0 10  2)") (produces 0 2 4 6 8 10 12 14 16 18 20))
+         (then "a decreasing sequence"    (text "(:from_x_count_n_by_step 5 10 -1)") (produces 5 4 3 2 1 0 -1 -2 -3 -4 -5)))
+
+(ion_1_1 "it is possible to create a delta of deltas encoding"
+         // See, for example
+         // https://www.timescale.com/blog/time-series-compression-algorithms-explained/#delta-of-delta-encoding
+         (mactab $ion_encoding
+                 (macro delta_of_deltas (flex_int::init dod*) (.delta (.. (%init) (.delta (%dod)))))
+                 (macro rle (flex_uint::run_length flex_int::value) (.repeat (%run_length) (%value))))
+         (text "(:delta_of_deltas 52 (:: -1 (:rle 10 0) 1 (:rle 5 0) 1 (:rle 5 0)))")
+         (produces 52 51 50 49 48 47 46 45 44 43 42 41 41 41 41 41 41 41 42 43 44 45 46 47))
