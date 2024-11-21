@@ -1,8 +1,84 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// sum can be invoked using any type of macro reference.
-// the arguments of sum must be zero or more non-null integers
-// any annotations on the arguments are silently dropped
-// the output of sum is the sum of all its argument values
+(ion_1_1 "sum can be invoked"
+         (each "in text with an unqualified macro name"
+               (text "(:sum 0 0)")
+               "in text with an unqualified macro address"
+               (text "(:20 0 0)")
+               "in text with a qualified macro name"
+               (text "(:$ion::sum 0 0)")
+               "in text with a qualified macro address"
+               (text "(:$ion::20 0 0)")
+               "in binary with a system macro address"
+               (binary "EF 14 60 60")
+               "in binary with a user macro address"
+               (binary "14 60 60")
+               (produces 0)))
+
+(ion_1_1 "sum produces a single, unannotated integer that is the sum of"
+         (each "integers"
+               (text "(:sum -1  4)")
+               (text "(:sum  0  3)")
+               (text "(:sum  1  2)")
+               (text "(:sum  2  1)")
+               (text "(:sum  3  0)")
+               (text "(:sum  4 -1)")
+               "annotated integers"
+               (text "(:sum a::1 2)")
+               (text "(:sum 1 b::2)")
+               (text "(:sum a::1 b::2)")
+               "expressions that produce integers"
+               (text "(:sum (:values 1) 2)")
+               (text "(:sum 1 (:values 2))")
+               "other sums"
+               (text "(:sum (:sum 1 1) 1)")
+               (text "(:sum 1 (:sum 1 1))")
+               (text "(:sum (:sum -4 3) (:sum 2 2))")
+               (produces 3)))
+
+(ion_1_1 "sum is commutative"
+         (each (text "(:sum  1  0)") (text "(:sum  0  1)") (produces  1))
+         (each (text "(:sum -1  0)") (text "(:sum  0 -1)") (produces -1))
+         (each (text "(:sum -1  1)") (text "(:sum  1 -1)") (produces  0))
+         (each (text "(:sum  3  7)") (text "(:sum  7  3)") (produces 10))
+         (each (text "(:sum -3 -5)") (text "(:sum -5 -3)") (produces -8))
+         (each (text "(:sum -2  4)") (text "(:sum  4 -2)") (produces  2)))
+
+(ion_1_1 "arguments may not be"
+         (each "less than two integers"
+               (text "(:sum)")
+               (text "(:sum 1)")
+               "more than two integers"
+               (text "(:sum 1 2 3)")
+               "any null"
+               (text "(:sum 1 null)")
+               (text "(:sum 1 null.int)")
+               (text "(:sum 1 null.float)")
+               (text "(:sum 1 null.decimal)")
+               (text "(:sum null 2)")
+               (text "(:sum null.int 2)")
+               (text "(:sum null.float 2)")
+               (text "(:sum null.decimal 2)")
+               "a float"
+               (text "(:sum 1 3e1)")
+               (text "(:sum 3e1 2)")
+               "a decimal"
+               (text "(:sum 1 3d1)")
+               (text "(:sum 3d1 2)")
+               "a list of numbers"
+               (text "(:sum 1 [3])")
+               (text "(:sum [3] 2)")
+               (text "(:sum [1, 2])")
+               "a sexp of numbers"
+               (text "(:sum 1 (3))")
+               (text "(:sum (3) 2)")
+               (text "(:sum (1 2))")
+               "a numeric text value"
+               (text '''(:sum 1 "3")''')
+               (text '''(:sum 1 '3')''')
+               (text '''(:sum "3" 2)''')
+               (text '''(:sum '3' 2)''')
+               "a single expression that produces two integers"
+               (text "(:sum (:values 1 3))")
+               (signals "invalid argument")))
