@@ -1,12 +1,67 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// delta can be invoked using any type of macro reference.
-// the arguments of delta must be non-null integers
-// the "initial" argument is required
-// the "delta" argument can be zero or more values
-// any annotations on the arguments are silently dropped
+(ion_1_1 "delta can be invoked"
+         (each "in text with an unqualified macro name"
+               (text "(:delta)")
+               "in text with an unqualified macro address"
+               (text "(:18)")
+               "in text with a qualified macro name"
+               (text "(:$ion::delta)")
+               "in text with a qualified macro address"
+               (text "(:$ion::18)")
+               "in binary with a system macro address"
+               (binary "EF 12 00")
+               "in binary with a user macro address"
+               (binary "12 00")
+               (produces)))
+
 // the output of delta is defined as follows:
-//    output₀ = initial + delta₀
+//    output₀ = delta₀
 //    outputₙ₊₁ = outputₙ + deltaₙ₊₁
+(ion_1_1 "delta produces a stream of values that is the delta of"
+         (each "0 arguments"
+               (binary "EF 12 00")
+               (text "(:delta)")
+               (text "(:delta (::))")
+               (produces))
+         (each "1 argument"
+               (binary "EF 12 01 03")
+               (text "(:delta 1)")
+               (produces 1))
+         (each "2 arguments"
+               (binary "EF 12 02 05 03 05 01")
+               (text "(:delta 1 2)")
+               (produces 1 3))
+         (each "3 arguments"
+               (binary "EF 12 02 07 FF FF FF 01")
+               (text "(:delta -1 -1 -1)")
+               (produces -1 -2 -3))
+         (each "4 arguments"
+               (binary "EF 12 02 09 03 03 03 03 01")
+               (text "(:delta 1 1 1 1)")
+               (text "(:delta (:repeat 4 1))")
+               (produces 1 2 3 4))
+         (each "many arguments"
+               (text "(:delta 1 2 3 4 5 -1 -2 -3)")
+               // Annotations are silently dropped
+               (text "(:delta a::1 b::2 c::3 d::4 e::5 -1 -2 -3)")
+               (produces 1 3 6 10 15 14 12 9)))
+
+(ion_1_1 "arguments may not be"
+         (each "any null"
+               (text "(:delta 1 null 2)")
+               (text "(:delta 1 null.int 2)")
+               (text "(:delta 1 null.float 2)")
+               (text "(:delta 1 null.decimal 2)")
+               "a float"
+               (text "(:delta 1 3e1 2)")
+               "a decimal"
+               (text "(:delta 1 3d1 2)")
+               "a list of numbers"
+               (text "(:delta 1 [3, 4, 5] 2)")
+               "a sexp of numbers"
+               (text "(:delta 1 (3 4 5) 2)")
+               "a numeric string"
+               (text "(:delta 1 '''3''' 2)")
+               (signals "invalid argument")))

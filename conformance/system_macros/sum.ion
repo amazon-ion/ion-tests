@@ -1,8 +1,54 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// sum can be invoked using any type of macro reference.
-// the arguments of sum must be zero or more non-null integers
-// any annotations on the arguments are silently dropped
-// the output of sum is the sum of all its argument values
+(ion_1_1 "sum can be invoked"
+         (each "in text with an unqualified macro name"
+               (text "(:sum)")
+               "in text with an unqualified macro address"
+               (text "(:20)")
+               "in text with a qualified macro name"
+               (text "(:$ion::sum)")
+               "in text with a qualified macro address"
+               (text "(:$ion::20)")
+               "in binary with a system macro address"
+               (binary "EF 14 00")
+               "in binary with a user macro address"
+               (binary "14 00")
+               (produces 0)))
+
+(ion_1_1 "sum produces a single value that is the sum of"
+         (each "zero arguments"
+               (binary "EF 14 00")
+               (text "(:sum)")
+               (text "(:sum (::))")
+               (produces 0))
+         (then "one argument"
+               (binary "EF 14 01 03")
+               (text "(:sum 1)")
+               (produces 1))
+         (each "multiple arguments"
+               (binary "EF 14 02 09 61 08 61 07")
+               (text "(:sum 1 2 3 4 5)")
+               (text "(:sum 0 15)")
+               (text "(:sum 10 10 -2 -3)")
+               // Annotations are silently dropped
+               (text "(:sum a::1 b::2 c::3 d::4 e::5)")
+               (produces 15)))
+
+(ion_1_1 "arguments may not be"
+         (each "any null"
+               (text "(:sum 1 null 2)")
+               (text "(:sum 1 null.int 2)")
+               (text "(:sum 1 null.float 2)")
+               (text "(:sum 1 null.decimal 2)")
+               "a float"
+               (text "(:sum 1 3e1 2)")
+               "a decimal"
+               (text "(:sum 1 3d1 2)")
+               "a list of numbers"
+               (text "(:sum 1 [3, 4, 5] 2)")
+               "a sexp of numbers"
+               (text "(:sum 1 (3 4 5) 2)")
+               "a numeric string"
+               (text "(:sum 1 '''3''' 2)")
+               (signals "invalid argument")))
