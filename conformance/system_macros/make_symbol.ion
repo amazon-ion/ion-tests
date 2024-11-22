@@ -1,8 +1,74 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// make_symbol can be invoked using any type of macro reference.
-// make_symbol creates a single unannotated symbol from zero or more text values
-// null values, unknown symbol text, and non-text values must signal an error
-// annotations on the argment values are silently dropped
+(ion_1_1 "make_symbol can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:make_symbol (::)) ")
+               "in text with an unqualified macro address"
+               (text " (:4 (::)) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::make_symbol (::)) ")
+               "in text using qualified system macro address 4"
+               (text " (:$ion::4 (::)) ")
+               "in binary using system macro address 4"
+               (binary "EF 04 00")
+               "in binary with a user macro address"
+               (binary "04 00")
+               (produces '')))
+
+(ion_1_1 "make_symbol creates a single, unannotated symbol from"
+         (then "0 values"
+               (text '''(:make_symbol)''')
+               (produces ''))
+         (then "1 string"
+               (text '''(:make_symbol "a")''')
+               (produces a))
+         (then "2 strings"
+               (text '''(:make_symbol "a" "b")''')
+               (produces ab))
+         (then "3 strings"
+               (text '''(:make_symbol "a" "b" "c")''')
+               (produces abc))
+         (then "1 symbol"
+               (text '''(:make_symbol a)''')
+               (produces a))
+         (then "2 symbols"
+               (text '''(:make_symbol a b)''')
+               (produces ab))
+         (then "3 symbols"
+               (text '''(:make_symbol a b c)''')
+               (produces abc))
+         (then "a mix of symbols and strings"
+               (text '''(:make_symbol a "b" c "d")''')
+               (produces abcd))
+         (then "an expression that produces multiple text values"
+               (text '''(:make_symbol (:values a "b" c))''')
+               (produces abc))
+         (then "annotated text values"
+               // Argument annotations are silently dropped.
+               (text '''(:make_symbol x::a y::"b" z::c)''')
+               (produces abc)))
+
+(ion_1_1 "the argument cannot be"
+         (each "null"
+               (text ''' (:make_symbol null) ''')
+               (text ''' (:make_symbol "a" null "b") ''')
+               "null.symbol"
+               (text ''' (:make_symbol null.symbol) ''')
+               (text ''' (:make_symbol "a" null.symbol "b") ''')
+               "null.string"
+               (text ''' (:make_symbol null.string) ''')
+               (text ''' (:make_symbol "a" null.string "b") ''')
+               "a non-text value"
+               (text ''' (:make_symbol {{ "abc" }}) ''')
+               (text ''' (:make_symbol 123) ''')
+               (text ''' (:make_symbol ["a", "b", "c"]) ''')
+               (text ''' (:make_symbol "a" {{ "abc" }} "b") ''')
+               (text ''' (:make_symbol "a" 123 "b") ''')
+               (text ''' (:make_symbol "a" ["a", "b", "c"] "b") ''')
+               "a symbol with unknown text"
+               (text ''' (:make_symbol $0) ''')
+               (text ''' (:make_symbol "a" $0 "b") ''')
+               (text ''' (:make_symbol $9999999) ''')
+               (text ''' (:make_symbol "a" $9999999 "b") ''')
+               (signals "invalid argument")))

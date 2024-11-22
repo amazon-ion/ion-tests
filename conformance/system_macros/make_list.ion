@@ -1,8 +1,62 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// make_list can be invoked using any type of macro reference.
-// the argument values may be zero or more non-null lists and s-expressions
-// make_list creates a single unannotated list whose elements are the concatenated elements of all its arguments
-// annotations on the argument values are silently dropped
+(ion_1_1 "make_list can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:make_list (::)) ")
+               "in text with an unqualified macro address"
+               (text " (:8 (::)) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::make_list (::)) ")
+               "in text using qualified system macro address 8"
+               (text " (:$ion::8 (::)) ")
+               "in binary using system macro address 8"
+               (binary "EF 08 00")
+               "in binary with a user macro address"
+               (binary "08 00")
+               (produces [])))
+
+(ion_1_1 "make_list creates a single, unannotated list from"
+         (then "0 values"
+               (text "(:make_list)")
+               (produces []))
+         (each "one list"
+               (text "(:make_list [1, 2, 3])")
+               "multiple lists"
+               (text "(:make_list [1, 2] [3])")
+               (text "(:make_list [1] [2] [3])")
+               (text "(:make_list [] [1, 2, 3] [])")
+               (text "(:make_list [] [1] [] [2] [] [3] [])")
+               "one sexp"
+               (text "(:make_list (1 2 3))")
+               "multiple sexps"
+               (text "(:make_list (1 2) (3))")
+               (text "(:make_list (1) (2) (3))")
+               (text "(:make_list () (1 2 3) ())")
+               (text "(:make_list () (1) () (2) () (3) ())")
+               "a mix of lists and sexps"
+               (text "(:make_list () [1] (2) [3])")
+               (text "(:make_list (1) [2, 3] ())")
+               "annotated sequence values"
+               // Argument annotations are silently dropped.
+               (text "(:make_list a::() b::[1] c::(2) d::[3])")
+               (produces [1, 2, 3])))
+
+(ion_1_1 "the argument cannot be"
+         (each "null"
+               (text "(:make_list null)")
+               (text "(:make_list [1] null [2])")
+               "null.list"
+               (text "(:make_list null.list)")
+               (text "(:make_list [1] null.list [2])")
+               "null.sexp"
+               (text "(:make_list null.sexp)")
+               (text "(:make_list [1] null.sexp [2])")
+               "a non-sequence value"
+               (text "(:make_list {{ '''abc''' }})")
+               (text "(:make_list [1] {{ '''abc''' }} [2])")
+               (text "(:make_list 123)")
+               (text "(:make_list [1] 123 [2])")
+               (text "(:make_list { a: 1 })")
+               (text "(:make_list [1] { a: 1 } [2])")
+               (signals "invalid argument")))

@@ -1,8 +1,62 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// make_sexp can be invoked using any type of macro reference.
-// the argument values may be zero or more non-null lists and s-expressions
-// make_sexp creates a single unannotated s-expression whose elements are the concatenated elements of all its arguments
-// annotations on the argument values are silently dropped
+(ion_1_1 "make_sexp can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:make_sexp (::)) ")
+               "in text with an unqualified macro address"
+               (text " (:9 (::)) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::make_sexp (::)) ")
+               "in text using qualified system macro address 9"
+               (text " (:$ion::9 (::)) ")
+               "in binary using system macro address 9"
+               (binary "EF 09 00")
+               "in binary with a user macro address"
+               (binary "09 00")
+               (produces ())))
+
+(ion_1_1 "make_sexp creates a single, unannotated sexp from"
+         (then "0 values"
+               (text "(:make_sexp)")
+               (produces ()))
+         (each "one list"
+               (text "(:make_sexp [1, 2, 3])")
+               "multiple lists"
+               (text "(:make_sexp [1, 2] [3])")
+               (text "(:make_sexp [1] [2] [3])")
+               (text "(:make_sexp [] [1, 2, 3] [])")
+               (text "(:make_sexp [] [1] [] [2] [] [3] [])")
+               "one sexp"
+               (text "(:make_sexp (1 2 3))")
+               "multiple sexps"
+               (text "(:make_sexp (1 2) (3))")
+               (text "(:make_sexp (1) (2) (3))")
+               (text "(:make_sexp () (1 2 3) ())")
+               (text "(:make_sexp () (1) () (2) () (3) ())")
+               "a mix of lists and sexps"
+               (text "(:make_sexp () [1] (2) [3])")
+               (text "(:make_sexp (1) [2, 3] ())")
+               "annotated sequence values"
+               // Argument annotations are silently dropped.
+               (text "(:make_sexp a::() b::[1] c::(2) d::[3])")
+               (produces (1 2 3))))
+
+(ion_1_1 "the argument cannot be"
+         (each "null"
+               (text "(:make_sexp null)")
+               (text "(:make_sexp (1) null (2))")
+               "null.list"
+               (text "(:make_sexp null.list)")
+               (text "(:make_sexp (1) null.list (2))")
+               "null.sexp"
+               (text "(:make_sexp null.sexp)")
+               (text "(:make_sexp (1) null.sexp (2))")
+               "a non-sequence value"
+               (text "(:make_sexp {{ '''abc''' }})")
+               (text "(:make_sexp (1) {{ '''abc''' }} (2))")
+               (text "(:make_sexp 123)")
+               (text "(:make_sexp (1) 123 (2))")
+               (text "(:make_sexp { a: 1 })")
+               (text "(:make_sexp (1) { a: 1 } (2))")
+               (signals "invalid argument")))

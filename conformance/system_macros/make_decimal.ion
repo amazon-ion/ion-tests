@@ -1,9 +1,64 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// make_decimal can be invoked using any type of macro reference.
-// make_decimal creates a single unannotated decimal
-// the coefficient argument must be a non-null integer
-// the exponent argument must be a non-null integer
-// annotations on the argument values are silently dropped
+(ion_1_1 "make_decimal can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:make_decimal 0 0) ")
+               "in text with an unqualified macro address"
+               (text " (:6 0 0) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::make_decimal 0 0) ")
+               "in text using qualified system macro address 6"
+               (text " (:$ion::6 0 0) ")
+               "in binary using system macro address 6"
+               (binary "EF 06 01 01")
+               "in binary with a user macro address"
+               (binary "06 01 01")
+               (produces 0.)))
+
+(ion_1_1 "the first argument must be a single, non-null integer"
+         (each (text " (:make_decimal     null 0) ")
+               (text " (:make_decimal null.int 0) ")
+               (text " (:make_decimal      0e0 0) ")
+               (text " (:make_decimal      0d0 0) ")
+               (text " (:make_decimal  (:none) 0) ")
+               (text " (:make_decimal (:: 1 2) 0) ")
+               (signals "invalid argument")))
+
+(ion_1_1 "the second argument must be a single, non-null integer"
+         (each (text " (:make_decimal 0     null) ")
+               (text " (:make_decimal 0 null.int) ")
+               (text " (:make_decimal 0      0e0) ")
+               (text " (:make_decimal 0      0d0) ")
+               (text " (:make_decimal 0  (:none)) ")
+               (text " (:make_decimal 0 (:: 1 2)) ")
+               (signals "invalid argument")))
+
+(ion_1_1 "in binary both arguments are encoded as flex_int"
+         (then (binary "EF 06 01    01   ") (produces 0d0))
+         (then (binary "EF 06 03    03   ") (produces 1d1))
+         (then (binary "EF 06 06 00 06 00") (produces 1d1))
+         (then (binary "EF 06 9E F4 01   ") (produces -729d0))
+         (then (binary "EF 06 01    9E F4") (produces 0d-729))
+         (then (binary "EF 06 FF    FF   ") (produces -1d-1))
+         (then (binary "EF 06 FE FF FE FF") (produces -1d-1)))
+
+(ion_1_1 "make_decimal creates a single unannotated decimal"
+         (then (text "(:make_decimal -3 1)") (produces -3d1))
+         (then (text "(:make_decimal -2 1)") (produces -2d1))
+         (then (text "(:make_decimal -1 1)") (produces -1d1))
+         (then (text "(:make_decimal -0 1)") (produces  0d1))
+         (then (text "(:make_decimal  0 1)") (produces  0d1))
+         (then (text "(:make_decimal  1 1)") (produces  1d1))
+         (then (text "(:make_decimal  2 1)") (produces  2d1))
+         (then (text "(:make_decimal  3 1)") (produces  3d1))
+         (then (text "(:make_decimal 2 -3)") (produces 2d-3))
+         (then (text "(:make_decimal 2 -2)") (produces 2d-2))
+         (then (text "(:make_decimal 2 -1)") (produces 2d-1))
+         (then (text "(:make_decimal 2 -0)") (produces 2d0))
+         (then (text "(:make_decimal 2  0)") (produces 2d0))
+         (then (text "(:make_decimal 2  1)") (produces 2d1))
+         (then (text "(:make_decimal 2  2)") (produces 2d2))
+         (then (text "(:make_decimal 2  3)") (produces 2d3))
+         // Argument annotations are silently dropped.
+         (then (text "(:make_decimal a::3  b::3)") (produces 3d3)))
