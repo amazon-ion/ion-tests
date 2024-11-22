@@ -1,9 +1,85 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// add_symbols can be invoked using any type of macro reference.
-// the argument values may be zero or more non-null text values
-// add_symbols does not have any side-effects on the macro table
-// add_symbols should append its arguments to the symbol table of the default module
-// annotations on any argument value should signal an error (because it's not allowed in the symbol table rather than because of any specific validation by the add_symbols macro)
+(ion_1_1 "add_symbols can be invoked"
+         (each "in text with an unqualified macro name"
+               (text ''' (:add_symbols "") ''')
+               "in text with an unqualified macro address"
+               (text ''' (:12 "") ''')
+               "in text with a qualified macro name"
+               (text ''' (:$ion::add_symbols "") ''')
+               "in text with a qualified macro address 12"
+               (text ''' (:$ion::12 "") ''')
+               "in binary with a system macro address 12"
+               (binary "EF 0C 01 90")
+               "in binary with a user macro address"
+               (binary "0C 01 90")
+               (then "and produces only system values"
+                     (produces))
+               (then "and affects the symbol table"
+                     (toplevel '#$1' '#$65' '#$66')
+                     (produces '$ion' 'make_field' ''))))
+
+(ion_1_1 "add_symbols can accept"
+         (then "an empty expression group"
+               (text "(:add_symbols)")
+               (then "with no error and producing no user values"
+                     (produces))
+               (then "and does not remove any symbols"
+                     (toplevel '#$1' '#$65')
+                     (produces '$ion' 'make_field'))
+               (then "and does not add any symbols"
+                     (toplevel '#$66')
+                     (signals "invalid symbol id")))
+         (each "a single string"
+               (text "(:add_symbols '''a''')")
+               "a single symbol"
+               (text "(:add_symbols 'a')")
+               (then "with no error and producing no user values"
+                     (produces))
+               (then "and does not remove any symbols"
+                     (toplevel '#$1' '#$65')
+                     (produces '$ion' 'make_field'))
+               (then "and appends the new symbol to the symbol table"
+                     (toplevel '#$66')
+                     (produces 'a')))
+         (each "multiple strings"
+               (text ''' (:add_symbols "a" "b" "c") ''')
+               "multiple symbols"
+               (text ''' (:add_symbols 'a' 'b' 'c') ''')
+               "a mix of strings and symbols"
+               (text ''' (:add_symbols 'a' "b" 'c') ''')
+               (then "with no error and producing no user values"
+                     (produces))
+               (then "and does not remove any symbols"
+                     (toplevel '#$1' '#$65')
+                     (produces '$ion' 'make_field'))
+               (then "and appends the new symbols to the symbol table"
+                     (toplevel '#$66' '#$67' '#$68')
+                     (produces 'a' 'b' 'c'))))
+
+(ion_1_1 "add_symbols does not accept"
+         (each "null"
+               (text "(:add_symbols null)")
+               "null.symbol"
+               (text "(:add_symbols null.symbol)")
+               "null.string"
+               (text "(:add_symbols null.string)")
+               "annotated arguments" // because of the symbol table syntax rather than any specific restriction of this macro
+               (text "(:add_symbols a::b)")
+               "symbols with unknown text and sid >0"
+               (text "(:add_symbols $256)")
+               (signals "invalid argument")))
+
+(ion_1_1 "add_symbols does not have any side-effects on the macro table"
+         (text "(:set_macros (macro x () X))")
+         (then "[PRECONDITION] macros are set as expected"
+               (text "(:x) (:0)")
+               (produces X X))
+         (each (text "(:$ion::add_symbols)")
+               (text "(:$ion::add_symbols 'a')")
+               (text "(:$ion::add_symbols 'a' 'b')")
+               // TODO: If it's not too difficult, assert that no macros are added
+               (then "no macros are removed"
+                     (text "(:x) (:0)")
+                     (produces X X))))

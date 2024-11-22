@@ -1,9 +1,82 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// set_symbols can be invoked using any type of macro reference.
-// the argument values may be zero or more non-null text values
-// set_symbols does not have any side-effects on the macro table
-// set_symbols replaces the current symbol table with a new symbol table that consists of the arguments of set_symbols
-// annotations on any argument value should signal an error (because it's not allowed in the symbol table rather than because of any specific validation by the set_symbols macro)
+(ion_1_1 "set_symbols can be invoked"
+         (each "in text with an unqualified macro name"
+               (text ''' (:set_symbols "") ''')
+               "in text with an unqualified macro address"
+               (text ''' (:11 "") ''')
+               "in text with a qualified macro name"
+               (text ''' (:$ion::set_symbols "") ''')
+               "in text with a qualified macro address 11"
+               (text ''' (:$ion::11 "") ''')
+               "in binary with a system macro address 11"
+               (binary "EF 0B 01 90")
+               "in binary with a user macro address"
+               (binary "0B 01 90")
+               (then "and produces only system values"
+                     (produces))
+               (then "and affects the symbol table"
+                     (toplevel '#$1')
+                     (produces ''))))
+
+(ion_1_1 "set_symbols can accept"
+         (then "an empty expression group"
+               (text "(:set_symbols (::))")
+               (then "with no error and producing no user values"
+                     (produces))
+               (then "and clears the symbol table"
+                     (toplevel '#$1')
+                     (signals "invalid symbol id")))
+         (each "a single string"
+               (text "(:set_symbols '''a''')")
+               "a single symbol"
+               (text "(:set_symbols 'a')")
+               (then "with no error and producing no user values"
+                     (produces))
+               (then "and sets the symbol table"
+                     (toplevel '#$1')
+                     (produces 'a'))
+               (then "and clears any existing symbols"
+                     (toplevel '#$2')
+                     (signals "invalid symbol id")))
+         (each "multiple strings"
+               (text ''' (:set_symbols "a" "b" "c") ''')
+               "multiple symbols"
+               (text ''' (:set_symbols 'a' 'b' 'c') ''')
+               "a mix of strings and symbols"
+               (text ''' (:set_symbols 'a' "b" 'c') ''')
+               (then "with no error and producing no user values"
+                     (produces))
+               (then "and sets the symbol table"
+                     (toplevel '#$1' '#$2' '#$3')
+                     (produces 'a' 'b' 'c'))
+               (then "and clears any existing symbols"
+                     (toplevel '#$4')
+                     (signals "invalid symbol id"))))
+
+(ion_1_1 "set_symbols does not accept"
+         (each "null"
+               (text "(:set_symbols null)")
+               "null.symbol"
+               (text "(:set_symbols null.symbol)")
+               "null.string"
+               (text "(:set_symbols null.string)")
+               "annotated arguments" // because of the symbol table syntax rather than any specific restriction of this macro
+               (text "(:set_symbols a::b)")
+               "symbols with unknown text and sid >0"
+               (text "(:set_symbols $256)")
+               (signals "invalid argument")))
+
+(ion_1_1 "set_symbols does not have any side-effects on the macro table"
+         (text "(:set_macros (macro x () X))")
+         (then "[PRECONDITION] macros are set as expected"
+               (text "(:x) (:0)")
+               (produces X X))
+         (each (text "(:$ion::set_symbols)")
+               (text "(:$ion::set_symbols 'a')")
+               (text "(:$ion::set_symbols 'a' 'b')")
+               // TODO: If it's not too difficult, assert that no macros are added
+               (then "no macros are removed"
+                     (text "(:x) (:0)")
+                     (produces X X))))
