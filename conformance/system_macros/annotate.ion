@@ -1,9 +1,91 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// annotate can be invoked using any type of macro reference.
-// annotate adds annotations to a value
-// if the value has existing annotations, they are preserved and annotate prepends annotations to the existing annotations of the value
+(ion_1_1 "annotate can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:annotate (::) 0) ")
+               "in text with an unqualified macro address"
+               (text " (:2 (::) 0) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::annotate (::) 0) ")
+               "in text using qualified system macro address 2"
+               (text " (:$ion::2 (::) 0) ")
+               "in binary using system macro address 2"
+               (binary "EF 02 00 60")
+               "in binary with a user macro address"
+               (binary "02 00 60")
+               (produces 0)))
+
+(ion_1_1 "annotate can add"
+         (each "0 annotations"
+               (text " (:annotate (::) a::b::c::d::e::0) ")
+               "1 annotations"
+               (text " (:annotate (:: a) b::c::d::e::0) ")
+               "2 annotations"
+               (text " (:annotate (:: a b) c::d::e::0) ")
+               "3 annotations"
+               (text " (:annotate (:: a b c) d::e::0) ")
+               "4 annotations"
+               (text " (:annotate (:: a b c d) e::0) ")
+               "5 annotations"
+               (text " (:annotate (:: a b c d e) 0) ")
+               (produces a::b::c::d::e::0)))
+
+(ion_1_1 "annotate can add annotations to"
+         (then "null"      (text "(:annotate (:: a)          null )") (produces a::null))
+         (then "bool"      (text "(:annotate (:: a)          true )") (produces a::true))
+         (then "int"       (text "(:annotate (:: a)             2 )") (produces a::2))
+         (then "float"     (text "(:annotate (:: a)           3e0 )") (produces a::3e0))
+         (then "decimal"   (text "(:annotate (:: a)           4d0 )") (produces a::4d0))
+         (then "timestamp" (text "(:annotate (:: a)         2024T )") (produces a::2024T))
+         (then "string"    (text "(:annotate (:: a)     '''abc''' )") (produces a::"abc"))
+         (then "symbol"    (text "(:annotate (:: a)           abc )") (produces a::abc))
+         (then "clob"      (text "(:annotate (:: a) {{'''abc'''}} )") (produces a::{{"abc"}}))
+         // (then "blob"      (text "(:annotate (:: a)      {{+AB/}} )") (produces a::{{ +AB/ }}))
+         (then "list"      (text "(:annotate (:: a)     [0, 1, 2] )") (produces a::[0, 1, 2]))
+         (then "sexp"      (text "(:annotate (:: a)       (0 1 2) )") (produces a::(0 1 2)))
+         (then "struct"    (text "(:annotate (:: a)         {a:1} )") (produces a::{a:1}))
+         (then "the result of an e-expression"
+               (text " (:annotate (:: a) (:values 123))")
+               (produces a::123))
+         (then "the result of a tdl macro invocation"
+               (mactab (macro foo () (.annotate (.. "a") (.values "b"))))
+               (text "(:foo)")
+               (produces a::"b"))
+         (then "the value of a tdl variable"
+               (mactab (macro foo (x) (.annotate (.. "a") (%x))))
+               (text "(:foo 10)")
+               (produces a::10)))
+
+(ion_1_1 "the annotations argument"
+         (then "may be"
+               (then "an empty expression group"
+                     (text "(:annotate (::) 0)")
+                     (produces 0))
+               (then "a symbol with unknown text"
+                     (text "(:annotate (:: $0) true)")
+                     // Could be (produces $0::true), but some implementations don't support $0 nicely.
+                     (denotes (annot true 0)))
+               (each "a string"
+                     (text "(:annotate (:: '''a''') 0)")
+                     "a symbol"
+                     (text "(:annotate (:: 'a') 0)")
+                     "an expression that produces a text value"
+                     (text "(:annotate (:: (:values a)) 0)")
+                     (produces a::0))
+               (each "an expression group with multiple text values"
+                     (text "(:annotate (:: a b) 0)")
+                     "an expression that produces multiple text values"
+                     (text "(:annotate (:: (:values a b)) 0)")
+                     (produces a::b::0)))
+         (then "may not be"
+               (each "any null"
+                     (text "(:annotate (:: null) 0)")
+                     (text "(:annotate (:: null.string) 0)")
+                     (text "(:annotate (:: null.symbol) 0)")
+                     "a non-text value"
+                     (text "(:annotate (:: 1) 0)")
+                     (signals "invalid argument"))))
+
 // the first argument must be zero or more non-null text values ($0 is allowed)
 // the second argument must be a single expression that also expands to a single expression
