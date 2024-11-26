@@ -57,6 +57,13 @@
                (text "(:foo 10)")
                (produces a::10)))
 
+(ion_1_1 "the value to annotate cannot be"
+         (each "nothing"
+               (text "(:text (:: a) (:values))")
+               "more than one value"
+               (text "(:text (:: a) (:values 1 2))")
+               (signals "invalid argument")))
+
 (ion_1_1 "the annotations argument"
          (then "may be"
                (then "an empty expression group"
@@ -86,6 +93,3 @@
                      "a non-text value"
                      (text "(:annotate (:: 1) 0)")
                      (signals "invalid argument"))))
-
-// the first argument must be zero or more non-null text values ($0 is allowed)
-// the second argument must be a single expression that also expands to a single expression
