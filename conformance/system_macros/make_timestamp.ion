@@ -79,7 +79,7 @@
          (then "is encoded in binary as a tagged value"
                (binary "EF 07"
                        "01 00"
-                       "62 0F 27" // Y Y
+                       "62 0F 27" // Y Y Y
                        "61 0C")
                (produces 9999-12T))
          (then "must be greater than 0"
@@ -107,7 +107,7 @@
          (then "is encoded in binary as a tagged value"
                (binary "EF 07"
                        "05 00"
-                       "62 0F 27 61 0C" // Y Y M
+                       "62 0F 27 61 0C" // Y Y Y M M
                        "61 1F")
                (produces 9999-12-31T))
          (then "must be greater than 0"
@@ -201,7 +201,7 @@
          // We can't test the hour and minute arguments separately for this case
          (binary "EF 07"
                  "55 00"
-                 "62 0F 27 61 0C 61 1F" // Y Y M D
+                 "62 0F 27 61 0C 61 1F" // Y Y Y M M D D
                  "61 17 61 3B")
          (produces 9999-12-31T23:59-00:00))
 
@@ -219,14 +219,14 @@
                (each "may be a tagged decimal"
                      (binary "EF 07"
                              "55 01"
-                             "62 0F 27 61 0C 61 1F" // Y Y M D
-                             "61 17 61 3B"             // H m
+                             "62 0F 27 61 0C 61 1F" // Y Y Y M M D D
+                             "61 17 61 3B"             // H H m m
                              "70")
                      "may be a tagged integer"
                      (binary "EF 07"
                              "55 01"
-                             "62 0F 27 61 0C 61 1F" // Y Y M D
-                             "61 17 61 3B"             // H m
+                             "62 0F 27 61 0C 61 1F" // Y Y Y M M D D
+                             "61 17 61 3B"             // H H m m
                              "60")
                      (produces 9999-12-31T23:59:00-00:00)))
          (then "must be a positive value"
@@ -269,23 +269,23 @@
                (signals "invalid argument"))
          (then "is encoded in binary as a tagged value"
                (then (binary "EF 07 55 05"
-                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y M D H m s
+                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "60")
                      (produces 9999-12-30T23:59:00Z))
                (then (binary "EF 07 55 05"
-                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y M D H m s
+                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "61 FF")
                      (produces 9999-12-30T23:59:00-00:01))
                (then (binary "EF 07 55 05"
-                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y M D H m s
+                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "61 01")
                      (produces 9999-12-30T23:59:00+00:01))
                (then (binary "EF 07 55 05"
-                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y M D H m s
+                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "62 61 FA")
                      (produces 9999-12-30T23:59:00-23:59))
                (then (binary "EF 07 55 05"
-                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y M D H m s
+                             "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "62 9F 05")
                      (produces 9999-12-30T23:59:00+23:59)))
          (then "must be greater than -1440"
