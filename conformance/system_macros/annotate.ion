@@ -41,7 +41,7 @@
          (then "string"    (text "(:annotate (:: a)     '''abc''' )") (produces a::"abc"))
          (then "symbol"    (text "(:annotate (:: a)           abc )") (produces a::abc))
          (then "clob"      (text "(:annotate (:: a) {{'''abc'''}} )") (produces a::{{"abc"}}))
-         // (then "blob"      (text "(:annotate (:: a)      {{+AB/}} )") (produces a::{{ +AB/ }}))
+         (then "blob"      (text "(:annotate (:: a)      {{+AB/}} )") (produces a::{{ +AB/ }}))
          (then "list"      (text "(:annotate (:: a)     [0, 1, 2] )") (produces a::[0, 1, 2]))
          (then "sexp"      (text "(:annotate (:: a)       (0 1 2) )") (produces a::(0 1 2)))
          (then "struct"    (text "(:annotate (:: a)         {a:1} )") (produces a::{a:1}))

@@ -16,7 +16,7 @@
                (binary "13 00")
                (produces /*nothing*/)))
 
-(ion_1_1 "flatten creates a single, unannotated sexp from"
+(ion_1_1 "flatten creates a flat sequence of values from"
          (then "0 values"
                (text "(:flatten)")
                (produces /*nothing*/))
