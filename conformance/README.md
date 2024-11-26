@@ -10,6 +10,7 @@ declarative domain-specific language.
  * `ion_encoding/` – test cases for encoding directives
    * `module/`
  * `system_macros/` – test cases for each of the system macros
+ * `demos/` – contains demonstrations of interesting and/or useful strategies
 
 > [!WARNING]
 > This test suite and its DSL are **Work In Progress**.

@@ -1,0 +1,24 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(ion_1_1 "a macro that can create a monomorphized variant of the values macro"
+         (mactab (macro tagless_values (mod_or_type type?)
+                        (macro
+                          // Macro name
+                          (.$ion::make_symbol (.. (%mod_or_type) (.$ion::if_some (%type) "_") (%type) "_values"))
+                          // Signature
+                          ((.$ion::annotate (.. (%mod_or_type) (%type)) vals) *)
+                          // Body
+                          ((.$ion::values %) vals))
+                 ) )
+         (then "for a built-in encoding type"
+               (toplevel ('#$:$ion::add_macros' ('#$:tagless_values' uint8)))
+               (then "when invoked in Ion text"
+                     (text "(:uint8_values 1 2 3 4 5)")
+                     (produces 1 2 3 4 5))
+               (then "when invoked in Ion binary"
+                     // Invoke our new "uint8_values" macro
+                     (binary "02 02 0B 01 02 03 04 05")
+                     (produces 1 2 3 4 5))
+         // TODO: Add cases to demo macro shaped parameters and qualified type names
+))
