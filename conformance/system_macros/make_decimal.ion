@@ -34,14 +34,12 @@
                (text " (:make_decimal 0 (:: 1 2)) ")
                (signals "invalid argument")))
 
-(ion_1_1 "in binary both arguments are encoded as flex_int"
-         (then (binary "EF 06 01    01   ") (produces 0d0))
-         (then (binary "EF 06 03    03   ") (produces 1d1))
-         (then (binary "EF 06 06 00 06 00") (produces 1d1))
-         (then (binary "EF 06 9E F4 01   ") (produces -729d0))
-         (then (binary "EF 06 01    9E F4") (produces 0d-729))
-         (then (binary "EF 06 FF    FF   ") (produces -1d-1))
-         (then (binary "EF 06 FE FF FE FF") (produces -1d-1)))
+(ion_1_1 "in binary both arguments are encoded as tagged values"
+         (then (binary "EF 06 60    60   ") (produces 0d0))
+         (then (binary "EF 06 61 01 61 01") (produces 1d1))
+         (then (binary "EF 06 61 FF 61 01") (produces -1d1))
+         (then (binary "EF 06 61 01 61 FF") (produces 1d-1))
+         (then (binary "EF 06 61 FF 61 FF") (produces -1d-1)))
 
 (ion_1_1 "make_decimal creates a single unannotated decimal"
          (then (text "(:make_decimal -3 1)") (produces -3d1))
@@ -60,5 +58,8 @@
          (then (text "(:make_decimal 2  1)") (produces 2d1))
          (then (text "(:make_decimal 2  2)") (produces 2d2))
          (then (text "(:make_decimal 2  3)") (produces 2d3))
+         // Arguments can be e-expressions
+         (then (text "(:make_decimal (:values 2) 3)") (produces 2d3))
+         (then (text "(:make_decimal 2 (:values 3))") (produces 2d3))
          // Argument annotations are silently dropped.
          (then (text "(:make_decimal a::3  b::3)") (produces 3d3)))

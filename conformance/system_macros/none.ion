@@ -18,10 +18,10 @@
                (produces /*nothing*/)))
 
 (ion_1_1 "none signals an error when"
-         (each "passed any expression value"
+         (each "argument is any expression value"
                (text "(:none 0)")
-               "passed an empty expression group"
+               "argument is an empty expression group"
                (text "(:none (::))")
-               "passed an expression that produces nothing"
+               "argument is an expression that produces nothing"
                (text "(:none (:none))")
                (signals "unexpected argument")))
