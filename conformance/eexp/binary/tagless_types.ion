@@ -1,0 +1,76 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// Basic tests to check that an implementation can read a single value of each tagless type.
+// TODO: Add more test cases covering different types of flex_syms
+//       Add test cases for an expression group containing the tagless value.
+
+(ion_1_1 "a macro with a flex_sym parameter"
+         (mactab (macro null (flex_sym::x) (%x)))
+         (binary "00 03 6E")
+         (denotes (Symbol 1) true))
+
+(ion_1_1 "a macro with a flex_uint parameter"
+         (mactab (macro null (flex_uint::x) (%x)))
+         (binary "00 03 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a uint8 parameter"
+         (mactab (macro null (uint8::x) (%x)))
+         (binary "00 01 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a uint16 parameter"
+         (mactab (macro null (uint16::x) (%x)))
+         (binary "00 01 00 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a uint32 parameter"
+         (mactab (macro null (uint32::x) (%x)))
+         (binary "00 01 00 00 00 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a uint64 parameter"
+         (mactab (macro null (uint64::x) (%x)))
+         (binary "00 01 00 00 00 00 00 00 00 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a flex_int parameter"
+         (mactab (macro null (flex_int::x) (%x)))
+         (binary "00 03 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a int8 parameter"
+         (mactab (macro null (int8::x) (%x)))
+         (binary "00 01 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a int16 parameter"
+         (mactab (macro null (int16::x) (%x)))
+         (binary "00 01 00 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a int32 parameter"
+         (mactab (macro null (int32::x) (%x)))
+         (binary "00 01 00 00 00 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a int64 parameter"
+         (mactab (macro null (int64::x) (%x)))
+         (binary "00 01 00 00 00 00 00 00 00 6E")
+         (denotes 1 true))
+
+(ion_1_1 "a macro with a float16 parameter"
+         (mactab (macro null (float16::x) (%x)))
+         (binary "00 00 3C 6E")
+         (denotes (Float "1e0") true))
+
+(ion_1_1 "a macro with a float32 parameter"
+         (mactab (macro null (float32::x) (%x)))
+         (binary "00 00 00 80 3F 6E")
+         (denotes (Float "1e0") true))
+
+(ion_1_1 "a macro with a float64 parameter"
+         (mactab (macro null (float64::x) (%x)))
+         (binary "00 00 00 00 00 00 00 F0 3F 6E")
+         (denotes (Float "1e0") true))
