@@ -231,7 +231,7 @@ type::{
 type::{
   name: model_annot,
   ordered_elements: [
-    { valid_values: [Annot, "Annot"] },
+    { valid_values: [annot, "annot"] },
     model_content,
     { type: model_symtok, occurs: range::[0, max] }
   ]

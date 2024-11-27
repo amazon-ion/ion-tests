@@ -16,10 +16,89 @@
                 (binary "10 94 74 72 75 65")
                 (produces true)))
 
-// parse_ion can read Ion 1.0 and Ion 1.1, text and binary
+(ion_1_1 "parse_ion can parse"
+         (each "Ion 1.0 text in a string literal"
+               (text '''(:parse_ion "$ion_1_0 0")''')
+               "Ion 1.0 text in a clob literal"
+               (text '''(:parse_ion {{ "$ion_1_0 0" }})''')
+               "Ion 1.0 text in a blob literal"
+               (text "(:parse_ion {{ JGlvbl8xXzAgMA== }})")
+               "Ion 1.0 binary in a blob literal"
+               (text "(:parse_ion {{ 4AEA6iA= }})")
+               "Ion 1.1 text in a string literal"
+               (text '''(:parse_ion "$ion_1_1 0")''')
+               "Ion 1.1 text in a clob literal"
+               (text '''(:parse_ion {{ "$ion_1_1 0" }})''')
+               "Ion 1.1 text in a blob literal"
+               (text "(:parse_ion {{ JGlvbl8xXzEgMA== }})")
+               "Ion 1.1 binary in a blob literal"
+               (text "(:parse_ion {{ 4AEB6mA= }})")
+               (produces 0)))
 
-// parse_ion always produces user values. See https://github.com/amazon-ion/ion-docs/issues/365 for complications to be resolved.
+(ion_1_1 "when invoked in TDL, parse_ion can parse"
+         (each "Ion 1.0 text in a string literal"
+               (mactab (macro foo () (.parse_ion "$ion_1_0 0")))
+               "Ion 1.0 text in a clob literal"
+               (mactab (macro foo () (.parse_ion {{ "$ion_1_0 0" }})))
+               "Ion 1.0 text in a blob literal"
+               (mactab (macro foo () (.parse_ion {{ JGlvbl8xXzAgMA== }})))
+               "Ion 1.0 binary in a blob literal"
+               (mactab (macro foo () (.parse_ion {{ 4AEA6iA= }} )))
+               "Ion 1.1 text in a string literal"
+               (mactab (macro foo () (.parse_ion "$ion_1_1 0")))
+               "Ion 1.1 text in a clob literal"
+               (mactab (macro foo () (.parse_ion {{ "$ion_1_1 0" }})))
+               "Ion 1.1 text in a blob literal"
+               (mactab (macro foo () (.parse_ion {{ JGlvbl8xXzEgMA== }})))
+               "Ion 1.1 binary in a blob literal"
+               (mactab (macro foo () (.parse_ion {{ 4AEB6mA= }} )))
+               (then (text "(:foo)")
+                     (produces 0))))
 
-// parse_ion requires exactly one argument
+// parse_ion requires exactly one argument, which must be a string or lob literal
+(ion_1_1 "parse_ion"
+         (each "must have exactly one argument"
+               (text '''(:parse_ion "$ion_1_0" "0")''')
+               (text "(:parse_ion)")
+               "argument must not be any null "
+               (text "(:parse_ion null)")
+               (text "(:parse_ion null.blob)")
+               (text "(:parse_ion null.clob)")
+               (text "(:parse_ion null.string)")
+               "argument may not be a symbol"
+               (text "(:parse_ion '$ion_1_0 0')")
+               "argument may not be an expression group"
+               (text '''(:parse_ion (:: "$ion_1_0 0"))''')
+               "argument may not be an e-expression"
+               (text '''(:parse_ion (:values "$ion_1_0 0"))''')
+               (signals "invalid argument"))
+         (each "argument may not be a tdl macro invocation"
+               (mactab (macro foo () (.parse_ion (.values "$ion_1_1 0"))))
+               "argument may not be a tdl variable"
+               (mactab (macro bar (x) (.parse_ion (%x))))
+               "argument may not be a special form"
+               (mactab (macro bar (x) (.parse_ion (.if_void (%x) "0" "1"))))
+               (signals "invalid macro definition")))
 
-// parse_ion argument must be a string or lob literal
+(ion_1_1 "when the enclosing document's encoding context has symbols and macros"
+         (toplevel $ion_symbol_table::{symbols: ["a", "b", "c", "d"]})
+         (mactab (macro pi () 3.14159))
+         (each "embedded Ion 1.0 does not inherit any outer symbols"
+               (text '''(:parse_ion "$ion_1_0 $10")''')
+               "embedded Ion 1.1 does not inherit any outer symbols"
+               (text '''(:parse_ion "$ion_1_1 $66")''')
+               "embedded Ion 1.1 does not inherit any outer macros"
+               (text '''(:parse_ion "$ion_1_1 (:pi)")''')
+               (signals "invalid argument")))
+
+// This may need to be updated once https://github.com/amazon-ion/ion-docs/issues/365 is resolved
+(ion_1_1 "parse_ion always produces user values"
+         (then "from values that look like system values"
+               (text '''(:parse_ion "$ion_1_1 $ion_literal::$ion_symbol_table::{symbols:[]}")''')
+               (produces $ion_symbol_table::{symbols:[]}))
+         (each "from values that look like IVMs"
+               (text '''(:parse_ion "$ion_1_1 $ion_literal::$ion_1_0")''')
+               // TODO: These might not be correct depending on the semantics around quoted IVMs.
+               (text '''(:parse_ion "$ion_1_1 '$ion_1_0')''')
+               (text '''(:parse_ion "$ion_1_0 '$ion_1_0')''')
+               (produces $ion_1_0)))
