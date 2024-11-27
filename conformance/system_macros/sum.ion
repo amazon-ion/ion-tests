@@ -45,7 +45,7 @@
          (each (text "(:sum -3 -5)") (text "(:sum -5 -3)") (produces -8))
          (each (text "(:sum -2  4)") (text "(:sum  4 -2)") (produces  2)))
 
-(ion_1_1 "arguments may not be"
+(ion_1_1 "sum arguments may not be"
          (each "less than two integers"
                (text "(:sum)")
                (text "(:sum 1)")

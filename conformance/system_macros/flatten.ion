@@ -1,8 +1,62 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// flatten can be invoked using any type of macro reference.
-// the argument values may be zero or more non-null lists and s-expressions
-// flatten expands to a stream whose elements are the concatenated elements of all its arguments
-// annotations on the argument (list and sexp) values are silently dropped
+(ion_1_1 "flatten can be invoked"
+         (each "in text with an unqualified macro name"
+               (text " (:flatten (::)) ")
+               "in text with an unqualified macro address"
+               (text " (:19 (::)) ")
+               "in text with a qualified macro name"
+               (text " (:$ion::flatten (::)) ")
+               "in text using qualified system macro address 19"
+               (text " (:$ion::19 (::)) ")
+               "in binary using system macro address 19"
+               (binary "EF 13 00")
+               "in binary with a user macro address"
+               (binary "13 00")
+               (produces /*nothing*/)))
+
+(ion_1_1 "flatten creates a flat sequence of values from"
+         (then "0 values"
+               (text "(:flatten)")
+               (produces /*nothing*/))
+         (each "one list"
+               (text "(:flatten [1, 2, 3])")
+               "multiple lists"
+               (text "(:flatten [1, 2] [3])")
+               (text "(:flatten [1] [2] [3])")
+               (text "(:flatten [] [1, 2, 3] [])")
+               (text "(:flatten [] [1] [] [2] [] [3] [])")
+               "one sexp"
+               (text "(:flatten (1 2 3))")
+               "multiple sexps"
+               (text "(:flatten (1 2) (3))")
+               (text "(:flatten (1) (2) (3))")
+               (text "(:flatten () (1 2 3) ())")
+               (text "(:flatten () (1) () (2) () (3) ())")
+               "a mix of lists and sexps"
+               (text "(:flatten () [1] (2) [3])")
+               (text "(:flatten (1) [2, 3] ())")
+               "annotated sequence values"
+               // Argument annotations are silently dropped.
+               (text "(:flatten a::() b::[1] c::(2) d::[3])")
+               (produces 1 2 3)))
+
+(ion_1_1 "the argument cannot be"
+         (each "null"
+               (text "(:flatten null)")
+               (text "(:flatten (1) null (2))")
+               "null.list"
+               (text "(:flatten null.list)")
+               (text "(:flatten (1) null.list (2))")
+               "null.sexp"
+               (text "(:flatten null.sexp)")
+               (text "(:flatten (1) null.sexp (2))")
+               "a non-sequence value"
+               (text "(:flatten {{ '''abc''' }})")
+               (text "(:flatten (1) {{ '''abc''' }} (2))")
+               (text "(:flatten 123)")
+               (text "(:flatten (1) 123 (2))")
+               (text "(:flatten { a: 1 })")
+               (text "(:flatten (1) { a: 1 } (2))")
+               (signals "invalid argument")))
