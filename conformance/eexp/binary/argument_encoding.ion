@@ -1,0 +1,629 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// The tests in this file cover the binary encodings for zero, one, and many values for
+//  - tagged parameter
+//  - tagless, single-byte parameter
+//  - tagless, fixed-size multi-byte parameter
+//  - tagless, variable-size parameter
+//
+// TODO: Determine whether this level of coverage is needed for all tagless types, or if
+//       representative cases here are sufficient when combined with minimal additional
+//       test cases to cover just the tagless encodings (i.e. not expression groups, AEB,
+//       etc.) for other tagless types.
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//                               Single Tagged parameter                                    //
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+(ion_1_1 "a macro with a tagged, required parameter"
+         (mactab (macro X (x) (%x)))
+         (then "when invoked with zero arguments"
+               (binary "00")
+               (signals "Unexpected EOF"))
+         (then "when invoked with a single argument"
+               (binary "00 60")
+               (produces 0)))
+
+(ion_1_1 "a macro with a tagged, zero-to-one parameter"
+         (mactab (macro X (x?) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (produces))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (then "that is one byte long"
+                     (binary "60") (produces 0))
+               (then "that is multiple bytes long"
+                     (binary "61 00") (produces 0)))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (each "and contains one value"
+                           // Int 0 with various amounts of overpadding to test that the expression group length is handled correctly.
+                           (binary "03 60")
+                           (binary "05 61 00")
+                           (binary "07 62 00 00")
+                           (produces 0))
+                    (each "and contains multiple values, raises an error"
+                          // Length, 1, 0e0
+                          (binary "05  60        6A")
+                          (binary "07  61 00     6A")
+                          (binary "09  62 00 00  6A")
+                          (signals "invalid argument")))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "F0")
+                           (produces))
+                     (each "and contains one value"
+                           // 0, delimited end
+                           (binary "60     F0")
+                           (binary "61 00  F0")
+                           (produces 0))
+                     (each "and contains multiple values, raises an error"
+                           (binary "60 6A F0")
+                           (signals "invalid argument")))))
+
+(ion_1_1 "a macro with a tagged, zero-to-many parameter"
+         (mactab (macro X (x*) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (produces))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (then "that is one byte long"
+                     (binary "60") (produces 0))
+               (then "that is multiple bytes long"
+                     (binary "61 00") (produces 0)))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (each "and contains one value"
+                           // Int 0 with various amounts of overpadding to test that the expression group length is handled correctly.
+                           (binary "03 60")
+                           (binary "05 61 00")
+                           (binary "07 62 00 00")
+                           (produces 0))
+                     (each "and contains multiple values"
+                           // Int 0 with various amounts of overpadding, Float 0
+                           (binary "05  60        6A")
+                           (binary "07  61 00     6A")
+                           (binary "09  62 00 00  6A")
+                           (produces 0 0e0)))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "F0")
+                           (produces))
+                     (each "and contains one value"
+                           // Int 0 with various amounts of overpadding
+                           (binary "60       F0")
+                           (binary "61 00    F0")
+                           (binary "62 00 00 F0")
+                           (produces 0))
+                     (each "and contains multiple values"
+                           // Int 0 with various amounts of overpadding, Float 0
+                           (binary "60        6A  F0")
+                           (binary "61 00     6A  F0")
+                           (binary "62 00 00  6A  F0")
+                           (produces 0 0e0)))))
+
+(ion_1_1 "a macro with a tagged, one-to-many parameter"
+         (mactab (macro X (x+) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (signals "missing required argument"))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (then "that is one byte long"
+                     (binary "60") (produces 0))
+               (then "that is multiple bytes long"
+                     (binary "61 00") (produces 0)))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (each "and contains one value"
+                           // Int 0 with various amounts of overpadding to test that the expression group length is handled correctly.
+                           (binary "03 60")
+                           (binary "05 61 00")
+                           (binary "07 62 00 00")
+                           (produces 0))
+                     (each "and contains multiple values"
+                           // Int 0 with various amounts of overpadding, Float 0
+                           (binary "05  60        6A")
+                           (binary "07  61 00     6A")
+                           (binary "09  62 00 00  6A")
+                           (produces 0 0e0)))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "F0")
+                           (signals "invalid argument"))
+                     (each "and contains one value"
+                           // Int 0 with various amounts of overpadding
+                           (binary "60        F0")
+                           (binary "61 00     F0")
+                           (binary "62 00 00  F0")
+                           (produces 0))
+                     (each "and contains multiple values"
+                           // Int 0 with various amounts of overpadding, Float 0
+                           (binary "60        6A  F0")
+                           (binary "61 00     6A  F0")
+                           (binary "62 00 00  6A  F0")
+                           (produces 0 0e0)))))
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//                 Single tagless, fixed-sized, single-byte parameter                       //
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+(ion_1_1 "a macro with a tagless, single-byte, required parameter"
+         (mactab (macro X (uint8::x) (%x)))
+         (then "when invoked with zero arguments"
+               (binary "00")
+               (signals "Unexpected EOF"))
+         (then "when invoked with a single argument"
+               (binary "00 01")
+               (produces 1)))
+
+(ion_1_1 "a macro with a tagless, single-byte, zero-to-one parameter"
+         (mactab (macro X (uint8::x?) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (produces))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (binary "01") // uint8 `1`
+               (produces 1))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (then "and contains one value"
+                           // L=1 bytes, uint8 `1`
+                           (binary "03 01")
+                           (produces 1))
+                     (then "and contains multiple values"
+                           // L=2 bytes, uint8 `1`, uint8 `2`
+                           (binary "05 01 02")
+                           (signals "invalid argument")))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (produces))
+                     (then "and contains one value"
+                           // L=1 bytes, uint8 `1`, delimited end
+                           (binary "03 01 01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // L=2 bytes, `1`, `2`, delimited end
+                           (binary "05 01 02 01")
+                           (signals "invalid argument")))))
+
+(ion_1_1 "a macro with a tagless, single-byte, zero-to-many parameter"
+         (mactab (macro X (uint8::x*) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (produces))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (binary "01") // uint8 `1`
+               (produces 1))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (then "and contains one value"
+                           // L=1 bytes, uint8 `1`
+                           (binary "03 01")
+                           (produces 1))
+                     (then "and contains multiple values"
+                           // L=2 bytes, uint8 `1`, uint8 `2`
+                           (binary "05 01 02")
+                           (produces 1 2)))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (produces))
+                     (then "and contains one value"
+                           // L=1 bytes, uint8 `1`, delimited end
+                           (binary "03 01 01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // L=2 bytes, `1`, `2`, delimited end
+                           (binary "05 01 02 01")
+                           (produces 1 2))
+                     (each "and contains multiple values in multiple chunks"
+                           // Contains the values 1, 2, 3, 4; chunks indicated by string grouping
+                           (binary "07 01 02 03"  "03 04"        "01")
+                           (binary "05 01 02"     "05 03 04"     "01")
+                           (binary "03 01"        "07 02 03 04"  "01")
+                           (produces 1 2 3 4)))))
+
+(ion_1_1 "a macro with a tagless, single-byte, one-to-many parameter"
+         (mactab (macro X (uint8::x+) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (signals "invalid argument"))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (binary "01") // uint8 `1`
+               (produces 1))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (then "and contains one value"
+                           // L=1 bytes, uint8 `1`
+                           (binary "03 01")
+                           (produces 1))
+                     (then "and contains multiple values"
+                           // L=2 bytes, uint8 `1`, uint8 `2`
+                           (binary "05 01 02")
+                           (produces 1 2)))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (signals "invalid argument"))
+                     (then "and contains one value"
+                           // L=1 bytes, uint8 `1`, delimited end
+                           (binary "03 01 01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // L=2 bytes, `1`, `2`, delimited end
+                           (binary "05 01 02 01")
+                           (produces 1 2))
+                     (each "and contains multiple values in multiple chunks"
+                           // Contains the values 1, 2, 3, 4; chunks indicated by string grouping
+                           (binary "07 01 02 03"  "03 04"        "01")
+                           (binary "05 01 02"     "05 03 04"     "01")
+                           (binary "03 01"        "07 02 03 04"  "01")
+                           (produces 1 2 3 4)))))
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//                      Single tagless, fixed-size multi-byte parameter                     //
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+(ion_1_1 "a macro with a tagless, fixed-size multi-byte, required parameter"
+         (mactab (macro X (uint16::x) (%x)))
+         (then "when invoked with zero arguments"
+               (binary "00")
+               (signals "Unexpected EOF"))
+         (then "when invoked with a single argument"
+               (binary "00 01 00")
+               (produces 1)))
+
+(ion_1_1 "a macro with a tagless, fixed-size multi-byte, zero-to-one parameter"
+         (mactab (macro X (uint16::x?) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (produces))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (binary "01 00") // uint16 `1`
+               (produces 1))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (then "and contains one value"
+                           // L=2 bytes, `1`
+                           (binary "05  01 00")
+                           (produces 1))
+                     (then "and contains multiple values"
+                           // L=4 bytes, `1`, `2`
+                           (binary "09  01 00  02 00")
+                           (signals "invalid argument")))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (produces))
+                     (then "and contains one value"
+                           // L=2 bytes, `1`, delimited end
+                           (binary "05  01 00  01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // L=4 bytes, `1`, `2`, delimited end
+                           (binary "09  01 00  02 00  01")
+                           (signals "invalid argument")))))
+
+(ion_1_1 "a macro with a tagless, fixed-size multi-byte, zero-to-many parameter"
+         (mactab (macro X (uint16::x*) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (produces))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (binary "01 00") // uint16 `1`
+               (produces 1))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (then "and contains one value"
+                           // L=2 bytes, `1`
+                           (binary "05 01 00")
+                           (produces 1))
+                     (then "and contains multiple values"
+                           // L=4 bytes, `1`, `2`
+                           (binary "09  01 00  02 00")
+                           (produces 1 2)))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (produces))
+                     (then "and contains one value"
+                           // L=2 bytes, `1`, delimited end
+                           (binary "05  01 00  01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // L=4 bytes, `1`, `2`, delimited end
+                           (binary "09  01 00  02 00  01")
+                           (produces 1 2))
+                     (each "and contains multiple values in multiple chunks"
+                           // Contains the values 1, 2, 3, 4; chunks indicated by string grouping
+                           (binary "0D 01 00 02 00 03 00"   "05 04 00"               "01")
+                           (binary "09 01 00 02 00"         "09 03 00 04 00"         "01")
+                           (binary "05 01 00"               "0D 02 00 03 00 04 00"   "01")
+                           (produces 1 2 3 4))
+                     (each "and contains a value that is split across a chunk boundary, raises an error"
+                           // uint16 1, uint16 2, uint16 3, uint16 4; split in the middle of a u16
+                           (binary "0F 01 00 02 00 03 00 04"   "03 00"               "01")
+                           (binary "0B 01 00 02 00 03"         "07 00 04 00"         "01")
+                           (binary "07 01 00 02"               "0B 00 03 00 04 00"   "01")
+                           (signals "invalid expression group length")))))
+
+(ion_1_1 "a macro with a tagless, fixed-size multi-byte, one-to-many parameter"
+         (mactab (macro X (uint16::x*) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (signals "invalid argument"))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (binary "01 00") // uint16 `1`
+               (produces 1))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (then "and contains one value"
+                           // L=2 bytes, `1`
+                           (binary "05 01 00")
+                           (produces 1))
+                     (then "and contains multiple values"
+                           // L=4 bytes, `1`, `2`
+                           (binary "09  01 00  02 00")
+                           (produces 1 2)))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (signals "invalid argument"))
+                     (then "and contains one value"
+                           // L=2 bytes, `1`, delimited end
+                           (binary "05  01 00  01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // L=4 bytes, `1`, `2`, delimited end
+                           (binary "09  01 00  02 00  01")
+                           (produces 1 2))
+                     (each "and contains multiple values in multiple chunks"
+                           // Contains the values 1, 2, 3, 4; chunks indicated by string grouping
+                           (binary "0D 01 00 02 00 03 00"   "05 04 00"               "01")
+                           (binary "09 01 00 02 00"         "09 03 00 04 00"         "01")
+                           (binary "05 01 00"               "0D 02 00 03 00 04 00"   "01")
+                           (produces 1 2 3 4))
+                     (each "and contains a value that is split across a chunk boundary, raises an error"
+                           // uint16 1, uint16 2, uint16 3, uint16 4; split in the middle of a uint16
+                           (binary "0F 01 00 02 00 03 00 04"   "03 00"               "01")
+                           (binary "0B 01 00 02 00 03"         "07 00 04 00"         "01")
+                           (binary "07 01 00 02"               "0B 00 03 00 04 00"   "01")
+                           (signals "invalid expression group length")))))
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//                      Single tagless, variable-sized parameter                            //
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+(ion_1_1 "a macro with a tagless, variable-size, required parameter"
+         (mactab (macro X (flex_uint::x) (%x)))
+         (then "when invoked with zero arguments"
+               (binary "00")
+               (signals "Unexpected EOF"))
+         (then "when invoked with a single argument"
+               (binary "00 03")
+               (produces 1)))
+
+(ion_1_1 "a macro with a tagless, variable-size, zero-to-one parameter"
+         (mactab (macro X (flex_uint::x?) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (produces))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (each (binary "03")    // flexuint `1`
+                     (binary "06 00") // overpadded flexuint `1`
+                     (produces 1)))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (each "and contains one value"
+                           // L=1 bytes, flexuint `1`
+                           (binary "03 03")
+                           // L=2 bytes, overpadded flexuint `1`
+                           (binary "05 06 00")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // Various lengths with regular and overpadded flexuint 1 2
+                           (binary "05  03     05   ")
+                           (binary "07  06 00  05   ")
+                           (binary "07  03     0B 00")
+                           (binary "09  06 00  0B 00")
+                           (signals "invalid argument")))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (produces))
+                     (then "and contains one value"
+                           // Length, `1`, delimited end
+                           (binary "03   03      01")
+                           (binary "05   06 00   01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // Length, `1`, `2`, delimited end
+                           (binary "05  03     05     01")
+                           (binary "07  06 00  05     01")
+                           (binary "07  03     0B 00  01")
+                           (binary "09  06 00  0B 00  01")
+                           (signals "invalid argument")))))
+
+(ion_1_1 "a macro with a tagless, variable-size, zero-to-many parameter"
+         (mactab (macro X (flex_uint::x*) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (produces))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (each (binary "03")    // flexuint `1`
+                     (binary "06 00") // overpadded flexuint `1`
+                     (produces 1)))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (each "and contains one value"
+                           // L=1 bytes, flexuint `1`
+                           (binary "03 03")
+                           // L=2 bytes, overpadded flexuint `1`
+                           (binary "05 06 00")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // Various lengths with regular and overpadded flexuint 1 2
+                           (binary "05  03     05   ")
+                           (binary "07  06 00  05   ")
+                           (binary "07  03     0B 00")
+                           (binary "09  06 00  0B 00")
+                           (produces 1 2)))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (produces))
+                     (then "and contains one value"
+                           // Length, `1`, delimited end
+                           (binary "03  03     01")
+                           (binary "05  06 00  01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // ChunkLength, `1`, `2`, delimited end
+                           (binary "05  03     05     01")
+                           (binary "07  06 00  05     01")
+                           (binary "07  03     0B 00  01")
+                           (binary "09  06 00  0B 00  01")
+                           (produces 1 2))
+                     (each "and contains multiple values in multiple chunks"
+                           // Contains the values 1, 2, 3, 4; chunks indicated by string grouping
+                           (binary "07 03 05 07"        "03 09"        "01")
+                           (binary "05 03 05"           "05 07 09"     "01")
+                           (binary "03 03"              "07 05 07 09"  "01")
+                           (binary "05 06 00"           "07 05 07 09"  "01")
+                           (binary "07 06 00 05"        "05 07 09"     "01")
+                           (binary "09 06 00 0B 00"     "05 07 09"     "01")
+                           (binary "0B 06 00 0B 00 07"  "03 09"        "01")
+                           (produces 1 2 3 4))
+                     (each "and contains a value that is split across a chunk boundary, raises an error"
+                           (binary "03 06"     "03 00"     "01")
+                           (binary "05 03 0B"  "05 00 07"  "01")
+                           (signals "invalid expression group length")))))
+
+(ion_1_1 "a macro with a tagless, variable-size, one-to-many parameter"
+         (mactab (macro X (flex_uint::x+) (%x)))
+         (binary "00")
+         (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
+         (then "when invoked with no arguments"
+               (binary "00") // Presence bitmap indicating no arguments
+               (signals "invalid argument"))
+         (then "when invoked with a single argument"
+               (binary "01") // Presence bitmap indicating 1 argument
+               (each (binary "03")    // flexuint `1`
+                     (binary "06 00") // overpadded flexuint `1`
+                     (produces 1)))
+         (then "when invoked with an expression group"
+               (binary "02") // Presence bitmap indicating expression group
+               (then "that is length prefixed"
+                     // L=0 is the escape for delimited expression groups, so there is no empty case here
+                     (each "and contains one value"
+                           // L=1 bytes, flexuint `1`
+                           (binary "03 03")
+                           // L=2 bytes, overpadded flexuint `1`
+                           (binary "05 06 00")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // Various lengths with regular and overpadded flexuint 1 2
+                           (binary "05 03 05")
+                           (binary "07 06 00 05")
+                           (binary "07 03 0B 00")
+                           (binary "09 06 00 0B 00")
+                           (produces 1 2)))
+               (then "that is delimited"
+                     (binary "01")
+                     (then "and empty"
+                           (binary "01")
+                           (signals "invalid argument"))
+                     (then "and contains one value"
+                           // Length, `1`, delimited end
+                           (binary "03  03     01")
+                           (binary "05  06 00  01")
+                           (produces 1))
+                     (each "and contains multiple values"
+                           // ChunkLength, `1`, `2`, delimited end
+                           (binary "05"  "03"     "05"     "01")
+                           (binary "07"  "06 00"  "05"     "01")
+                           (binary "07"  "03"     "0B 00"  "01")
+                           (binary "09"  "06 00"  "0B 00"  "01")
+                           (produces 1 2))
+                     (each "and contains multiple values in multiple chunks"
+                           // Contains the values 1, 2, 3, 4; chunks indicated by string grouping
+                           (binary "07 03 05 07"        "03 09"        "01")
+                           (binary "05 03 05"           "05 07 09"     "01")
+                           (binary "03 03"              "07 05 07 09"  "01")
+                           (binary "05 06 00"           "07 05 07 09"  "01")
+                           (binary "07 06 00 05"        "05 07 09"     "01")
+                           (binary "09 06 00 0B 00"     "05 07 09"     "01")
+                           (binary "0B 06 00 0B 00 07"  "03 09"        "01")
+                           (produces 1 2 3 4))
+                     (each "and contains a value that is split across a chunk boundary, raises an error"
+                           (binary "03 06"     "03 00"     "01")
+                           (binary "05 03 0B"  "05 00 07"  "01")
+                           (signals "invalid expression group length")))))
