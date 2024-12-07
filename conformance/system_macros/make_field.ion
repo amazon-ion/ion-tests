@@ -52,7 +52,7 @@
                      (text "(:make_field foo 0)")
                      (produces {foo:0} ))
                (then "an expression that produces a single value"
-                     (text "(:make_field foo (:values foo))")
+                     (text "(:make_field foo (:values 0))")
                      (produces {foo:0} )))
          (then "cannot be"
                (each "missing"
