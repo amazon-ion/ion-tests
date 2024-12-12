@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:make_timestamp 1) ")
                "in text with an unqualified macro address"
-               (text " (:7 1) ")
+               (text " (:12 1) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_timestamp 1) ")
-               "in text using qualified system macro address 7"
-               (text " (:$ion::7 1) ")
-               "in binary using system macro address 7"
-               (binary "EF 07 00 00 61 01")
+               "in text using qualified system macro address 12"
+               (text " (:$ion::12 1) ")
+               "in binary using system macro address 12"
+               (binary "EF 0C 00 00 61 01")
                "in binary with a user macro address"
-               (binary "07 00 00 61 01")
+               (binary "0C 00 00 61 01")
                (produces 0001T)))
 
 (ion_1_1 "make_timestamp produces a single, unannotated timestamp"
@@ -51,7 +51,7 @@
                (text " (:make_timestamp (:: 1 1) 2 3 4 5 6. 7) ")
                (signals "invalid argument"))
          (then "is encoded in binary as a tagged value"
-               (binary "EF 07" // System macro invocation
+               (binary "EF 0C" // System macro invocation
                        "00 00" // Presence bitmap
                        /* Y */ "62 0F 27")
                (produces 9999T))
@@ -77,7 +77,7 @@
                (text " (:make_timestamp 1 (:: 2 2) 3 4 5 6. 7) ")
                (signals "invalid argument"))
          (then "is encoded in binary as a tagged value"
-               (binary "EF 07"
+               (binary "EF 0C"
                        "01 00"
                        "62 0F 27" // Y Y Y
                        "61 0C")
@@ -105,7 +105,7 @@
                (text " (:make_timestamp 1 2 (:: 3 3) 4 5 6. 7) ")
                (signals "invalid argument"))
          (then "is encoded in binary as a tagged value"
-               (binary "EF 07"
+               (binary "EF 0C"
                        "05 00"
                        "62 0F 27 61 0C" // Y Y Y M M
                        "61 1F")
@@ -199,7 +199,7 @@
 
 (ion_1_1 "the hour and minute arguments are encoded in binary as tagged values"
          // We can't test the hour and minute arguments separately for this case
-         (binary "EF 07"
+         (binary "EF 0C"
                  "55 00"
                  "62 0F 27 61 0C 61 1F" // Y Y Y M M D D
                  "61 17 61 3B")
@@ -217,13 +217,13 @@
                (signals "invalid argument"))
          (then "in binary"
                (each "may be a tagged decimal"
-                     (binary "EF 07"
+                     (binary "EF 0C"
                              "55 01"
                              "62 0F 27 61 0C 61 1F" // Y Y Y M M D D
                              "61 17 61 3B"             // H H m m
                              "70")
                      "may be a tagged integer"
-                     (binary "EF 07"
+                     (binary "EF 0C"
                              "55 01"
                              "62 0F 27 61 0C 61 1F" // Y Y Y M M D D
                              "61 17 61 3B"             // H H m m
@@ -268,23 +268,23 @@
                (text "(:make_timestamp 1 2 3 4 5 6. (:: 7 7))")
                (signals "invalid argument"))
          (then "is encoded in binary as a tagged value"
-               (then (binary "EF 07 55 05"
+               (then (binary "EF 0C 55 05"
                              "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "60")
                      (produces 9999-12-30T23:59:00Z))
-               (then (binary "EF 07 55 05"
+               (then (binary "EF 0C 55 05"
                              "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "61 FF")
                      (produces 9999-12-30T23:59:00-00:01))
-               (then (binary "EF 07 55 05"
+               (then (binary "EF 0C 55 05"
                              "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "61 01")
                      (produces 9999-12-30T23:59:00+00:01))
-               (then (binary "EF 07 55 05"
+               (then (binary "EF 0C 55 05"
                              "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "62 61 FA")
                      (produces 9999-12-30T23:59:00-23:59))
-               (then (binary "EF 07 55 05"
+               (then (binary "EF 0C 55 05"
                              "62 0F 27 61 0C 61 1E 61 17 61 3B 70"    // Y Y Y M M D D H H m m s
                              "62 9F 05")
                      (produces 9999-12-30T23:59:00+23:59)))

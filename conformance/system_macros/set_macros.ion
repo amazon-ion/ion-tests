@@ -8,15 +8,15 @@
          (each "in text with an unqualified macro name"
                (text "(:set_macros) ")
                "in text with an unqualified macro address"
-               (text "(:13)")
+               (text "(:21)")
                "in text with a qualified macro name"
                (text "(:$ion::set_macros)")
-               "in text with a qualified macro address 13"
-               (text "(:$ion::13)")
-               "in binary with a system macro address 13"
-               (binary "EF 0D 00")
+               "in text with a qualified macro address 21"
+               (text "(:$ion::21)")
+               "in binary with a system macro address 21"
+               (binary "EF 15 00")
                "in binary with a user macro address"
-               (binary "0D 00")
+               (binary "15 00")
                (produces)))
 
 (ion_1_1 "set_macros can be invoked with a single macro"

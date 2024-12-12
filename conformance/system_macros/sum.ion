@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text "(:sum 0 0)")
                "in text with an unqualified macro address"
-               (text "(:20 0 0)")
+               (text "(:7 0 0)")
                "in text with a qualified macro name"
                (text "(:$ion::sum 0 0)")
                "in text with a qualified macro address"
-               (text "(:$ion::20 0 0)")
+               (text "(:$ion::7 0 0)")
                "in binary with a system macro address"
-               (binary "EF 14 60 60")
+               (binary "EF 07 60 60")
                "in binary with a user macro address"
-               (binary "14 60 60")
+               (binary "07 60 60")
                (produces 0)))
 
 (ion_1_1 "sum produces a single, unannotated integer that is the sum of"

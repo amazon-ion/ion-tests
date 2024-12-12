@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:make_string (::)) ")
                "in text with an unqualified macro address"
-               (text " (:3 (::)) ")
+               (text " (:9 (::)) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_string (::)) ")
-               "in text using qualified system macro address 3"
-               (text " (:$ion::3 (::)) ")
-               "in binary using system macro address 3"
-               (binary "EF 03 00")
+               "in text using qualified system macro address 9"
+               (text " (:$ion::9 (::)) ")
+               "in binary using system macro address 9"
+               (binary "EF 09 00")
                "in binary with a user macro address"
-               (binary "03 00")
+               (binary "09 00")
                (produces "")))
 
 (ion_1_1 "make_string creates a single, unannotated string from"

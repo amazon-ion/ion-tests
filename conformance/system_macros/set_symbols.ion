@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text ''' (:set_symbols "") ''')
                "in text with an unqualified macro address"
-               (text ''' (:11 "") ''')
+               (text ''' (:19 "") ''')
                "in text with a qualified macro name"
                (text ''' (:$ion::set_symbols "") ''')
-               "in text with a qualified macro address 11"
-               (text ''' (:$ion::11 "") ''')
-               "in binary with a system macro address 11"
-               (binary "EF 0B 01 90")
+               "in text with a qualified macro address 19"
+               (text ''' (:$ion::19 "") ''')
+               "in binary with a system macro address 19"
+               (binary "EF 13 01 90")
                "in binary with a user macro address"
-               (binary "0B 01 90")
+               (binary "13 01 90")
                (then "and produces only system values"
                      (produces))
                (then "and affects the symbol table"

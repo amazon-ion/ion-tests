@@ -5,20 +5,20 @@
          (each "in text with an unqualified macro name"
                (text ''' (:add_symbols "") ''')
                "in text with an unqualified macro address"
-               (text ''' (:12 "") ''')
+               (text ''' (:20 "") ''')
                "in text with a qualified macro name"
                (text ''' (:$ion::add_symbols "") ''')
-               "in text with a qualified macro address 12"
-               (text ''' (:$ion::12 "") ''')
-               "in binary with a system macro address 12"
-               (binary "EF 0C 01 90")
+               "in text with a qualified macro address 20"
+               (text ''' (:$ion::20 "") ''')
+               "in binary with a system macro address 20"
+               (binary "EF 14 01 90")
                "in binary with a user macro address"
-               (binary "0C 01 90")
+               (binary "14 01 90")
                (then "and produces only system values"
                      (produces))
                (then "and affects the symbol table"
-                     (toplevel '#$1' '#$65' '#$66')
-                     (produces '$ion' 'make_field' ''))))
+                     (toplevel '#$1' '#$63' '#$64')
+                     (produces '$ion' 'use' ''))))
 
 (ion_1_1 "add_symbols can accept"
          (then "an empty expression group"
@@ -26,10 +26,10 @@
                (then "with no error and producing no user values"
                      (produces))
                (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$65')
-                     (produces '$ion' 'make_field'))
+                     (toplevel '#$1' '#$63')
+                     (produces '$ion' 'use'))
                (then "and does not add any symbols"
-                     (toplevel '#$66')
+                     (toplevel '#$64')
                      (signals "invalid symbol id")))
          (each "a single string"
                (text "(:add_symbols '''a''')")
@@ -38,10 +38,10 @@
                (then "with no error and producing no user values"
                      (produces))
                (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$65')
-                     (produces '$ion' 'make_field'))
+                     (toplevel '#$1' '#$63')
+                     (produces '$ion' 'use'))
                (then "and appends the new symbol to the symbol table"
-                     (toplevel '#$66')
+                     (toplevel '#$64')
                      (produces 'a')))
          (each "multiple strings"
                (text ''' (:add_symbols "a" "b" "c") ''')
@@ -52,10 +52,10 @@
                (then "with no error and producing no user values"
                      (produces))
                (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$65')
-                     (produces '$ion' 'make_field'))
+                     (toplevel '#$1' '#$63')
+                     (produces '$ion' 'use'))
                (then "and appends the new symbols to the symbol table"
-                     (toplevel '#$66' '#$67' '#$68')
+                     (toplevel '#$64' '#$65' '#$66')
                      (produces 'a' 'b' 'c'))))
 
 (ion_1_1 "add_symbols does not accept"
