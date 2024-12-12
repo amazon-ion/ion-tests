@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:make_decimal 0 0) ")
                "in text with an unqualified macro address"
-               (text " (:6 0 0) ")
+               (text " (:11 0 0) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_decimal 0 0) ")
                "in text using qualified system macro address 6"
-               (text " (:$ion::6 0 0) ")
+               (text " (:$ion::11 0 0) ")
                "in binary using system macro address 6"
-               (binary "EF 06 01 01")
+               (binary "EF 0B 01 01")
                "in binary with a user macro address"
-               (binary "06 01 01")
+               (binary "0B 01 01")
                (produces 0.)))
 
 (ion_1_1 "the first argument must be a single, non-null integer"
@@ -35,11 +35,11 @@
                (signals "invalid argument")))
 
 (ion_1_1 "in binary both arguments are encoded as tagged values"
-         (then (binary "EF 06 60    60   ") (produces 0d0))
-         (then (binary "EF 06 61 01 61 01") (produces 1d1))
-         (then (binary "EF 06 61 FF 61 01") (produces -1d1))
-         (then (binary "EF 06 61 01 61 FF") (produces 1d-1))
-         (then (binary "EF 06 61 FF 61 FF") (produces -1d-1)))
+         (then (binary "EF 0B 60    60   ") (produces 0d0))
+         (then (binary "EF 0B 61 01 61 01") (produces 1d1))
+         (then (binary "EF 0B 61 FF 61 01") (produces -1d1))
+         (then (binary "EF 0B 61 01 61 FF") (produces 1d-1))
+         (then (binary "EF 0B 61 FF 61 FF") (produces -1d-1)))
 
 (ion_1_1 "make_decimal creates a single unannotated decimal"
          (then (text "(:make_decimal -3 1)") (produces -3d1))

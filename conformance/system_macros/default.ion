@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:default 0 1) ")
                "in text with an unqualified macro address"
-               (text " (:23 0 1) ")
+               (text " (:2 0 1) ")
                "in text with a qualified macro name"
                (text " (:$ion::default 0 1) ")
-               "in text using qualified system macro address 23"
-               (text " (:$ion::23 0 1) ")
-               "in binary using system macro address 23"
-               (binary "EF 17 05 60 61 01")
+               "in text using qualified system macro address 2"
+               (text " (:$ion::2 0 1) ")
+               "in binary using system macro address 2"
+               (binary "EF 02 05 60 61 01")
                "in binary with a user macro address"
-               (binary "17 05 60 61 01")
+               (binary "02 05 60 61 01")
                (produces 0)))
 
 (ion_1_1 "default produces"

@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:make_symbol (::)) ")
                "in text with an unqualified macro address"
-               (text " (:4 (::)) ")
+               (text " (:10 (::)) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_symbol (::)) ")
-               "in text using qualified system macro address 4"
-               (text " (:$ion::4 (::)) ")
-               "in binary using system macro address 4"
-               (binary "EF 04 00")
+               "in text using qualified system macro address 10"
+               (text " (:$ion::10 (::)) ")
+               "in binary using system macro address 10"
+               (binary "EF 0A 00")
                "in binary with a user macro address"
-               (binary "04 00")
+               (binary "0A 00")
                (produces '')))
 
 (ion_1_1 "make_symbol creates a single, unannotated symbol from"
