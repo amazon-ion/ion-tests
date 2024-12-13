@@ -1,0 +1,132 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(ion_1_1 "if_none special form cannot be"
+         (each "invoked as an unqualified e-expression"
+               (text "(:if_none 1 2 3)")
+               "invoked as a qualified e-expression"
+               (text "(:$ion::if_none 1 2 3)")
+               "exported"
+               (mactab (export if_none))
+               (mactab (export $ion::if_none))
+               (signals "no such macro")))
+
+(ion_1_1 "when invoked in TDL,"
+         // TODO: Can be invoked qualified and unqualified
+         //       Can be shadowed
+         (each "each argument can be elided because they are optional trailing parameters"
+               (mactab (macro foo () (.$ion::if_none)))
+               (mactab (macro foo () (.$ion::if_none 2)))
+               (mactab (macro foo () (.$ion::if_none 2 3)))
+               (then (toplevel 0 ('$#:foo') 1)
+                     (produces 0 1))))
+
+(ion_1_1 "when the first argument is"
+         (each "an empty expression group"
+               (mactab (macro is_none () (.$ion::if_none (..) true false)))
+               "a macro that produces nothing"
+               (mactab (macro is_none () (.$ion::if_none (.$ion::none) true false)))
+               "an expression group with one macro that produces nothing"
+               (mactab (macro is_none () (.$ion::if_none (..(.$ion::none)) true false)))
+               "an expression group with multiple macros that produce nothing"
+               (mactab (macro is_none () (.$ion::if_none (..(.$ion::none)(.$ion::none)) true false)))
+               (then "then if_none should produce the true branch"
+                     (toplevel ('#$:is_none'))
+                     (produces true)))
+         (each "a single value"
+               (mactab (macro is_none () (.$ion::if_none 0 true false)))
+               "an expression group with a single value"
+               (mactab (macro is_none () (.$ion::if_none (..0) true false)))
+               "a macro that produces a single value"
+               (mactab (macro is_none () (.$ion::if_none (.values 0) true false)))
+               "an expression group with a single macro that produces a single value"
+               (mactab (macro is_none () (.$ion::if_none (.. (.values 0)) true false)))
+               "an expression group with a multiple macros that collectively produce a single value"
+               (mactab (macro is_none () (.$ion::if_none (.. (.values 0) (.none)) true false)))
+               (mactab (macro is_none () (.$ion::if_none (.. (.none) (.values 0)) true false)))
+               "an expression group with a single value and a macro that produces nothing"
+               (mactab (macro is_none () (.$ion::if_none (.. 0 (.none)) true false)))
+               (mactab (macro is_none () (.$ion::if_none (.. (.none) 0) true false)))
+               "an expression group with multiple values"
+               (mactab (macro is_none () (.$ion::if_none (.. 0 1 2) true false)))
+               "a macro that produces multiple values"
+               (mactab (macro is_none () (.$ion::if_none (.values (.. 0 1 2)) true false)))
+               "an expression group with a single macro that produces multiple values"
+               (mactab (macro is_none () (.$ion::if_none (..(.values (.. 0 1 2))) true false)))
+               "an expression group with multiple macros "
+               (mactab (macro is_none () (.$ion::if_none (..(.values 0) (.values 1)) true false)))
+               "an expression group with multiple values and some macros that produce nothing"
+               (mactab (macro is_none () (.$ion::if_none (.. 0 1 2 (.none)) true false)))
+               "an expression group with multiple values that starts with a macro that produces nothing"
+               (mactab (macro is_none () (.$ion::if_none (.. (.none) 0 1 2) true false)))
+               (then "then if_none should produce the false branch"
+                     (toplevel ('#$:is_none'))
+                     (produces false))))
+
+(ion_1_1 "when the first argument is none"
+         (then "the 'true_branch' argument can be"
+               (each "an empty expression group"
+                     (mactab (macro is_none () (.$ion::if_none (..) (..) false)))
+                     "a macro that produces no values"
+                     (mactab (macro is_none () (.$ion::if_none (..) (.none) false)))
+                     "an expression group with macros that produces no values"
+                     (mactab (macro is_none () (.$ion::if_none (..) (.. (.none) (.none)) false)))
+                     (then (toplevel 1 ('#$:is_none') 2)
+                           (produces 1 2)))
+               (each "one value"
+                     (mactab (macro is_none () (.$ion::if_none (..) true false)))
+                     "an expression group with one value"
+                     (mactab (macro is_none () (.$ion::if_none (..) (.. true) false)))
+                     "a macro that produces one value"
+                     (mactab (macro is_none () (.$ion::if_none (..) (.$ion::values true) false)))
+                     (then (toplevel 1 ('#$:is_none') 2)
+                           (produces 1 true 2)))
+               (each "an expression group with multiple values"
+                     (mactab (macro is_none () (.$ion::if_none (..) (.. true true) false)))
+                     "a macro that produces multiple values"
+                     (mactab (macro is_none () (.$ion::if_none (..) (.$ion::values (.. true true)) false)))
+                     (then (toplevel 1 ('#$:is_none') 2)
+                           (produces 1 true true 2))))
+         (then "the 'false_branch' argument is not evaluated"
+               // Note the false branch here must be something that is a RUNTIME evaluation error.
+               // We use `make_string`, assuming that it is a macro that will be implemented early on.
+               // We wrap the invalid argument in a `values` invocation so that the test won't cause
+               // a compilation error if implementations try to have compile time analysis of macro arguments.
+               (mactab (macro always_true () (.$ion::if_none (..) true (.$ion::make_string (.$ion::values null)))))
+               (then (toplevel 1 ('#$:always_true') 2)
+                     (produces 1 true 2))))
+
+(ion_1_1 "when the first argument is some"
+         (then "the 'false_branch' argument can be"
+               (each "an empty expression group"
+                     (mactab (macro is_none () (.$ion::if_none "something" true (..))))
+                     "a macro that produces no values"
+                     (mactab (macro is_none () (.$ion::if_none "something" true (.none))))
+                     "an expression group with macros that produces no values"
+                     (mactab (macro is_none () (.$ion::if_none "something" true (.. (.none) (.none)))))
+                     (then (toplevel 1 ('#$:is_none') 2)
+                           (produces 1 2)))
+               (each "one value"
+                     (mactab (macro is_none () (.$ion::if_none "something" true false)))
+                     "an expression group with one value"
+                     (mactab (macro is_none () (.$ion::if_none "something" true (.. false))))
+                     "a macro that produces one value"
+                     (mactab (macro is_none () (.$ion::if_none "something" true (.$ion::values false))))
+                     (then (toplevel 1 ('#$:is_none') 2)
+                           (produces 1 false 2)))
+               (each "an expression group with multiple values"
+                     (mactab (macro is_none () (.$ion::if_none "something" true (.. false false))))
+                     "a macro that produces multiple values"
+                     (mactab (macro is_none () (.$ion::if_none "something" true (.$ion::values (.. false false)))))
+                     "multiple values as implicit rest args"
+                     (mactab (macro is_none () (.$ion::if_none "something" true false false)))
+                     (then (toplevel 1 ('#$:is_none') 2)
+                           (produces 1 false false 2))))
+         (then "the 'true_branch' argument is not evaluated"
+               // Note the true branch here must be something that is a RUNTIME evaluation error.
+               // We use `make_string`, assuming that it is a macro that will be implemented early on.
+               // We wrap the invalid argument in a `values` invocation so that the test won't cause
+               // a compilation error if implementations try to have compile time analysis of macro arguments.
+               (mactab (macro always_false () (.$ion::if_none "something" (.$ion::make_string (.$ion::values null)) false)))
+               (then (toplevel 1 ('#$:always_false') 2)
+                     (produces 1 false 2))))

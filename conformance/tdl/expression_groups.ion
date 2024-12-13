@@ -1,0 +1,54 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(ion_1_1 "expression groups may not"
+         (each "have an annotation on the s-expression"
+               (mactab (macro foo () (.values foo::(.. 1 2))))
+               "have an annotation on the '..' operator"
+               (mactab (macro foo () (.values (foo::'..' 1 2))))
+               "contain another expression group"
+               (mactab (macro foo () (.values (.. (..)))))
+               (mactab (macro foo () (.values (.. 1 (..) 2))))
+               (mactab (macro foo () (.values (.. (.. 1) 2))))
+               (mactab (macro foo () (.values (.. 1 (.. 2)))))
+               (mactab (macro foo () (.values (.. (.. 1 2)))))
+               "be used as rest arguments"
+               // ...you can have rest arguments or an expression group, but not both.
+               (mactab (macro foo () (.values (.. 1) (.. 2))))
+               "be the template body expression"
+               (mactab (macro foo () (..)))
+               (mactab (macro foo () (.. 1)))
+               "occur in a list"
+               (mactab (macro foo () [(..)]))
+               (mactab (macro foo () [(.. 1)]))
+               (mactab (macro foo () [0, (..), 2]))
+               (mactab (macro foo () [0, (.. 1), 2]))
+               "occur in a sexp"
+               (mactab (macro foo () ( (..) ) ))
+               (mactab (macro foo () (0 (..) 2) ))
+               (mactab (macro foo () ( (.. 1) ) ))
+               (mactab (macro foo () (0 (.. 1) 1) ))
+               "occur in a struct"
+               (mactab (macro foo () { a: (..) } ))
+               (mactab (macro foo () { a: 1, b: (..), c: 2 } ))
+               (mactab (macro foo () { a: (.. 1) } ))
+               (mactab (macro foo () { a: 0, b: (.. 1), c:2 } ))
+               (signals "invalid macro definition")))
+
+(ion_1_1 "expression groups"
+         (then "may be empty"
+               (mactab (macro foo () (.values (..))))
+               (toplevel 0 ('#$:foo') 1)
+               (produces 0 1))
+         (then "may contain one value"
+               (mactab (macro foo () (.values (.. 2))))
+               (toplevel 0 ('#$:foo') 1)
+               (produces 0 2 1))
+         (then "may contain many values"
+               (mactab (macro foo () (.values (.. 2 3))))
+               (toplevel 0 ('#$:foo') 1)
+               (produces 0 2 3 1))
+         (then "may contain macro invocations"
+               (mactab (macro foo () (.values (.. (.values 2)))))
+               (toplevel 0 ('#$:foo') 1)
+               (produces 0 2 1)))

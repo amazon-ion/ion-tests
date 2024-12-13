@@ -1,0 +1,17 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// DECLARATION TEST CASES
+
+// May not have annotations on the `%`, enclosing sexp, or variable name
+// May not have other values inside the enclosing sexp
+// Variable name must be a symbol and correspond to a valid, in-scope variable
+
+// EVALUATION TEST CASES (Many of these tests should also be repeated for e-expression invocations)
+
+// Cardinality checks for zero-or-one
+// Cardinality checks for exactly-one
+// Cardinality checks for zero-or-more
+// Cardinality checks for one-or-more
+// The variable cardinality should not be checked if the variable is unused.
+// A variable should not be expanded unless it is actually being used.

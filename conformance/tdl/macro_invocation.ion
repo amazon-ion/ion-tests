@@ -1,0 +1,13 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// * Macro invocations
+//  * Must be invoked with `.`
+//  * Can be invoked by name
+//  * Can be invoked by number
+//  * Can be invoked by qualified names
+//  * Can be invoked by qualified addresses
+//  * Can be invoked using implicit rest args
+//  * Can be invoked with elided, trailing, optional args
+//  * May not have annotations on the `.` or enclosing sexp
+//
