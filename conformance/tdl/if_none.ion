@@ -44,7 +44,7 @@
                "an expression group with a multiple macros that collectively produce a single value"
                (mactab (macro is_none () (.$ion::if_none (.. (.values 0) (.none)) true false)))
                (mactab (macro is_none () (.$ion::if_none (.. (.none) (.values 0)) true false)))
-               "an expression group with a single value and a macro produces nothing"
+               "an expression group with a single value and a macro that produces nothing"
                (mactab (macro is_none () (.$ion::if_none (.. 0 (.none)) true false)))
                (mactab (macro is_none () (.$ion::if_none (.. (.none) 0) true false)))
                "an expression group with multiple values"

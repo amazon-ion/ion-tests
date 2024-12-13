@@ -56,14 +56,14 @@
                "an expression group with a multiple macros that collectively produce a single value"
                (mactab (macro is_single () (.$ion::if_single (.. (.values 0) (.none)) true false)))
                (mactab (macro is_single () (.$ion::if_single (.. (.none) (.values 0)) true false)))
-               "an expression group with a single value and a macro produces nothing"
+               "an expression group with a single value and a macro that produces nothing"
                (mactab (macro is_single () (.$ion::if_single (.. 0 (.none)) true false)))
                (mactab (macro is_single () (.$ion::if_single (.. (.none) 0) true false)))
                (then "then if_single should produce the true branch"
                      (toplevel ('#$:is_single'))
                      (produces true))))
 
-(ion_1_1 "when the first argument is some"
+(ion_1_1 "when the first argument is a single value"
          (then "the 'true_branch' argument can be"
                (each "an empty expression group"
                      (mactab (macro is_single () (.$ion::if_single "something" (..) false)))

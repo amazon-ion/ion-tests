@@ -41,7 +41,7 @@
                "an expression group with a multiple macros that collectively produce a single value"
                (mactab (macro is_multi () (.$ion::if_multi (.. (.values 0) (.none)) true false)))
                (mactab (macro is_multi () (.$ion::if_multi (.. (.none) (.values 0)) true false)))
-               "an expression group with a single value and a macro produces nothing"
+               "an expression group with a single value and a macro that produces nothing"
                (mactab (macro is_multi () (.$ion::if_multi (.. 0 (.none)) true false)))
                (mactab (macro is_multi () (.$ion::if_multi (.. (.none) 0) true false)))
                (then "then if_multi should produce the false branch"
