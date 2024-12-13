@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:make_field foo 0) ")
                "in text with an unqualified macro address"
-               (text " (:22 foo 0) ")
+               (text " (:16 foo 0) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_field foo 0) ")
                "in text using qualified system macro address 22"
-               (text " (:$ion::22 foo 0) ")
+               (text " (:$ion::16 foo 0) ")
                "in binary using system macro address 22"
-               (binary "EF 16 A3 66 6F 6F 60")
+               (binary "EF 10 A3 66 6F 6F 60")
                "in binary with a user macro address"
-               (binary "16 A3 66 6F 6F 60")
+               (binary "10 A3 66 6F 6F 60")
                (produces {foo: 0} )))
 
 (ion_1_1 "the first argument"

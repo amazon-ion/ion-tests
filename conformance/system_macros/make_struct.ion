@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:make_struct (::)) ")
                "in text with an unqualified macro address"
-               (text " (:10 (::)) ")
+               (text " (:17 (::)) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_struct (::)) ")
                "in text using qualified system macro address 10"
-               (text " (:$ion::10 (::)) ")
+               (text " (:$ion::17 (::)) ")
                "in binary using system macro address 10"
-               (binary "EF 0A 00")
+               (binary "EF 11 00")
                "in binary with a user macro address"
-               (binary "0A 00")
+               (binary "11 00")
                (produces {})))
 
 (ion_1_1 "make_struct creates a single, unannotated struct from"
@@ -26,11 +26,18 @@
          (each "one struct"
                (text "(:make_struct {a:1, b:2, c:3})")
                "multiple structs"
-               (text "(:make_struct {a:1, b:2} {b:3})")
-               (text "(:make_struct {} {a:1} {} {b:2} {} {b:3})")
+               (text "(:make_struct {a:1, b:2} {c:3})")
+               (text "(:make_struct {} {a:1} {} {b:2} {} {c:3})")
+               "other make_struct invocations"
+               (text "(:make_struct (:make_struct {a:1} {b:2} {c:3}))")
+               (text "(:make_struct (:make_struct {} {a:1} {} {b:2} {} {c:3}))")
+               "make_field invocations"
+               (text "(:make_struct (:make_field a 1) (:make_field b 2) (:make_field c 3))")
+               (text "(:make_struct (:: (:make_field a 1) (:make_field b 2) (:make_field c 3)))")
                "annotated struct values"
                // Argument annotations are silently dropped.
                (text "(:make_struct a::{} b::{a:1} c::{b:2} d::{c:3})")
+               (text "(:make_struct a::{a:1} b::{b:2} c::{c:3} d::{})")
                (produces {a:1, b:2, c:3}))
          (then "structs with repeated fields"
                (text "(:make_struct {a:1} {a:1})")

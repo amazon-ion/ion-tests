@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:make_sexp (::)) ")
                "in text with an unqualified macro address"
-               (text " (:9 (::)) ")
+               (text " (:15 (::)) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_sexp (::)) ")
                "in text using qualified system macro address 9"
-               (text " (:$ion::9 (::)) ")
+               (text " (:$ion::15 (::)) ")
                "in binary using system macro address 9"
-               (binary "EF 09 00")
+               (binary "EF 0F 00")
                "in binary with a user macro address"
-               (binary "09 00")
+               (binary "0F 00")
                (produces ())))
 
 (ion_1_1 "make_sexp creates a single, unannotated sexp from"
@@ -37,6 +37,22 @@
                "a mix of lists and sexps"
                (text "(:make_sexp () [1] (2) [3])")
                (text "(:make_sexp (1) [2, 3] ())")
+               "other make_sexp invocations"
+               (text "(:make_sexp (:make_sexp) [1, 2, 3])")
+               (text "(:make_sexp [1, 2, 3] (:make_sexp))")
+               (text "(:make_sexp (:: (:make_sexp) [1, 2, 3]))")
+               (text "(:make_sexp (:: [1, 2, 3] (:make_sexp)))")
+               (text "(:make_sexp (:make_sexp [1]) (:make_sexp [2]) (:make_sexp [3]))")
+               (text "(:make_sexp (:make_sexp (:: [1])) (:make_sexp (:: [2])) (:make_sexp (:: [3])))")
+               (text "(:make_sexp (:: (:make_sexp [1]) (:make_sexp [2]) (:make_sexp [3])))")
+               (text "(:make_sexp (:: (:make_sexp (:: [1])) (:make_sexp (:: [2])) (:make_sexp (:: [3]))))")
+               (text "(:make_sexp (:make_sexp [1, 2, 3]))")
+               (text "(:make_sexp (:make_sexp (:make_sexp [1, 2, 3])))")
+               (text "(:make_sexp (:make_sexp (:make_sexp (:make_sexp [1, 2, 3]))))")
+               "tdl invocations"
+               (text "(:add_macros (macro foo (x) (.make_sexp (%x))))              (:foo [1, 2, 3])")
+               (text "(:add_macros (macro foo (x) (.make_sexp (%x))))              (:foo (:make_sexp [1, 2, 3]))")
+               (text "(:add_macros (macro bar (x) (.make_sexp (.make_sexp (%x))))) (:bar [1, 2, 3])")
                "annotated sequence values"
                // Argument annotations are silently dropped.
                (text "(:make_sexp a::() b::[1] c::(2) d::[3])")

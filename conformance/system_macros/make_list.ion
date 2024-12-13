@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text " (:make_list (::)) ")
                "in text with an unqualified macro address"
-               (text " (:8 (::)) ")
+               (text " (:14 (::)) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_list (::)) ")
                "in text using qualified system macro address 8"
-               (text " (:$ion::8 (::)) ")
+               (text " (:$ion::14 (::)) ")
                "in binary using system macro address 8"
-               (binary "EF 08 00")
+               (binary "EF 0E 00")
                "in binary with a user macro address"
-               (binary "08 00")
+               (binary "0E 00")
                (produces [])))
 
 (ion_1_1 "make_list creates a single, unannotated list from"
@@ -27,6 +27,22 @@
                (text "(:make_list [1] [2] [3])")
                (text "(:make_list [] [1, 2, 3] [])")
                (text "(:make_list [] [1] [] [2] [] [3] [])")
+               "other make_list invocations"
+               (text "(:make_list (:make_list) [1, 2, 3])")
+               (text "(:make_list [1, 2, 3] (:make_list))")
+               (text "(:make_list (:: (:make_list) [1, 2, 3]))")
+               (text "(:make_list (:: [1, 2, 3] (:make_list)))")
+               (text "(:make_list (:make_list [1]) (:make_list [2]) (:make_list [3]))")
+               (text "(:make_list (:make_list (:: [1])) (:make_list (:: [2])) (:make_list (:: [3])))")
+               (text "(:make_list (:: (:make_list [1]) (:make_list [2]) (:make_list [3])))")
+               (text "(:make_list (:: (:make_list (:: [1])) (:make_list (:: [2])) (:make_list (:: [3]))))")
+               (text "(:make_list (:make_list [1, 2, 3]))")
+               (text "(:make_list (:make_list (:make_list [1, 2, 3])))")
+               (text "(:make_list (:make_list (:make_list (:make_list [1, 2, 3]))))")
+               "tdl invocations"
+               (text "(:add_macros (macro foo (x) (.make_list (%x))))              (:foo [1, 2, 3])")
+               (text "(:add_macros (macro foo (x) (.make_list (%x))))              (:foo (:make_list [1, 2, 3]))")
+               (text "(:add_macros (macro bar (x) (.make_list (.make_list (%x))))) (:bar [1, 2, 3])")
                "one sexp"
                (text "(:make_list (1 2 3))")
                "multiple sexps"

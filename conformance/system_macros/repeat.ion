@@ -5,15 +5,15 @@
          (each "in text with an unqualified macro name"
                (text ''' (:repeat 1 1) ''')
                "in text with an unqualified macro address"
-               (text ''' (:17 1 1) ''')
+               (text ''' (:4 1 1) ''')
                "in text with a qualified macro name"
                (text ''' (:$ion::repeat 1 1) ''')
                "in text with a qualified macro address"
-               (text ''' (:$ion::17 1 1) ''')
+               (text ''' (:$ion::4 1 1) ''')
                "in binary with a system macro address"
-               (binary "EF 11 01 61 01 61 01")
+               (binary "EF 04 01 61 01 61 01")
                "in binary with a user macro address"
-               (binary "11 01 61 01 61 01")
+               (binary "04 01 61 01 61 01")
                (produces 1)))
 
 (ion_1_1 "repeat can produce"
