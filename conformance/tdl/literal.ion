@@ -1,0 +1,17 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// TODO:
+//   - literal can wrap
+//     - each type of scalar value
+//     - the `literal` special form
+//     - variable-expansion-like syntax
+//       - things that would be invalid syntax, such as annotations on the `%` operator
+//     - macro-like syntax
+//       - both names and addresses
+//       - qualified and unqualified
+//       - things that would be invalid syntax, such as annotations on the `.` operator
+//     - expression-group-like syntax
+//       - things that would be invalid syntax, such as annotations on the `..` operator
+//   - literal does not prevent evaluation of e-expressions
+//   - literal does not prevent SIDs from being interpreted

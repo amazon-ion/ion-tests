@@ -1,0 +1,19 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// * Test cases for `for`
+//   * binding names, keywords, etc. cannot be annotated
+//   * Can iterate one stream
+//   * Can iterate more than one stream
+//   * Can iterate empty stream
+//   * Can iterate non-empty stream
+//   * Can use grouping syntax for avoiding ambiguity
+//   * Creates a new binding for the stream iteration
+//     * Bindings can shadow the macro variables
+//     * Bindings can shadow an outer `for`
+//   * Iteration ends when the shorter stream is complete
+//     * When there's one stream
+//     * When there's multiple streams, and the first stream is shortest
+//     * When there's multiple streams, and the second (or later) is the shortest
+//     * When two streams have the same length
+//   * `for` should have exactly one template body expression

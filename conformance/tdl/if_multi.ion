@@ -1,0 +1,132 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(ion_1_1 "if_multi special form cannot be"
+         (each "invoked as an unqualified e-expression"
+               (text "(:if_multi 1 2 3)")
+               "invoked as a qualified e-expression"
+               (text "(:$ion::if_multi 1 2 3)")
+               "exported"
+               (mactab (export if_multi))
+               (mactab (export $ion::if_multi))
+               (signals "no such macro")))
+
+(ion_1_1 "when invoked in TDL,"
+         // TODO: Can be invoked qualified and unqualified
+         //       Can be shadowed
+         (each "each argument can be elided because they are optional trailing parameters"
+               (mactab (macro foo () (.$ion::if_multi)))
+               (mactab (macro foo () (.$ion::if_multi (..))))
+               (mactab (macro foo () (.$ion::if_multi (..) 3)))
+               (then (toplevel 0 ('#$:foo') 1)
+                     (produces 0 1))))
+
+(ion_1_1 "when the first argument is"
+         (each "an empty expression group"
+               (mactab (macro is_multi () (.$ion::if_multi (..) true false)))
+               "a macro that produces nothing"
+               (mactab (macro is_multi () (.$ion::if_multi (.$ion::none) true false)))
+               "an expression group with one macro that produces nothing"
+               (mactab (macro is_multi () (.$ion::if_multi (..(.$ion::none)) true false)))
+               "an expression group with multiple macros that produce nothing"
+               (mactab (macro is_multi () (.$ion::if_multi (..(.$ion::none)(.$ion::none)) true false)))
+               "a single value"
+               (mactab (macro is_multi () (.$ion::if_multi 0 true false)))
+               "an expression group with a single value"
+               (mactab (macro is_multi () (.$ion::if_multi (..0) true false)))
+               "a macro that produces a single value"
+               (mactab (macro is_multi () (.$ion::if_multi (.values 0) true false)))
+               "an expression group with a single macro that produces a single value"
+               (mactab (macro is_multi () (.$ion::if_multi (.. (.values 0)) true false)))
+               "an expression group with a multiple macros that collectively produce a single value"
+               (mactab (macro is_multi () (.$ion::if_multi (.. (.values 0) (.none)) true false)))
+               (mactab (macro is_multi () (.$ion::if_multi (.. (.none) (.values 0)) true false)))
+               "an expression group with a single value and a macro produces nothing"
+               (mactab (macro is_multi () (.$ion::if_multi (.. 0 (.none)) true false)))
+               (mactab (macro is_multi () (.$ion::if_multi (.. (.none) 0) true false)))
+               (then "then if_multi should produce the false branch"
+                     (toplevel ('#$:is_multi'))
+                     (produces false)))
+         (each "an expression group with multiple values"
+               (mactab (macro is_multi () (.$ion::if_multi (.. 0 1 2) true false)))
+               "a macro that produces multiple values"
+               (mactab (macro is_multi () (.$ion::if_multi (.values (.. 0 1 2)) true false)))
+               "an expression group with a single macro that produces multiple values"
+               (mactab (macro is_multi () (.$ion::if_multi (..(.values (.. 0 1 2))) true false)))
+               "an expression group with multiple macros "
+               (mactab (macro is_multi () (.$ion::if_multi (..(.values 0) (.values 1)) true false)))
+               "an expression group with multiple values and some macros that produce nothing"
+               (mactab (macro is_multi () (.$ion::if_multi (.. 0 1 2 (.none)) true false)))
+               "an expression group with multiple values that starts with a macro that produces nothing"
+               (mactab (macro is_multi () (.$ion::if_multi (.. (.none) 0 1 2) true false)))
+               (then "then if_multi should produce the true branch"
+                     (toplevel ('#$:is_multi'))
+                     (produces true))))
+
+(ion_1_1 "when the first argument is multiple values"
+         (then "the 'true_branch' argument can be"
+               (each "an empty expression group"
+                     (mactab (macro is_multi () (.$ion::if_multi (.. "two" "things") (..) false)))
+                     "a macro that produces no values"
+                     (mactab (macro is_multi () (.$ion::if_multi (.. "two" "things") (.none) false)))
+                     "an expression group with macros that produces no values"
+                     (mactab (macro is_multi () (.$ion::if_multi (.. "two" "things") (.. (.none) (.none)) false)))
+                     (then (toplevel 1 ('#$:is_multi') 2)
+                           (produces 1 2)))
+               (each "one value"
+                     (mactab (macro is_multi () (.$ion::if_multi (.. "two" "things") true false)))
+                     "an expression group with one value"
+                     (mactab (macro is_multi () (.$ion::if_multi (.. "two" "things") (.. true) false)))
+                     "a macro that produces one value"
+                     (mactab (macro is_multi () (.$ion::if_multi (.. "two" "things") (.$ion::values true) false)))
+                     (then (toplevel 1 ('#$:is_multi') 2)
+                           (produces 1 true 2)))
+               (each "an expression group with multiple values"
+                     (mactab (macro is_multi () (.$ion::if_multi (.. "two" "things") (.. true true) false)))
+                     "a macro that produces multiple values"
+                     (mactab (macro is_multi () (.$ion::if_multi (.. "two" "things") (.$ion::values (.. true true)) false)))
+                     (then (toplevel 1 ('#$:is_multi') 2)
+                           (produces 1 true true 2))))
+         (then "the 'false_branch' argument is not evaluated"
+               // Note the false branch here must be something that is a RUNTIME evaluation error.
+               // We use `make_string`, assuming that it is a macro that will be implemented early on.
+               // We wrap the invalid argument in a `values` invocation so that the test won't cause
+               // a compilation error if implementations try to have compile time analysis of macro arguments.
+               (mactab (macro always_true () (.$ion::if_multi (.. "two" "things") true (.$ion::make_string (.$ion::values null)))))
+               (then (toplevel 1 ('#$:always_true') 2)
+                     (produces 1 true 2))))
+
+(ion_1_1 "when the first argument is none"
+         (then "the 'false_branch' argument can be"
+               (each "an empty expression group"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true (..))))
+                     "a macro that produces no values"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true (.none))))
+                     "an expression group with macros that produces no values"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true (.. (.none) (.none)))))
+                     (then (toplevel 1 ('#$:is_multi') 2)
+                           (produces 1 2)))
+               (each "one value"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true false)))
+                     "an expression group with one value"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true (.. false))))
+                     "a macro that produces one value"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true (.$ion::values false))))
+                     (then (toplevel 1 ('#$:is_multi') 2)
+                           (produces 1 false 2)))
+               (each "an expression group with multiple values"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true (.. false false))))
+                     "a macro that produces multiple values"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true (.$ion::values (.. false false)))))
+                     "multiple values as implicit rest args"
+                     (mactab (macro is_multi () (.$ion::if_multi (..) true false false)))
+                     (then (toplevel 1 ('#$:is_multi') 2)
+                           (produces 1 false false 2))))
+         (then "the 'true_branch' argument is not evaluated"
+               // Note the true branch here must be something that is a RUNTIME evaluation error.
+               // We use `make_string`, assuming that it is a macro that will be implemented early on.
+               // We wrap the invalid argument in a `values` invocation so that the test won't cause
+               // a compilation error if implementations try to have compile time analysis of macro arguments.
+               (mactab (macro always_false () (.$ion::if_multi (..) (.$ion::make_string (.$ion::values null)) false)))
+               (then (toplevel 1 ('#$:always_false') 2)
+                     (produces 1 false 2))))
