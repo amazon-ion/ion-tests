@@ -16,31 +16,45 @@
                (binary "13 00")
                (produces /*nothing*/)))
 
-(ion_1_1 "flatten creates a flat sequence of values from"
-         (then "0 values"
+(ion_1_1 "flatten creates a flat sequence of values"
+         (then "from 0 values"
                (text "(:flatten)")
                (produces /*nothing*/))
-         (each "one list"
+         (each "from one list"
                (text "(:flatten [1, 2, 3])")
-               "multiple lists"
+               "from multiple lists"
                (text "(:flatten [1, 2] [3])")
                (text "(:flatten [1] [2] [3])")
                (text "(:flatten [] [1, 2, 3] [])")
                (text "(:flatten [] [1] [] [2] [] [3] [])")
-               "one sexp"
+               "from one sexp"
                (text "(:flatten (1 2 3))")
-               "multiple sexps"
+               "from multiple sexps"
                (text "(:flatten (1 2) (3))")
                (text "(:flatten (1) (2) (3))")
                (text "(:flatten () (1 2 3) ())")
                (text "(:flatten () (1) () (2) () (3) ())")
-               "a mix of lists and sexps"
+               "from a mix of lists and sexps"
                (text "(:flatten () [1] (2) [3])")
                (text "(:flatten (1) [2, 3] ())")
-               "annotated sequence values"
+               "from annotated sequence values"
                // Argument annotations are silently dropped.
                (text "(:flatten a::() b::[1] c::(2) d::[3])")
-               (produces 1 2 3)))
+               "from nested flatten invocations"
+               (text "(:flatten (:flatten) [1, 2, 3])")
+               (text "(:flatten [1, 2, 3] (:flatten))")
+               (text "(:flatten (:: (:flatten) [1, 2, 3]))")
+               (text "(:flatten (:: [1, 2, 3] (:flatten)))")
+               (text "(:flatten (:flatten [[1, 2, 3]]))")
+               (text "(:flatten (:flatten [[1]]) [2, 3])")
+               (text "(:flatten [1, 2] (:flatten [[3]]))")
+               (produces 1 2 3))
+         (then "and can be embedded in a list"
+               (text "[ (:flatten (1 2 3) ) ]")
+               (produces [1, 2, 3]))
+         (then "and can be embedded in a sexp"
+               (text "( (:flatten [1,2,3]) )")
+               (produces (1 2 3))) )
 
 (ion_1_1 "the argument cannot be"
          (each "null"
