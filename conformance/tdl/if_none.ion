@@ -18,7 +18,7 @@
                (mactab (macro foo () (.$ion::if_none)))
                (mactab (macro foo () (.$ion::if_none 2)))
                (mactab (macro foo () (.$ion::if_none 2 3)))
-               (then (toplevel 0 ('$#:foo') 1)
+               (then (toplevel 0 ('#$:foo') 1)
                      (produces 0 1))))
 
 (ion_1_1 "when the first argument is"
