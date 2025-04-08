@@ -1,0 +1,59 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(ion_1_1 "example telemetry log entry"
+         (toplevel
+           ("#$:set_macros" ("#$::"
+               (macro one () '')
+               (macro summary (name sum unit? count?)
+                      {
+                        Name: (%name),
+                        Sum: (%sum),
+                        Unit: (.$ion::default (%unit) (.one)),
+                        Count: (.$ion::default (%count) 1)
+                      }
+               )
+               (macro summary_ONE (name value count)
+                      (.summary (%name) (%value) (.one) (%count))
+               )
+               (macro summary_ms (name value count?)
+                      (.summary (%name) (%value) ms (%count))
+               )
+               (macro sample (value repeat?)
+                      {
+                        Value: (%value),
+                        Repeat: (.$ion::default (%repeat) 1)
+                      }
+               )
+               (macro metric (name value unit? dimensions?)
+                      {
+                        Name: (%name),
+                        Samples: (%value),
+                        Unit: (.$ion::default (%unit) (.one)),
+                        Dimensions: (%dimensions)
+                      }
+               )
+               (macro metric_single (name value repeat? unit? dimensions?)
+                      (.metric (%name) [(.sample (%value) (%repeat))] (%unit) (%dimensions))
+               )
+            ))
+         )
+         (then (toplevel ("#$:summary_ONE" Event 2e0 2))
+               (produces {Name:Event,Sum:2e0,Unit:'',Count:2}))
+         (then (toplevel ("#$:metric_single" Error 0e0))
+               (produces {Name:Error,Samples:[{Value:0e0,Repeat:1}],Unit:''}))
+         (then (toplevel ("#$:summary" [("#$:summary_ms" foo 3.0e0)] [("#$:summary_ms" bar 1.0e0)]))
+               (produces {Name:[{Name:foo,Sum:3e0,Unit:ms,Count:1}],Sum:[{Name:bar,Sum:1e0,Unit:ms,Count:1}],Unit:'',Count:1} ))
+         (then (toplevel ("#$:$ion::values" [("#$:summary_ms" foo 3.0e0)] [("#$:summary_ms" bar 1.0e0)]))
+               (produces [{Name:foo,Sum:3e0,Unit:ms,Count:1}] [{Name:bar,Sum:1e0,Unit:ms,Count:1}]))
+         (then (toplevel ("#$:summary_ms" foo 3.0e0))
+               (produces {Name:foo,Sum:3e0,Unit:ms,Count:1}))
+         (then (toplevel ("#$:summary_ms" bar 1.0e0))
+               (produces {Name:bar,Sum:1e0,Unit:ms,Count:1}))
+         (then (toplevel ("#$:$ion::make_list" [("#$:summary_ms" foo 3.0e0)]))
+               (produces [{Name:foo,Sum:3e0,Unit:ms,Count:1}]))
+         (then (toplevel ("#$:$ion::make_list" [("#$:summary_ms" bar 1.0e0)]))
+               (produces [{Name:bar,Sum:1e0,Unit:ms,Count:1}]))
+         (then (toplevel ("#$:$ion::make_list" [("#$:summary_ms" foo 3.0e0), ("#$:summary_ms" bar 1.0e0)]))
+               (produces [{Name:foo,Sum:3e0,Unit:ms,Count:1},{Name:bar,Sum:1e0,Unit:ms,Count:1}]))
+)

@@ -1,0 +1,458 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(document "the decimal positive zero"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (binary "50")
+                      (binary "51 80")
+                      (binary "52 00 80")
+                      (binary "54 00 00 00 80")
+                      (binary "58 00 00 00 00 00 00 00 80")
+                      (binary "5D 00 00 00 00 00 00 00 00 00 00 00 00 80")
+                      "with length as varuint"
+                      (binary "5E 80")
+                      (binary "5E 81 80")
+                      (binary "5E 82 00 80")
+                      (binary "5E 84 00 00 00 80")
+                      (binary "5E 88 00 00 00 00 00 00 00 80")
+                      (binary "5E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80")
+                      "with explicit coefficient"
+                      (binary "52 80 00")
+                      (binary "54 00 80 00 00")
+                      (binary "58 00 00 80 00 00 00 00 00")
+                      "with negative zero exponent"
+                      (binary "51 C0")
+                      (binary "52 40 80")
+                      (binary "54 40 00 00 80")
+                      (binary "58 40 00 00 00 00 00 00 80")
+                      (denotes (Decimal 0 0))))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in opcode"
+                      (binary "70")
+                      (binary "71 01")
+                      (binary "72 02 00")
+                      (binary "73 04 00 00")
+                      (binary "74 08 00 00 00")
+                      (binary "75 10 00 00 00 00")
+                      (binary "76 20 00 00 00 00 00")
+                      (binary "77 40 00 00 00 00 00 00")
+                      (binary "78 80 00 00 00 00 00 00 00")
+                      "with length in flexuint"
+                      (binary "F7 01")
+                      (binary "F7 03 01")
+                      (binary "F7 05 02 00")
+                      (binary "F7 07 04 00 00")
+                      (binary "F7 09 08 00 00 00")
+                      (binary "F7 0B 10 00 00 00 00")
+                      (binary "F7 0D 20 00 00 00 00 00")
+                      (binary "F7 0F 40 00 00 00 00 00 00")
+                      (binary "F7 11 80 00 00 00 00 00 00 00")
+                      (binary "F7 13 00 01 00 00 00 00 00 00 00")
+                      (binary "F7 15 00 02 00 00 00 00 00 00 00 00")
+                      (denotes (Decimal 0 0))))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "positive zero representation"
+                      (text "0.")
+                      (text "0.d0")
+                      (text "0d0")
+                      (text "0d-0")
+                      (text "0D0")
+                      (text "0D-0")
+                      (denotes (Decimal 0 0)))))
+
+(document "a positive zero with high precision"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (binary "51 F2")
+                (denotes (Decimal 0 -50)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (binary "71 9D")
+                (denotes (Decimal 0 -50)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "positive zero representation"
+                      (text "0d-50")
+                      (text "0.0000000000d-40")
+                      (text "0.0000000000_0000000000d-30")
+                      (text "0.0000000000_0000000000_0000000000d-20")
+                      (text "0.0000000000_0000000000_0000000000_0000000000d-10")
+                      (text "0.0000000000_0000000000_0000000000_0000000000_0000000000")
+                      (denotes (Decimal 0 -50)))))
+
+(document "the decimal negative zero"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (each "with length in type code"
+                      (binary "52 80 80")
+                      (binary "54 80 80 00 00")
+                      (binary "54 00 80 80 00")
+                      (binary "58 00 00 80 80 00 00 00 00")
+                      (binary "5D 00 00 00 80 80 00 00 00 00 00 00 00 00")
+                      "with length as varuint"
+                      (binary "5E 82 80 80")
+                      (binary "5E 84 80 80 00 00")
+                      (binary "5E 88 80 80 00 00 00 00 00 00")
+                      (binary "5E 90 80 80 00 00 00 00 00 00 00 00 00 00 00 00 00 00")
+                      (denotes (Decimal "negative_0" 0))))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (each "with length in opcode"
+                      (binary "72 01 00")
+                      (binary "73 01 00 00")
+                      (binary "74 01 00 00 00")
+                      (binary "75 01 00 00 00 00")
+                      (binary "76 01 00 00 00 00 00")
+                      (binary "77 01 00 00 00 00 00 00")
+                      (binary "78 01 00 00 00 00 00 00 00")
+                      "with length in flexuint"
+                      (binary "F7 05 01 00")
+                      (binary "F7 07 01 00 00")
+                      (binary "F7 09 01 00 00 00")
+                      (binary "F7 0B 01 00 00 00 00")
+                      (binary "F7 0D 01 00 00 00 00 00")
+                      (binary "F7 0F 01 00 00 00 00 00 00")
+                      (binary "F7 11 01 00 00 00 00 00 00 00")
+                      (binary "F7 13 01 00 00 00 00 00 00 00 00")
+                      (binary "F7 15 01 00 00 00 00 00 00 00 00 00")
+                      (denotes (Decimal "negative_0" 0))))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "negative zero representation"
+                      (text "-0.")
+                      (text "-0d0")
+                      (text "-0.d0")
+                      (text "-0.0d1")
+                      (text "-0d-0")
+                      (text "-0D0")
+                      (denotes (Decimal "negative_0" 0)))))
+
+(document "a negative zero with high precision"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (binary "52 F2 80")
+                (denotes (Decimal "negative_0" -50)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (binary "72 9D 00")
+                (denotes (Decimal "negative_0" -50)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each "positive zero representation"
+                      (text "-0d-50")
+                      (text "-0.0000000000d-40")
+                      (text "-0.0000000000_0000000000d-30")
+                      (text "-0.0000000000_0000000000_0000000000d-20")
+                      (text "-0.0000000000_0000000000_0000000000_0000000000d-10")
+                      (text "-0.0000000000_0000000000_0000000000_0000000000_0000000000")
+                      (denotes (Decimal "negative_0" -50)))))
+
+(document "a positive number with low precision and low, positive exponent"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (binary "52 82 01")
+                (denotes (Decimal 1 2)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (binary "72 05 01")
+                (denotes (Decimal 1 2)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each (text "1d2")
+                      (text "1D2")
+                      (text "1.d2")
+                      (text "0.1d3")
+                      (denotes (Decimal 1 2)))))
+
+(document "a positive number with high precision and low, positive exponent"
+          // "high" is relative. In this case there are 6 digits of precision.
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (binary "54 80 01 86 A0")
+                (denotes (Decimal 100_000 0)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (binary "74 01 A0 86 01")
+                (denotes (Decimal 100_000 0)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each (text "100000.")
+                      (text "100000d0")
+                      (text "10000.0d1")
+                      (text "1000.00d2")
+                      (text "100.000d3")
+                      (text "10.0000d4")
+                      (text "1.00000d5")
+                      (text "0.100000d6")
+                      (denotes (Decimal 100_000 0)))))
+
+(document "a positive number with low precision and high, positive exponent"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (binary "53 03 F4 01")
+                (denotes (Decimal 1 500)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (binary "73 D2 07 01")
+                (denotes (Decimal 1 500)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each (text "1d500")
+                      (text "0.1d501")
+                      (denotes (Decimal 1 500)))))
+
+(document "a positive number with low precision and high, negative exponent"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (binary "53 43 F4 01")
+                (denotes (Decimal 1 -500)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (binary "73 32 F8 01")
+                (denotes (Decimal 1 -500)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each (text "1d-500")
+                      (text '''0.0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000000_'''
+                            '''0000000000_0000000000_0000000000_0000000000_0000000001''')
+                      (denotes (Decimal 1 -500)))))
+
+(document "a negative number with low precision and low, positive exponent"
+          (then "in Ion 1.0 binary"
+                (ivm 1 0)
+                (binary "52 82 81")
+                (denotes (Decimal -1 2)))
+          (then "in Ion 1.1 binary"
+                (ivm 1 1)
+                (binary "72 05 FF")
+                (denotes (Decimal -1 2)))
+          (each "in Ion 1.0 text"
+                (ivm 1 0)
+                "in Ion 1.1 text"
+                (ivm 1 1)
+                (each (text "-1d2")
+                      (text "-1D2")
+                      (text "-1.d2")
+                      (text "-0.1d3")
+                      (denotes (Decimal -1 2)))))
+
+// Arbitrary precision is not supported by Ion CLI, so the `check-syntax` CI task fails for this test case.
+//
+//(document "pi to 50 decimal places"
+//          (then "in Ion 1.0 binary"
+//                (ivm 1 0)
+//                (binary "5E 97 F2 00 D6 F4 DC AC DB E6 80 04 D7 66 6A 4D 01 DF A3 32 1E 33 E4 76 E6")
+//                (denotes (Decimal 314159265358979323846264338327950288419716939937510 -50))
+//          (then "in Ion 1.1 binary"
+//                (ivm 1 1)
+//                (binary "F7 2F 9D E6 76 E4 33 1E 32 A3 DF 01 4D 6A 66 D7 04 80 E6 DB AC DC F4 D6 00")
+//                (denotes (Decimal 314159265358979323846264338327950288419716939937510 -50)))
+//          (each "in Ion 1.0 text"
+//                (ivm 1 0)
+//                "in Ion 1.1 text"
+//                (ivm 1 1)
+//                (then (text "3.14159265358979323846264338327950288419716939937510")
+//                      (denotes (Decimal 314159265358979323846264338327950288419716939937510 -50)))))
+
+(ion_1_1 "various Ion 1.1 decimal values"
+         (each (text "0d1")
+               (binary "71 03")
+               (denotes (Decimal 0 1)))
+         (each (text "0d63")
+               (binary "71 7F")
+               (denotes (Decimal 0 63)))
+         (each (text "0d64")
+               (binary "72 02 01")
+               (denotes (Decimal 0 64)))
+         (each (text "0d99")
+               (binary "72 8E 01")
+               (denotes (Decimal 0 99)))
+         (each (text "0.0")
+               (binary "71 FF")
+               (denotes (Decimal 0 -1)))
+         (each (text "0.00")
+               (binary "71 FD")
+               (denotes (Decimal 0 -2)))
+         (each (text "0.000")
+               (binary "71 FB")
+               (denotes (Decimal 0 -3)))
+         (each (text "0d-64")
+               (binary "71 81")
+               (denotes (Decimal 0 -64)))
+         (each (text "0d-99")
+               (binary "72 76 FE")
+               (denotes (Decimal 0 -99)))
+         (each (text "-0.")
+               (binary "72 01 00")
+               (denotes (Decimal "negative_0" 0)))
+         (each (text "-0d1")
+               (binary "72 03 00")
+               (denotes (Decimal "negative_0" 1)))
+         (each (text "-0d3")
+               (binary "72 07 00")
+               (denotes (Decimal "negative_0" 3)))
+         (each (text "-0d63")
+               (binary "72 7F 00")
+               (denotes (Decimal "negative_0" 63)))
+         (each (text "-0d199")
+               (binary "73 1E 03 00")
+               (denotes (Decimal "negative_0" 199)))
+         (each (text "-0d-1")
+               (binary "72 FF 00")
+               (denotes (Decimal "negative_0" -1)))
+         (each (text "-0d-2")
+               (binary "72 FD 00")
+               (denotes (Decimal "negative_0" -2)))
+         (each (text "-0d-3")
+               (binary "72 FB 00")
+               (denotes (Decimal "negative_0" -3)))
+         (each (text "-0d-63")
+               (binary "72 83 00")
+               (denotes (Decimal "negative_0" -63)))
+         (each (text "-0d-64")
+               (binary "72 81 00")
+               (denotes (Decimal "negative_0" -64)))
+         (each (text "-0d-65")
+               (binary "73 FE FE 00")
+               (denotes (Decimal "negative_0" -65)))
+         (each (text "-0d-199")
+               (binary "73 E6 FC 00")
+               (denotes (Decimal "negative_0" -199)))
+         (each (text "0.01")
+               (binary "72 FD 01")
+               (denotes (Decimal 1 -2)))
+         (each (text "0.1")
+               (binary "72 FF 01")
+               (denotes (Decimal 1 -1)))
+         (each (text "1.")
+               (binary "72 01 01")
+               (denotes (Decimal 1 0)))
+         (each (text "1d1")
+               (binary "72 03 01")
+               (denotes (Decimal 1 1)))
+         (each (text "1d2")
+               (binary "72 05 01")
+               (denotes (Decimal 1 2)))
+         (each (text "1d63")
+               (binary "72 7F 01")
+               (denotes (Decimal 1 63)))
+         (each (text "1d64")
+               (binary "73 02 01 01")
+               (denotes (Decimal 1 64)))
+         (each (text "1d65536")
+               (binary "74 04 00 08 01")
+               (denotes (Decimal 1 65536)))
+         (each (text "2.")
+               (binary "72 01 02")
+               (denotes (Decimal 2 0)))
+         (each (text "7.")
+               (binary "72 01 07")
+               (denotes (Decimal 7 0)))
+         (each (text "14.")
+               (binary "72 01 0E")
+               (denotes (Decimal 14 0)))
+         (each (text "1.0")
+               (binary "72 FF 0A")
+               (denotes (Decimal 10 -1)))
+         (each (text "1.00")
+               (binary "72 FD 64")
+               (denotes (Decimal 100 -2)))
+         (each (text "1.27")
+               (binary "72 FD 7F")
+               (denotes (Decimal 127 -2)))
+         (each (text "1.28")
+               (binary "73 FD 80 00")
+               (denotes (Decimal 128 -2)))
+         (each (text "3.142")
+               (binary "73 FB 46 0C")
+               (denotes (Decimal 3142 -3)))
+         (each (text "3.14159")
+               (binary "74 F7 2F CB 04")
+               (denotes (Decimal 314159 -5)))
+         (each (text "3.1415927")
+               (binary "75 F3 77 5E DF 01")
+               (denotes (Decimal 31415927 -7)))
+         (each (text "3.141592653")
+               (binary "76 EF 4D E6 40 BB 00")
+               (denotes (Decimal 3141592653 -9)))
+         (each (text "3.141592653590")
+               (binary "77 E9 16 9F 83 75 DB 02")
+               (denotes (Decimal 3141592653590 -12)))
+         (each (text "3.14159265358979323")
+               (binary "79 DF FB A0 9E F6 2F 1E 5C 04")
+               (denotes (Decimal 314159265358979323 -17)))
+         (each (text "3.1415926535897932384626")
+               (binary "7B D5 72 49 64 CC AF EF 8F 0F A7 06")
+               (denotes (Decimal 31415926535897932384626 -22)))
+         (each (text "3.141592653589793238462643383")
+               (binary "7D CB B7 3C 92 86 40 9F 1B 01 1F AA 26 0A")
+               (denotes (Decimal 3141592653589793238462643383 -27)))
+         (each (text "3.14159265358979323846264338327950")
+               (binary "7F C1 8E 29 E5 E3 56 D5 DF C5 10 8F 55 3F 7D 0F")
+               (denotes (Decimal 314159265358979323846264338327950 -32)))
+         (each (text "3.141592653589793238462643383279503")
+               (binary "F7 21 BF 8F 9F F3 E6 64 55 BE BA A7 96 57 79 E4 9A 00")
+               (denotes (Decimal 3141592653589793238462643383279503 -33))))
+
+(ion_1_x "in Ion text, a decimal with unnecessary leading zeros before the decimal point is invalid"
+         (each (text "00.")
+               (text "-00.")
+               (text "053.")
+               (text "00000053.")
+               (text "-054.")
+               (text "-00000054.")
+               (signals "invalid leading zero")))
+
+(ion_1_x "in Ion text, a decimal with no digits before the decimal point is invalid"
+         (each (text ".0")
+               (text ".1d2")
+               (text "-.01")
+               (signals "syntax error")))
+
+(ion_1_x "a decimal with an unexpected non-numeric character should raise an error"
+         (each "an unexpected non-numeric character"
+               (text "1.a")
+               (text "0x21.34")
+               (text "0x1g")
+               (text "0.1d-0x2A")
+               (text "0c10")
+               (text "0b1a")
+               "spacing underscores between characters that are not both base 10 digits"
+               (text "1_.2d3")
+               (text "1._2d3")
+               (text "1.2_d3")
+               (text "1.2d_3")
+               (text "1.2d3_")
+               "consecutive underscores"
+               (text "-6__0.2")
+               (signals "numeric value followed by invalid character")))
+
+// TODO: Should we test that incomplete binary decimals signal an error? (i.e. EOF is reached before the end of the value.)
