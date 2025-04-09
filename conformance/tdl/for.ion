@@ -1,19 +1,122 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// * Test cases for `for`
-//   * binding names, keywords, etc. cannot be annotated
-//   * Can iterate one stream
-//   * Can iterate more than one stream
-//   * Can iterate empty stream
-//   * Can iterate non-empty stream
-//   * Can use grouping syntax for avoiding ambiguity
-//   * Creates a new binding for the stream iteration
-//     * Bindings can shadow the macro variables
-//     * Bindings can shadow an outer `for`
-//   * Iteration ends when the shorter stream is complete
-//     * When there's one stream
-//     * When there's multiple streams, and the first stream is shortest
-//     * When there's multiple streams, and the second (or later) is the shortest
-//     * When two streams have the same length
-//   * `for` should have exactly one template body expression
+(ion_1_1 "`for` can iterate over"
+         (each "an empty stream"
+               (mactab (macro foo () (.for (x) { a: (%x) })))
+               (mactab (macro foo () (.for (x (.none)) { a: (%x) })))
+               (mactab (macro foo () (.for [(x)] { a: (%x) })))
+               (mactab (macro foo () (.for ((x)) { a: (%x) })))
+               (then (text "1 (:foo) 2")
+                     (produces 1 2)))
+         (then "a stream of constant scalar values"
+               (mactab (macro foo () (.for (x 1 2 3) { a: (%x) })))
+               (text "1 (:foo) 2")
+               (produces 1 {a:1} {a:2} {a:3} 2 ))
+         (then "a variable with a stream of scalar values"
+               (mactab (macro foo (y*) (.for (x (%y)) { a: (%x) })))
+               (text "1 (:foo 1 2 3) 2")
+               (produces 1 {a:1} {a:2} {a:3} 2 ))
+         (then "a stream of constant container values"
+               (mactab (macro foo () (.for (x [] [1] [1, 2]) { a: (%x) })))
+               (text "1 (:foo) 2")
+               (produces 1 {a:[]} {a:[1]} {a:[1, 2]} 2 ))
+         (then "a variable with a stream of container values"
+               (mactab (macro foo (y*) (.for (x (%y)) { a: (%x) })))
+               (text "1 (:foo [] [1] [1, 2]) 2")
+               (produces 1 {a:[]} {a:[1]} {a:[1, 2]} 2 )))
+
+(ion_1_1 "a `for` clause can be nested in another `for` clause"
+         (mactab (macro foo () (.for (x 1 2 3) (.for (y 4 5 6) (%y)))))
+         (text "1 (:foo) 2")
+         (produces 1 4 5 6 4 5 6 4 5 6 2))
+
+(ion_1_1 "`for` variable bindings"
+         (then "can shadow macro variables"
+               (mactab (macro foo (x) (.for (x 1 2 3) { a: (%x) })))
+               (text "1 (:foo 99) 2")
+               (produces 1 {a:1} {a:2} {a:3} 2 ))
+         (then "can shadow an outer `for`'s bindings"
+               (mactab (macro foo () (.for (x a b c) (.for (x d e f) (%x)))) )
+               (text "1 (:foo) 2")
+               (produces 1 d e f d e f d e f 2))
+         (then "can reference outer bindings that they are shadowing"
+               (mactab (macro foo (x) (.for [(x 1 (%x) 3)] { a: (%x) })))
+               (text "1 (:foo 99) 2")
+               (produces 1 {a:1} {a:99} {a:3} 2 ))
+         (then "can reference outer bindings that are shadowed by another binding in that `for` clause"
+               (mactab (macro foo (x) (.for [(x 1 2 3), (y 4 (%x) 6)] { a: (%x), b: (%y) })))
+               (text "1 (:foo 99) 2")
+               (produces 1 {a:1,b:4} {a:2,b:99} {a:3,b:6} 2 ))
+         (each "must be present"
+               (mactab (macro foo () (.for [/* no variable binding clause here */] "body")))
+               "must not be an empty s-expression"
+               (mactab (macro foo () (.for () "body")))
+               (mactab (macro foo () (.for [(x 1 2 3), ()] "body")))
+               "must not have a null binding name"
+               (mactab (macro foo () (.for (null 1 2 3) (%y))))
+               (mactab (macro foo () (.for (null.symbol 1 2 3) (%y))))
+               "must not have an annotated binding name"
+               (mactab (macro foo () (.for (x::y 1 2 3) (%y))))
+               "must have a binding name that is a symbol"
+               (mactab (macro foo () (.for ("y" 1 2 3) (%y))))
+               "must not repeat binding names in the same `for` clause"
+               (mactab (macro foo () (.for [(x 1 2 3), (x 1 2 3)] (%x))))
+               "cannot bind to another variable declared in the same `for` clause"
+               (mactab (macro foo () (.for [(x 1 2 3), (y (%x))] (%y))))
+               (signals "invalid macro definition")))
+
+(ion_1_1 "the body expression can use variable bindings"
+         (then "from the macro signature"
+               (mactab (macro foo (x y*) (.for (z (%y)) { a: (%x), b: (%z) })))
+               (text "1 (:foo 0 (::1 2 3)) 2")
+               (produces 1 {a:0,b:1} {a:0,b:2} {a:0,b:3} 2 ))
+         (then "that were declared in any outer `for` clauses"
+               (mactab (macro foo () (.for (x a b c) (.for (y 1 2 3) (.make_field (%x) (%y))))))
+               (text "1 (:foo) 2")
+               (produces 1 {a:1} {a:2} {a:3} {b:1} {b:2} {b:3} {c:1} {c:2} {c:3} 2)))
+
+(ion_1_1 "`for` can iterate multiple streams in parallel"
+         (mactab (macro iter2 (x* y*) (.for [(xx (%x)), (yy (%y))] (%xx) ))
+                 (macro iter5 (a* b* c* d* e*)
+                        (.for ((aa (%a))
+                               (bb (%b))
+                               (cc (%c))
+                               (dd (%d))
+                               (ee (%e))) (%aa) )))
+         (then "and iteration ends when the shortest stream has no more elements"
+               (each "when all streams are empty"
+                     (text "(:iter2)")
+                     (text "(:iter5)")
+                     (produces))
+               (then "when any one stream is empty"
+                     (text "(:iter2 (::) (:: a b c) ))")
+                     (text "(:iter2 (:: 1 2 3) (::) ))")
+                     (text "(:iter5 (::) (::3 4) (::5 6) (::7 8) (::9 0) ))")
+                     (text "(:iter5 (::1 2) (::) (::5 6) (::7 8) (::9 0) ))")
+                     (text "(:iter5 (::1 2) (::3 4) (::) (::7 8) (::9 0) ))")
+                     (text "(:iter5 (::1 2) (::3 4) (::5 6) (::) (::9 0) ))")
+                     (text "(:iter5 (::1 2) (::3 4) (::5 6) (::7 8) (::) ))")
+                     (produces))
+               (then "when any one non-empty stream is the shortest"
+                     (text "(:iter2 (::1) (::a b c) ))")
+                     (text "(:iter2 (::1 2 3) (::a) ))")
+                     (text "(:iter5 (::1) (::3 4) (::5 6) (::7 8) (::9 0) ))")
+                     (text "(:iter5 (::1 2) (::3) (::5 6) (::7 8) (::9 0) ))")
+                     (text "(:iter5 (::1 2) (::3 4) (::5) (::7 8) (::9 0) ))")
+                     (text "(:iter5 (::1 2) (::3 4) (::5 6) (::7) (::9 0) ))")
+                     (text "(:iter5 (::1 2) (::3 4) (::5 6) (::7 8) (::9) ))")
+                     (produces 1))
+               (then "when all streams are equally long"
+                     (text "(:iter2 (::1 2) (::a b) ))")
+                     (text "(:iter5 (::1 2) (::3 4) (::5 6) (::7 8) (::9 0) ))")
+                     (produces 1 2))))
+
+(ion_1_1 "`for` should raise an error when"
+         (each "there are no arguments provided"
+               (mactab (macro foo () (.for)))
+               "there is no body clause"
+               (mactab (macro foo () (.for (x 1 2 3) /* Body would be here */)))
+               "there is more than one body clause"
+               (mactab (macro foo () (.for (x 1 2 3) (%x) (%x) )))
+               (signals "invalid macro definition")))
