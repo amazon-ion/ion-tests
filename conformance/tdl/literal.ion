@@ -1,17 +1,87 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// TODO:
-//   - literal can wrap
-//     - each type of scalar value
-//     - the `literal` special form
-//     - variable-expansion-like syntax
-//       - things that would be invalid syntax, such as annotations on the `%` operator
-//     - macro-like syntax
-//       - both names and addresses
-//       - qualified and unqualified
-//       - things that would be invalid syntax, such as annotations on the `.` operator
-//     - expression-group-like syntax
-//       - things that would be invalid syntax, such as annotations on the `..` operator
-//   - literal does not prevent evaluation of e-expressions
-//   - literal does not prevent SIDs from being interpreted
+(ion_1_1 "the literal special form"
+         (then "can wrap a null value"
+               (mactab (macro foo () (.literal null)))
+               (toplevel ('#$:foo')) (produces null))
+         (then "can wrap a bool value"
+               (mactab (macro foo () (.literal true )))
+               (toplevel ('#$:foo')) (produces true ))
+         (then "can wrap an int value"
+               (mactab (macro foo () (.literal 123 )))
+               (toplevel ('#$:foo')) (produces 123 ))
+         (then "can wrap a float value"
+               (mactab (macro foo () (.literal 1.2e3 )))
+               (toplevel ('#$:foo')) (produces 1.2e3 ))
+         (then "can wrap a decimal value"
+               (mactab (macro foo () (.literal 1.23 )))
+               (toplevel ('#$:foo')) (produces 1.23 ))
+         (then "can wrap a timestamp value"
+               (mactab (macro foo () (.literal 2025T )))
+               (toplevel ('#$:foo')) (produces 2025T ))
+         (then "can wrap a string value"
+               (mactab (macro foo () (.literal "abc" )))
+               (toplevel ('#$:foo')) (produces "abc" ))
+         (then "can wrap a symbol value"
+               (mactab (macro foo () (.literal abc )))
+               (toplevel ('#$:foo')) (produces abc ))
+         (then "can wrap a blob value"
+               (mactab (macro foo () (.literal null.blob )))
+               (toplevel ('#$:foo')) (produces null.blob ))
+         (then "can wrap a clob value"
+               (mactab (macro foo () (.literal {{""}} )))
+               (toplevel ('#$:foo')) (produces {{""}} ))
+         (then "can wrap a list value"
+               (mactab (macro foo () (.literal [] )))
+               (toplevel ('#$:foo')) (produces [] ))
+         (then "can wrap a sexp value"
+               (mactab (macro foo () (.literal () )))
+               (toplevel ('#$:foo')) (produces ()))
+         (then "can wrap a struct value"
+               (mactab (macro foo () (.literal {} )))
+               (toplevel ('#$:foo')) (produces {} ))
+         (then "can wrap multiple expressions"
+               (mactab (macro foo () (.literal 1 2 3 )))
+               (toplevel ('#$:foo')) (produces 1 2 3 ))
+         (each "can wrap things that would be invalid tdl syntax"
+               (mactab (macro foo (x) (.literal (%))) )
+               (mactab (macro foo (x) (.literal /* unresolvable variable */ (%y))))
+               (mactab (macro foo (x) (.literal hi::(%x))) )
+               (mactab (macro foo (x) (.literal (hi::'%'))) )
+               (mactab (macro foo (x) (.literal (hi::'%'x))) )
+               (mactab (macro foo (x) (.literal (% hi::x))) )
+               (mactab (macro foo () (.literal (..))) )
+               (mactab (macro foo () (.literal (.values hi::(..)))) )
+               (mactab (macro foo () (.literal (.values (hi::'..')))) )
+               (mactab (macro foo () (.literal (.))) )
+               (mactab (macro foo () (.literal hi::(.values))) )
+               (mactab (macro foo () (.literal (hi::'.'values))) )
+               // NOTE: We add an application value here to ensure that the macro table must be evaluated by any reader.
+               (then (toplevel 1) (produces 1)))
+         (then "causes things that look like macro invocations by name to be evaluated as literal s-expressions"
+               (mactab (macro foo () (.literal (.values 1 2 3))))
+               (toplevel ('#$:foo')) (produces (.values 1 2 3)))
+         (then "causes things that look like macro invocations by address to be evaluated as literal s-expressions"
+               (mactab (macro foo () (.literal (.0))))
+               (toplevel ('#$:foo')) (produces (.0)))
+         (then "causes things that look like qualified macro invocations to be evaluated as literal s-expressions"
+               (mactab (macro foo () (.literal (.$ion::values 1 2 3))))
+               (toplevel ('#$:foo')) (produces (.$ion::values 1 2 3)))
+         (then "causes things that look like expression groups to be evaluated as literal s-expressions"
+               (mactab (macro foo () (.values (.literal (.. 1 2 3)))))
+               (toplevel ('#$:foo')) (produces (.. 1 2 3)))
+         (then "causes things that look like variable expansions to be evaluated as literal s-expressions"
+               (mactab (macro foo () (.literal (%x))))
+               (toplevel ('#$:foo')) (produces (%x)))
+         (then "causes things that look like a nested literal special form to be evaluated as a literal s-expressions"
+               (mactab (macro foo () (.literal (.literal 1))))
+               (toplevel ('#$:foo')) (produces (.literal 1)))
+         (then "does not prevent interpretation of symbol IDs"
+               (encoding (symbols "a"))
+               (mactab (macro foo () (.literal $1)))
+               (toplevel ('#$:foo')) (produces a))
+         (then "does not prevent evaluation of e-expressions"
+               (encoding (symbols "a"))
+               (text "(:add_macros (macro foo () (.literal (:values 1) )))")
+               (toplevel ('#$:foo')) (produces 1)))
