@@ -6,7 +6,7 @@
 //     * E-expressions in field-name position?
 //   * Binary 1.0
 //     * various length of structs
-//     * illegal type descriptor C1
+//     * illegal type descriptor D1
 //   * Binary 1.1
 //     * Delimited structs
 //     * Length prefixed structs
