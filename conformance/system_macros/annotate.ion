@@ -5,16 +5,30 @@
          (each "in text with an unqualified macro name"
                (text " (:annotate (::) 0) ")
                "in text with an unqualified macro address"
-               (text " (:2 (::) 0) ")
+               (text " (:8 (::) 0) ")
                "in text with a qualified macro name"
                (text " (:$ion::annotate (::) 0) ")
-               "in text using qualified system macro address 2"
-               (text " (:$ion::2 (::) 0) ")
-               "in binary using system macro address 2"
-               (binary "EF 02 00 60")
+               "in text using qualified system macro address 8"
+               (text " (:$ion::8 (::) 0) ")
+               "in binary using system macro address 8"
+               (binary "EF 08 00 60")
                "in binary with a user macro address"
-               (binary "02 00 60")
-               (produces 0)))
+               (binary "08 00 60")
+               (produces 0))
+         (then "with an annotation"
+               (each "in text with an unqualified macro name"
+                     (text " (:annotate (:: '') 0) ")
+                     "in text with an unqualified macro address"
+                     (text " (:8 (:: '') 0) ")
+                     "in text with a qualified macro name"
+                     (text " (:$ion::annotate (:: '') 0) ")
+                     "in text using qualified system macro address 8"
+                     (text " (:$ion::8 (:: '') 0) ")
+                     "in binary using system macro address 8"
+                     (binary "EF 08 01 A0 60")
+                     "in binary with a user macro address"
+                     (binary "08 01 A0 60")
+                     (produces ''::0))))
 
 (ion_1_1 "annotate can add"
          (each "0 annotations"

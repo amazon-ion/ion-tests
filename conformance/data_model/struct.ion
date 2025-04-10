@@ -1,0 +1,67 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+// TODO:
+//   * Text
+//     * E-expressions in field-name position?
+//   * Binary 1.0
+//     * various length of structs
+//     * illegal type descriptor D1
+//   * Binary 1.1
+//     * Delimited structs
+//     * Length prefixed structs
+//     * Switching from SID to FlexSym mode
+//     * Annotated structs
+//   * General Cases (cover for both binary and text)
+//     * empty field name
+//     * unknown field name text ($0)
+//     * repeated field name
+//     * ordering of fields should not matter
+
+(ion_1_x "in text, a struct"
+         (then "may use unquoted identifier field names"
+               (text "{ a: 1 }")
+               (denotes (Struct ("a" 1))))
+         (then "may use single-quoted field names"
+               (text " { 'a': 1 } ")
+               (denotes (Struct ("a" 1))))
+         (then "may use double-quoted field names"
+               (text ''' { "a": 1 } ''')
+               (denotes (Struct ("a" 1))))
+         (then "may use long-string field names"
+               (text " { '''a''': 1 } ")
+               (denotes (Struct ("a" 1))))
+         (then "may use multi-segment long-string field names"
+               (text " { '''a''' '''b''' : 1 } ")
+               (denotes (Struct ("ab" 1))))
+         (then "may use SIDs as field names"
+               (text "{ $2: 1 }")
+               (denotes (Struct (2 1))))
+         (then "may use unknown symbol as a field name"
+               (text "{ $0: 1 }")
+               (denotes (Struct (0 1))))
+         (each "may have repeated field names"
+               (text "{ a: 1, a: 2 }")
+               (text "{ a: 2, a: 1 }")
+               (denotes (Struct ("a" 1) ("a" 2))))
+         (then "may have repeated field names with identical values"
+               (text "{ a: 1, a: 1 }")
+               (denotes (Struct ("a" 1) ("a" 1))))
+         (each "must have a comma between fields"
+               (text "{ a:1 b:2 }")
+               (text "{ a:1; b:2 }")
+               "must have a value expression for each field name"
+               (text "{ a:, b:2 }")
+               (text "{ a:, a:1 }")
+               (text "{ a:1, a: }")
+               "must not have multiple trailing commas"
+               (text "{ a:1, b:2, , }")
+               "must not have any leading commas"
+               (text "{ , a:1, b:2 }")
+               "must not have only a comma"
+               (text "{ , }")
+               "may not have annotations on field names"
+               (text "{ c::a:1, b:2 }")
+               "must not have unquoted field names that are not identifier symbols"
+               (text "{ abc-def:1 }")
+               (signals "invalid syntax")))

@@ -26,9 +26,12 @@
          (then "can wrap a symbol value"
                (mactab (macro foo () (.literal abc )))
                (toplevel ('#$:foo')) (produces abc ))
+         (then "can wrap a symbol that looks like an IVM"
+               (mactab (macro foo () (.literal $ion_1_0 )))
+               (toplevel ('#$:foo')) (produces '$ion_1_0' ))
          (then "can wrap a blob value"
-               (mactab (macro foo () (.literal null.blob )))
-               (toplevel ('#$:foo')) (produces null.blob ))
+               (mactab (macro foo () (.literal {{ ABc= }} )))
+               (toplevel ('#$:foo')) (produces {{ ABc= }} ))
          (then "can wrap a clob value"
                (mactab (macro foo () (.literal {{""}} )))
                (toplevel ('#$:foo')) (produces {{""}} ))
