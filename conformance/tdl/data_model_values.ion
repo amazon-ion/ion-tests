@@ -1,4 +1,49 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test each type of data model value in a template body.
+(ion_1_1 "a template body expression may be"
+         (then "a null value"
+               (mactab (macro foo () null))
+               (toplevel ('#$:foo')) (produces null))
+         (then "a bool value"
+               (mactab (macro foo () true ))
+               (toplevel ('#$:foo')) (produces true ))
+         (then "an int value"
+               (mactab (macro foo () 123 ))
+               (toplevel ('#$:foo')) (produces 123 ))
+         (then "a float value"
+               (mactab (macro foo () 1.2e3 ))
+               (toplevel ('#$:foo')) (produces 1.2e3 ))
+         (then "a decimal value"
+               (mactab (macro foo () 1.23 ))
+               (toplevel ('#$:foo')) (produces 1.23 ))
+         (then "a timestamp value"
+               (mactab (macro foo () 2025T ))
+               (toplevel ('#$:foo')) (produces 2025T ))
+         (then "a string value"
+               (mactab (macro foo () "abc" ))
+               (toplevel ('#$:foo')) (produces "abc" ))
+         (then "a symbol value"
+               (mactab (macro foo () abc ))
+               (toplevel ('#$:foo')) (produces abc ))
+         (then "a symbol that looks like an Ion 1.0 IVM"
+               (mactab (macro foo () $ion_1_0 ))
+               (toplevel ('#$:foo')) (produces '$ion_1_0' ))
+         (then "a symbol that looks like an Ion 1.1 IVM"
+               (mactab (macro foo () $ion_1_1 ))
+               (toplevel ('#$:foo')) (produces '$ion_1_1' ))
+         (then "a blob value"
+               (mactab (macro foo () {{ ABc= }} ))
+               (toplevel ('#$:foo')) (produces {{ ABc= }} ))
+         (then "a clob value"
+               (mactab (macro foo () {{""}} ))
+               (toplevel ('#$:foo')) (produces {{""}} ))
+         (then "a list value"
+               (mactab (macro foo () [1, 2, 3] ))
+               (toplevel ('#$:foo')) (produces [1, 2, 3] ))
+         (then "a sexp value"
+               (mactab (macro foo () (1 2 3)))
+               (toplevel ('#$:foo')) (produces (1 2 3)))
+         (then "a struct value"
+               (mactab (macro foo () { a: 1 } ))
+               (toplevel ('#$:foo')) (produces { a: 1 } )))

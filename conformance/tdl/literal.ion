@@ -26,9 +26,12 @@
          (then "can wrap a symbol value"
                (mactab (macro foo () (.literal abc )))
                (toplevel ('#$:foo')) (produces abc ))
-         (then "can wrap a symbol that looks like an IVM"
+         (then "can wrap a symbol that looks like an Ion 1.0 IVM"
                (mactab (macro foo () (.literal $ion_1_0 )))
                (toplevel ('#$:foo')) (produces '$ion_1_0' ))
+         (then "can wrap a symbol that looks like an Ion 1.1 IVM"
+               (mactab (macro foo () (.literal $ion_1_1 )))
+               (toplevel ('#$:foo')) (produces '$ion_1_1' ))
          (then "can wrap a blob value"
                (mactab (macro foo () (.literal {{ ABc= }} )))
                (toplevel ('#$:foo')) (produces {{ ABc= }} ))
@@ -47,6 +50,9 @@
          (then "can wrap multiple expressions"
                (mactab (macro foo () (.literal 1 2 3 )))
                (toplevel ('#$:foo')) (produces 1 2 3 ))
+         (then "can be empty"
+               (mactab (macro foo () (.literal)))
+               (toplevel ('#$:foo')) (produces))
          (each "can wrap things that would be invalid tdl syntax"
                (mactab (macro foo (x) (.literal (%))) )
                (mactab (macro foo (x) (.literal /* unresolvable variable */ (%y))))
