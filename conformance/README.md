@@ -109,8 +109,8 @@ The most interesting test cases involve encoding directives:
 We can test something similar for Ion 1.1 using the `ion_1_1` form:
 
 ```
-(ion_1_1 (text '''$ion_encoding::((module M (macro_table (macro mac [] 1)))
-                                  (macro_table M))
+(ion_1_1 (text '''$ion_encoding::((module M (macros (macro mac [] 1)))
+                                  (macros M))
                   (:M:mac) (:M:0) (:mac) (:0))
                '''
          (produces 1 1 1 1))
@@ -171,8 +171,8 @@ You can use `then` clauses to continue the document in different directions,
 each with additional fragments and an expectation.
 
 ````
-(ion_1_1 (text '''$ion_encoding::((module M (macro_table (macro mac [] 1)))
-                                  (macro_table M))'''
+(ion_1_1 (text '''$ion_encoding::((module M (macros (macro mac [] 1)))
+                                  (macros M))'''
          (then (text "(:M:mac)")
                (produces 1))
          (then (text "(:M:0)")
@@ -191,8 +191,8 @@ A further refinement is to indicate that multiple input forms all produce the
 same output, using `each`:
 
 ```
-(ion_1_1 (text '''$ion_encoding::((module M (macro_table (macro mac [] 1)))
-                                  (macro_table M))'''
+(ion_1_1 (text '''$ion_encoding::((module M (macros (macro mac [] 1)))
+                                  (macros M))'''
          (each (text "(:M:mac)")
                (text "(:M:0)")
                (text "(:mac)")
@@ -472,9 +472,9 @@ increasing the likelihood of syntactic errors in the input data itself:
 ```
 (ion_1_1 (text '''
            $ion_encoding::((module M
-                             (macro_table
+                             (macros
                                (macro m [] (noSuchMacro)))
-                           (macro_table M))
+                           (macros M))
            ''')
          (signals "No such macro: noSuchMacro"))
 ```
@@ -484,9 +484,9 @@ without a wrapping string.  The `toplevel` fragment does that:
 
 ```
 (ion_1_1 (toplevel $ion_encoding::((module M
-                                     (macro_table
+                                     (macros
                                        (macro m [] (noSuchMacro)))
-                                   (macro_table M)))
+                                   (macros M)))
          (signals "No such macro: noSuchMacro"))
 ```
 
@@ -513,9 +513,9 @@ The `encoding` fragment is such a shorthand:
 
 ```
 (ion_1_1 (encoding (module M
-                     (macro_table
+                     (macros
                        (macro m [] (noSuchMacro)))
-                   (macro_table M))
+                   (macros M))
          (signals "No such macro: noSuchMacro"))
 ```
 
@@ -527,7 +527,7 @@ syntax `(encoding expr …)` is shorthand for
 Another common test pattern, especially for testing the template language,
 is to define and install a number of macros.
 The syntax `(mactab expr …)` is shorthand for
-`(encoding (module M (macro_table expr …)) (macro_table M))`.
+`(encoding (module M (macros expr …)) (macros M))`.
 For example:
 
 ```
@@ -622,16 +622,16 @@ Here’s where the DSL starts showing its expressiveness.
 Compare that to the expanded cases without nested `then`/`each`:
 
 ```
-(ion_1_1 (toplevel $ion_encoding::((module M (macro_table (macro m () 0)))
-                                   (macro_table M))
+(ion_1_1 (toplevel $ion_encoding::((module M (macros (macro m () 0)))
+                                   (macros M))
                    ('#$:m'))
          (produces 0))
-(ion_1_1 (toplevel $ion_encoding::((module M (macro_table (macro m () 0)))
-                                   (macro_table M))
+(ion_1_1 (toplevel $ion_encoding::((module M (macros (macro m () 0)))
+                                   (macros M))
                     ('#$:m' 1))
          (signals "Too many arguments"))
-(ion_1_1 (toplevel $ion_encoding::((module M (macro_table (macro m () 0)))
-                                   (macro_table M))
+(ion_1_1 (toplevel $ion_encoding::((module M (macros (macro m () 0)))
+                                   (macros M))
                    ('#$:m' 1 2))
          (signals "Too many arguments"))
 ```

@@ -6,8 +6,8 @@
   (then
     (encoding (module M
                 (load N "abcs" 2)
-                (symbol_table ["m"] N))
-              (symbol_table M))
+                (symbols ["m"] N))
+              (symbols M))
     (then (toplevel '#$12' '#$14')
           (produces m b))
     (then (toplevel '#$15')
@@ -16,8 +16,8 @@
   (then "can shadow the enclosing name"
     (encoding (module M
                 (load M "abcs" 2)        // Note same name
-                (symbol_table ["m"] M))
-              (symbol_table M))
+                (symbols ["m"] M))
+              (symbols M))
     (then (toplevel '#$12' '#$14')
           (produces m b))
     (then (toplevel '#$15')
@@ -27,8 +27,8 @@
     (encoding (module M
                 (load N "abcs" 1)
                 (load N "mnop" 1)        // Shadows previous
-                (symbol_table N))
-              (symbol_table M))
+                (symbols N))
+              (symbols M))
     (then (toplevel '#$12')
           (produces m))
     (then (toplevel '#$13')
@@ -37,6 +37,6 @@
   (then "is not visible to top-level"
     (encoding (module M
                 (load N "abcs" 1)
-                (symbol_table N))
-              (symbol_table N))
+                (symbols N))
+              (symbols N))
     (signals "Module not in scope: N")))

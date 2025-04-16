@@ -68,6 +68,19 @@
                (text "(:set_symbols $256)")
                (signals "invalid argument")))
 
+(ion_1_1 "set_symbols may not be invoked"
+         (each "from TDL"
+               (mactab (macro foo () (.set_symbols (..))))
+               "in a list"
+               (toplevel [('#$:set_symbols')])
+               "in a sexp"
+               (toplevel (('#$:set_symbols')))
+               "in a struct"
+               (toplevel { a: ('#$:set_symbols') })
+               "as an e-expression argument"
+               (toplevel ('#$:values' ('#$:set_symbols') ))
+               (signals "set_symbols may only be invoked where system values can occur")))
+
 (ion_1_1 "set_symbols does not have any side-effects on the macro table"
          (text "(:set_macros (macro x () X))")
          (then "[PRECONDITION] macros are set as expected"

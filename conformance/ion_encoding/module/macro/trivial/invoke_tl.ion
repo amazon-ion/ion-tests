@@ -58,11 +58,11 @@
         (produces 1 a b 2      3 c d 4))
 
   (then "can reference a preceding module"
-    (encoding (module M (macro_table (macro m () "m")))
-              (module U (macro_table (macro u () [(':M:m'), (':M:0')])))  // No `use` needed!
+    (encoding (module M (macros (macro m () "m")))
+              (module U (macros (macro u () [(':M:m'), (':M:0')])))  // No `use` needed!
               (module V (use M)
-                        (macro_table (macro v () [(':M:m'), (':M:0')])))  // But it's allowed.
-              (macro_table U V))
+                        (macros (macro v () [(':M:m'), (':M:0')])))  // But it's allowed.
+              (macros U V))
     (toplevel ('#$:u')   ('#$:v'))
     (produces ["m", "m"] ["m", "m"])))
 
@@ -91,22 +91,22 @@
     (mactab (macro _ () (':values')))
     (signals "No such macro declared in this module: :values"))
   (then "cannot reference `use`d names"
-    (encoding (module M1 (macro_table (macro m () "M1")))
+    (encoding (module M1 (macros (macro m () "M1")))
               (module M2 (use M1)
-                         (macro_table (macro _ () (':m')))))
+                         (macros (macro _ () (':m')))))
     (signals "No such macro declared in this module: :m")))
 
 
 (ion_1_1 "Local names shadow `use`d names"
   (encoding
     (module M0
-      (macro_table (macro shadow () "M0")))
+      (macros (macro shadow () "M0")))
     (module M1
       (use M0)
-      (macro_table (macro m0     () (shadow))
+      (macros (macro m0     () (shadow))
                    (macro shadow () "M1")
                    (macro m1     () (shadow))))
-    (macro_table M0 M1))
+    (macros M0 M1))
   (toplevel ('#$:m0') ('#$:m1'))
   (produces     "M0"      "M1"))
 
@@ -114,10 +114,10 @@
 (ion_1_1 "Ambiguous references are compile-time errors"
   (encoding
       (module M0
-        (macro_table (macro ambig () "M0")))
+        (macros (macro ambig () "M0")))
       (module M1
-        (macro_table (macro ambig () "M1")))
+        (macros (macro ambig () "M1")))
       (module M2
         (use M0 M1)
-        (macro_table (macro m     () (ambig)))))
+        (macros (macro m     () (ambig)))))
   (signals "Ambiguous macro-ref: ambig"))

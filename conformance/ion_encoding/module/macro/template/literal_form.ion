@@ -7,14 +7,14 @@
 (ion_1_1 "literal form"
   (then "happy path"
     (encoding (module M
-                (macro_table (macro m ()  [(literal a::()), (literal literal)])
+                (macros (macro m ()  [(literal a::()), (literal literal)])
                              (macro n ()  (literal [1, (values 2 3), (literal v)]))
                              (macro o (v) [v, (literal v)])))
-              (macro_table M))
+              (macros M))
     (toplevel ('#$:m')         ('#$:n')                       ('#$:o' a))
     (produces [a::(), literal] [1, (values 2 3), (literal v)] [a, v]))
 
   (each "arity errors are caught at compile-time"
-    (encoding (module M (macro_table (macro m () (literal)))))
-    (encoding (module M (macro_table (macro m () (literal 1 2)))))
+    (encoding (module M (macros (macro m () (literal)))))
+    (encoding (module M (macros (macro m () (literal 1 2)))))
     (signals "Malformed literal clause")))

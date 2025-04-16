@@ -71,6 +71,19 @@
                (text "(:add_symbols $256)")
                (signals "invalid argument")))
 
+(ion_1_1 "add_symbols may not be invoked"
+         (each "from TDL"
+               (mactab (macro foo () (.add_symbols (..))))
+               "in a list"
+               (toplevel [('#$:add_symbols')])
+               "in a sexp"
+               (toplevel (('#$:add_symbols')))
+               "in a struct"
+               (toplevel { a: ('#$:add_symbols') })
+               "as an e-expression argument"
+               (toplevel ('#$:values' ('#$:add_symbols') ))
+               (signals "add_macros may only be invoked where system values can occur")))
+
 (ion_1_1 "add_symbols does not have any side-effects on the macro table"
          (text "(:set_macros (macro x () X))")
          (then "[PRECONDITION] macros are set as expected"

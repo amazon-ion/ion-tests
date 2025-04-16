@@ -6,7 +6,7 @@
 
 (ion_1_1 '''Ensure that malformed templates are signaled when they are encountered, '''
          '''not delayed until the module is installed or macro is invoked.'''
-  (encoding (module M (macro_table (macro m () ()))))
+  (encoding (module M (macros (macro m () ()))))
   (signals "Malformed template:"))
 
 
@@ -38,8 +38,8 @@
 
 
 (ion_1_1 "items not in macro_table are not accessible"
-  (encoding (module M (macro_table (macro mac () 1)))
-            (macro_table))
+  (encoding (module M (macros (macro mac () 1)))
+            (macros))
   (each (toplevel ('#$:M:mac'))
         (toplevel ('#$:M:0'))
         (signals "Module not in scope: M"))
