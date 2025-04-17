@@ -17,7 +17,7 @@
                (then "and produces only system values"
                      (produces))
                (then "and affects the symbol table"
-                     (toplevel '#$1' '#$63' '#$64')
+                     (toplevel '#$1' '#$62' '#$63')
                      (produces '$ion' 'use' ''))))
 
 (ion_1_1 "add_symbols can accept"
@@ -26,10 +26,10 @@
                (then "with no error and producing no user values"
                      (produces))
                (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$63')
+                     (toplevel '#$1' '#$62')
                      (produces '$ion' 'use'))
                (then "and does not add any symbols"
-                     (toplevel '#$64')
+                     (toplevel '#$63')
                      (signals "invalid symbol id")))
          (each "a single string"
                (text "(:add_symbols '''a''')")
@@ -38,10 +38,10 @@
                (then "with no error and producing no user values"
                      (produces))
                (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$63')
+                     (toplevel '#$1' '#$62')
                      (produces '$ion' 'use'))
                (then "and appends the new symbol to the symbol table"
-                     (toplevel '#$64')
+                     (toplevel '#$63')
                      (produces 'a')))
          (each "multiple strings"
                (text ''' (:add_symbols "a" "b" "c") ''')
@@ -52,10 +52,10 @@
                (then "with no error and producing no user values"
                      (produces))
                (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$63')
+                     (toplevel '#$1' '#$62')
                      (produces '$ion' 'use'))
                (then "and appends the new symbols to the symbol table"
-                     (toplevel '#$64' '#$65' '#$66')
+                     (toplevel '#$63' '#$64' '#$65')
                      (produces 'a' 'b' 'c'))))
 
 (ion_1_1 "add_symbols does not accept"
@@ -70,6 +70,19 @@
                "symbols with unknown text and sid >0"
                (text "(:add_symbols $256)")
                (signals "invalid argument")))
+
+(ion_1_1 "add_symbols may not be invoked"
+         (each "from TDL"
+               (mactab (macro foo () (.add_symbols (..))))
+               "in a list"
+               (toplevel [('#$:add_symbols')])
+               "in a sexp"
+               (toplevel (('#$:add_symbols')))
+               "in a struct"
+               (toplevel { a: ('#$:add_symbols') })
+               "as an e-expression argument"
+               (toplevel ('#$:values' ('#$:add_symbols') ))
+               (signals "add_macros may only be invoked where system values can occur")))
 
 (ion_1_1 "add_symbols does not have any side-effects on the macro table"
          (text "(:set_macros (macro x () X))")

@@ -5,13 +5,13 @@
 (ion_1_1 "top-level macro_table"
 
   (then "can be empty"
-    (toplevel $ion_encoding::((macro_table))
+    (toplevel $ion_encoding::((macros))
               ('#$:$ion:values' 1 2))
     (produces 1 2))
 
   (then "can install $ion"
-    (each (encoding (macro_table $ion))
-          (encoding (macro_table $ion $ion))
+    (each (encoding (macros $ion))
+          (encoding (macros $ion $ion))
       (then "and addresses work"
         (toplevel ('#$:1' 1 2))
         (produces 1 2))
@@ -20,14 +20,14 @@
         (produces 17))))
 
   (then "rejects unbound module name"
-    (each (encoding (macro_table M))
-          (encoding (macro_table $ion M))
+    (each (encoding (macros M))
+          (encoding (macros $ion M))
           (signals "Module not in scope:")))
 
   (then "rejects invalid module name"
-    (each (encoding (macro_table ''))
-          (encoding (macro_table null.symbol))
-          (encoding (macro_table '#$0'))      // TODO test absent shared symbol
-          (encoding (macro_table "M"))
-          (encoding (macro_table 1))
+    (each (encoding (macros ''))
+          (encoding (macros null.symbol))
+          (encoding (macros '#$0'))      // TODO test absent shared symbol
+          (encoding (macros "M"))
+          (encoding (macros 1))
           (signals "Invalid module name:"))))

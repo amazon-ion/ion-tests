@@ -6,7 +6,7 @@
 
 (ion_1_1
   (toplevel $ion_encoding::((load abc "abcs" 1)
-                            (symbol_table abc)))
+                            (symbols abc)))
   (then (toplevel '#$12')
         (produces a))
   (then (toplevel '#$13')
@@ -15,7 +15,7 @@
 (ion_1_1
   (toplevel $ion_encoding::((load mno "mnop" 3)
                             (load abc "abcs" 1)
-                            (symbol_table abc mno)))
+                            (symbols abc mno)))
   (then (toplevel '#$12' '#$13' '#$15')
         (produces a m o))
   (then (toplevel '#$16')
@@ -34,7 +34,7 @@
 
 (ion_1_1 "Shared symbols without text are treated as unique"
   (toplevel $ion_encoding::((load mno "mnop" 4)     // v4 has gap in first slot
-                            (symbol_table mno)))
+                            (symbols mno)))
   (then (toplevel '#$12' '#$13')
         (denotes (Symbol (absent "mnop" 1)) (Symbol "n"))))
 
@@ -44,7 +44,7 @@
 (ion_1_1 "Reused local name shadows previous binding"
   (toplevel $ion_encoding::((load m "mnop" 4)
                             (load m "mnop" 3)
-                            (symbol_table m ["x"])))
+                            (symbols m ["x"])))
   (then (toplevel '#$12' '#$13' '#$14' '#$15')
         (produces m n o x))
   (then (toplevel '#$16')
@@ -56,7 +56,7 @@
 (ion_1_1
   (toplevel $ion_encoding::((load mno "mnop" 3)
                             (load abc "abcs" 1)
-                            (symbol_table ["l1", "l2"] abc ["l3"] mno ["l4"])))
+                            (symbols ["l1", "l2"] abc ["l3"] mno ["l4"])))
   (then (toplevel '#$12' '#$13' '#$14' '#$15' '#$16' '#$17' '#$18' '#$19')
         (produces l1 l2 a l3 m n o l4))
   (then (toplevel '#$20')
@@ -68,31 +68,31 @@
 (ion_1_1
   (encoding (load A "abcs" 1)
             (load M "mnop" 3)
-            (symbol_table ["l1"] A))
+            (symbols ["l1"] A))
 
   (then "Module name bindings are dropped when not retained"
     (encoding // No `retains` clause
-              (symbol_table ["l2"] A))
+              (symbols ["l2"] A))
     (signals "Module not in scope: A"))
 
   (then "Retain * preserves all module name bindings"
     (toplevel '#$12' '#$13')
     (encoding (retain *)
-              (symbol_table ["l2"] M A))
+              (symbols ["l2"] M A))
     (toplevel '#$12' '#$13' '#$16')
     (produces l1 a l2 m a))
 
   (then "Retain can be selective"
     (then (encoding (retain A)
-                    (symbol_table A))
+                    (symbols A))
           (toplevel '#$12')
           (produces a))
     (then (encoding (retain A)
-                    (symbol_table M))
+                    (symbols M))
           (signals "Module not in scope: M")))
 
   (then "Retain can have repeated name"
     (encoding (retain A A)
-              (symbol_table A))
+              (symbols A))
     (toplevel '#$12')
     (produces a)))

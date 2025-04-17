@@ -7,7 +7,7 @@
 
 (ion_1_1 "template expressions containing only literal values"
   (encoding (module M
-              (macro_table
+              (macros
                 (macro nul          () null.null)
                 (macro nul_ann      () n::null)
                 (macro bol          () true)
@@ -18,7 +18,7 @@
                 (macro str_null     () null.string)
                 (macro str_ann      () a::"string")
                 (macro str_ann_null () b::c::null.string)))
-            (macro_table M))
+            (macros M))
   (toplevel ('#$:nul') ('#$:nul_ann')
             ('#$:bol') ('#$:bol_ann_null')
             ('#$:int') ('#$:int_ann_null')
