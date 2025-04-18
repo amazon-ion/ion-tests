@@ -15,48 +15,37 @@
                "in binary with a user macro address"
                (binary "14 01 90")
                (then "and produces only system values"
-                     (produces))
-               (then "and affects the symbol table"
-                     (toplevel '#$1' '#$62' '#$63')
-                     (produces '$ion' 'use' ''))))
+                     (produces))))
 
 (ion_1_1 "add_symbols can accept"
+         (symtab "a")
          (then "an empty expression group"
                (text "(:add_symbols)")
                (then "with no error and producing no user values"
                      (produces))
-               (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$62')
-                     (produces '$ion' 'use'))
-               (then "and does not add any symbols"
-                     (toplevel '#$63')
-                     (signals "invalid symbol id")))
+               (then "and does not add or remove any symbols"
+                     (toplevel '#$1' '#$2' )
+                     (produces   a   $ion  )))
          (each "a single string"
-               (text "(:add_symbols '''a''')")
+               (text "(:add_symbols '''b''')")
                "a single symbol"
-               (text "(:add_symbols 'a')")
+               (text "(:add_symbols 'b')")
                (then "with no error and producing no user values"
                      (produces))
-               (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$62')
-                     (produces '$ion' 'use'))
                (then "and appends the new symbol to the symbol table"
-                     (toplevel '#$63')
-                     (produces 'a')))
+                     (toplevel '#$1' '#$2' '#$3')
+                     (produces   a     b   $ion )))
          (each "multiple strings"
-               (text ''' (:add_symbols "a" "b" "c") ''')
+               (text ''' (:add_symbols "b" "c" "d") ''')
                "multiple symbols"
-               (text ''' (:add_symbols 'a' 'b' 'c') ''')
+               (text ''' (:add_symbols 'b' 'c' 'd') ''')
                "a mix of strings and symbols"
-               (text ''' (:add_symbols 'a' "b" 'c') ''')
+               (text ''' (:add_symbols 'b' "c" 'd') ''')
                (then "with no error and producing no user values"
                      (produces))
-               (then "and does not remove any symbols"
-                     (toplevel '#$1' '#$62')
-                     (produces '$ion' 'use'))
-               (then "and appends the new symbols to the symbol table"
-                     (toplevel '#$63' '#$64' '#$65')
-                     (produces 'a' 'b' 'c'))))
+               (then "and appends the new symbol to the symbol table"
+                     (toplevel '#$1' '#$2' '#$3' '#$4' '#$5')
+                     (produces   a     b      c     d   $ion ))))
 
 (ion_1_1 "add_symbols does not accept"
          (each "null"

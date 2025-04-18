@@ -148,7 +148,7 @@ type::{
     binary_clause,
     text_clause,
     mactab_clause,
-    encoding_clause,
+    symtab_clause,
   ]
 }
 
@@ -168,8 +168,8 @@ type::{
 }
 
 type::{
-  name: encoding_clause,
-  ordered_elements: [ { valid_values: [encoding, "encoding"] }, { occurs: range::[0, max] }, ]
+  name: symtab_clause,
+  ordered_elements: [ { valid_values: [symtab, "symtab"] }, { occurs: range::[0, max], type: string }, ]
 }
 
 type::{
