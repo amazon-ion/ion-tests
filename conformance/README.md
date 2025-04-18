@@ -30,7 +30,7 @@ and by expressing the earliest phases (the lowest-level test cases) in a subset 
 can be safely converted to JSON using `ion to json` (see [`ion-cli`](https://github.com/amazon-ion/ion-cli)).
 For example,
 
-```
+```json
 ["ion_1_1", ["each",
                ["text", "1"],
                ["bytes", 0x61, 0x01],
@@ -41,7 +41,7 @@ For example,
 The next logical tiers would introduce basic symbols and sexps into the parser.
 Here, the `denotes` expectation becomes valuable:
 
-```
+```json
 ["ion_1_x", ["text", "(1 2.3)"],
             ["denotes", ["Sexp", ["Int", 1], ["Decimal", 23, -1]]]]
 ```
@@ -59,7 +59,7 @@ the document produces, or an error condition that it signals.
 
 Here’s a simple example:
 
-```
+```ion
 (ion_1_0 (text ''' {a:1, b:2} "two" ''')
          (produces {b:2, a:1} "two"))
 ```
@@ -78,7 +78,7 @@ of application values equivalent to those given.
 The `produces` clause verifies fully-expanded output, so valid symbol IDs are
 replaced by their text:
 
-```
+```ion
 (ion_1_0 (text "$1 $2 $3")
          (produces $ion $ion_1_0 $ion_symbol_table))
 ```
@@ -87,7 +87,7 @@ Not all input documents can be parsed successfully; Ion specifies certain cases
 that must signal error conditions.
 To test that, use the `signals` expectation clause instead of `produces`:
 
-```
+```ion
 (ion_1_0 (text "$99")
          (signals "Out of range symbol ID: 99"))
 ```
@@ -101,19 +101,19 @@ extended with a more structural check on where the error occurred in the input.
 
 The most interesting test cases involve encoding directives:
 
-```
+```ion
 (ion_1_0 (text '''$ion_symbol_table::{symbols:["a"]}  $10''')
          (produces a))
 ```
 
 We can test something similar for Ion 1.1 using the `ion_1_1` form:
 
-```
-(ion_1_1 (text '''$ion_encoding::((module M (macros (macro mac [] 1)))
-                                  (macros M))
-                  (:M:mac) (:M:0) (:mac) (:0))
+```ion
+(ion_1_1 (text '''
+               $ion::(module _ (macros (macro mac () 1)))
+               (:_:mac) (:_:0) (:mac) (:0)
                '''
-         (produces 1 1 1 1))
+         (produces 1 1 1 1)))
 ```
 
 ## Binary fragments
@@ -121,7 +121,7 @@ We can test something similar for Ion 1.1 using the `ion_1_1` form:
 In addition to providing input data as text, you can provide Ion binary content:
 
 
-```
+```ion
 (ion_1_1 (binary   0x50 0x51 0x01 0xEB 0x01)
          (produces    0         1  null.int))
 ```
@@ -131,7 +131,7 @@ in the range 0-255, or a string of hexadecimal digits.
 
 For example:
 
-```
+```ion
 (ion_1_1 (binary   "50 5101 EB01")
          (produces  0  1    null.int))
 ```
@@ -147,7 +147,7 @@ are combined and then parsed and expanded.
 
 In clauses that accept fragments, more than one can be provided:
 
-```
+```ion
 (ion_1_0 (text "$1")
          (text "$2")
          (text "$3")
@@ -170,17 +170,16 @@ The DSL allows a common document prefix to be shared across multiple test cases.
 You can use `then` clauses to continue the document in different directions,
 each with additional fragments and an expectation.
 
-````
-(ion_1_1 (text '''$ion_encoding::((module M (macros (macro mac [] 1)))
-                                  (macros M))'''
-         (then (text "(:M:mac)")
+````ion
+(ion_1_1 (text '''$ion::(module _ (macros (macro mac () 1)))'''
+         (then (text "(:_::mac)")
                (produces 1))
-         (then (text "(:M:0)")
+         (then (text "(:_::0)")
                (produces 1))
          (then (text "(:mac)")
                (produces 1))
          (then (text "(:0)")
-               (produces 1)))
+               (produces 1))))
 ````
 
 Here, each `then` clause extends the document with a different suffix,
@@ -190,28 +189,27 @@ This more clearly associates the specific inputs forms and their outputs.
 A further refinement is to indicate that multiple input forms all produce the
 same output, using `each`:
 
-```
-(ion_1_1 (text '''$ion_encoding::((module M (macros (macro mac [] 1)))
-                                  (macros M))'''
-         (each (text "(:M:mac)")
-               (text "(:M:0)")
+```ion
+(ion_1_1 (text '''$ion::(module _ (macros (macro mac () 1)))'''
+         (each (text "(:_::mac)")
+               (text "(:_::0)")
                (text "(:mac)")
                (text "(:0)")
-               (produces 1)))
+               (produces 1))))
 ```
 
 The `each` clause extends the document multiple directions, then verifies the
 same expectation for each result.  In this example, there are four final
-documents; all have the same `$ion_encoding` directive but each has its own
+documents; all have the same `$ion` directive but each has its own
 single E-expression.
 
 This pattern makes it easy to verify multiple representations of the same data,
 ensuring that all input forms handle scenarios the same way.
 
-```
+```ion
 (ion_1_1 (each
            (text "1")
-           (bytes 0x51 0x01)
+           (bytes 0x61 0x01)
            (toplevel 1)         // Abstract syntax representation; see below.
            (produces 1)))
 ```
@@ -270,7 +268,7 @@ The examples above illustrate the `ion_1_0` and `ion_1_1` entry points.
 These are derived forms, shorthand for the common extensions to a more primitive
 starting point: an empty document.  Here's how that is expressed:
 
-```
+```ion
 (document (produces))
 ```
 
@@ -281,14 +279,14 @@ It starts a test case with an empty document: no IVM, no bytes of any kind.
 The body of the clause acts the same as a `then` clause, so the trivial
 example is equivalent to:
 
-```
+```ion
 (document (then (produces)))
 ```
 
 
 To make a more meaningful test, we must add some input to the document:
 
-```
+```ion
 (document (text "null.int")
           (denotes (Null int)))
 ```
@@ -300,21 +298,21 @@ The `ion_1_*` clauses are shorthands for extending the empty document with Ion
 version markers.
 To be more specific, `(ion_1_0 _form_ ...)` is equivalent to:
 
-```
+```ion
 (document
   (then (ivm 1 0) _form_ ...))
 ```
 
 `(ion_1_1 _form_ ...)` is equivalent to:
 
-```
+```ion
 (document
   (then (ivm 1 1) _form_ ...))
 ```
 
 Finally, `(ion_1_x _form_ ...)` is equivalent to:
 
-```
+```ion
 (document
   (then (ivm 1 0) _form_ ...)
   (then (ivm 1 1) _form_ ...))
@@ -322,7 +320,7 @@ Finally, `(ion_1_x _form_ ...)` is equivalent to:
 
 This combination declares behavior common to _both_ 1.0 and 1.1.
 
-```
+```ion
 (ion_1_x (text "1::true")
          (signals "Invalid annotation"))
 ```
@@ -342,7 +340,7 @@ JSON extensions like annotations, symbols, and S-expressions.
 As an alternative, you can use the `denotes` expectation to express output in a
 form that expresses the Ion data model in more primitive terms.
 
-```
+```ion
 (ion_1_0 (text "(symval 1.2) a::b::null.bool")
          (denotes (Sexp (Symbol "symval") (Decimal 12 -1))
                   (Annot (Null bool) "a" "b")))
@@ -363,9 +361,9 @@ To make it easier to bootstrap a new Ion system, the entire testing DSL can be
 written as JSON data by replacing S-expressions with lists (JSON "arrays") and
 keyword symbols with strings:
 
-```
+```json
 ["ion_1_0", ["text", "(symval 1.2) a::b::null.bool"],
-            ["denotes", ["Sexp", ["Symbol", "symval"], ["Decimal", 12, -1]]
+            ["denotes", ["Sexp", ["Symbol", "symval"], ["Decimal", 12, -1]],
                         ["Annot", ["Null", "bool"], "a", "b"]]]
 ```
 
@@ -386,7 +384,7 @@ of unknown symbols.  Per the spec, symbols are equivalent when they have the
 same text.  In the conformance suite, this situation is expressed via
 expectations such as these:
 
-```
+```ion
 (ion_1_0 (text '''$ion_symbol_table::{symbols:["$ion"]}''')
          (each (text "$ion")
                (text "$1")
@@ -398,7 +396,7 @@ When text is unknown for a SID, equivalence depends on whether the SID maps into
 the local symbol table or into a shared table.
 In the former case, all unknown symbols are equivalent to `$0`:
 
-```
+```ion
 (ion_1_0 (text '''$ion_symbol_table::{symbols:[null, false]}''')
          (each (text "$0")
                (text "$10")
@@ -412,7 +410,7 @@ string.
 When an unknown SID resides in a shared symbol table, it is equivalent only to
 the same local address in the same-named symbol table:
 
-```
+```ion
 (ion_1_0 (text '''$ion_symbol_table::{imports:[{name:"not found", max_id:2}]}''')
          (text "$10 $11")
          (denotes (Symbol ("not found" 1))
@@ -439,7 +437,7 @@ At present, the following forms are accepted:
 
 Per these rules, we can rewrite the above test cases as:
 
-```
+```ion
 (ion_1_0 (text '''$ion_symbol_table::{symbols:[null, false]}''')
          (each (text "$0")
                (text "$10")
@@ -469,12 +467,9 @@ Embedding Ion data inside a string means you won't get any assistance from your
 text editor, so common errors like unbalanced parentheses won't get flagged,
 increasing the likelihood of syntactic errors in the input data itself:
 
-```
+```ion
 (ion_1_1 (text '''
-           $ion_encoding::((module M
-                             (macros
-                               (macro m [] (noSuchMacro)))
-                           (macros M))
+           $ion::(module _ (macros (macro m () (.noSuchMacro) )))
            ''')
          (signals "No such macro: noSuchMacro"))
 ```
@@ -482,11 +477,8 @@ increasing the likelihood of syntactic errors in the input data itself:
 We can address these errors by allowing the input to be expressed directly as data,
 without a wrapping string.  The `toplevel` fragment does that:
 
-```
-(ion_1_1 (toplevel $ion_encoding::((module M
-                                     (macros
-                                       (macro m [] (noSuchMacro)))
-                                   (macros M)))
+```ion
+(ion_1_1 (toplevel $ion::(module _ (macros (macro m () (.noSuchMacro)))))
          (signals "No such macro: noSuchMacro"))
 ```
 
@@ -507,31 +499,14 @@ This is a lot of overhead, introducing friction for the test author, when we
 want to make it easy and concise to denote highly-focused test scenarios.
 Let's whittle that away a bit.
 
-Because many test cases will focus on the behavior of 1.1 encoding directives,
-there are special forms to shorten the expression of such input documents.
-The `encoding` fragment is such a shorthand:
-
-```
-(ion_1_1 (encoding (module M
-                     (macros
-                       (macro m [] (noSuchMacro)))
-                   (macros M))
-         (signals "No such macro: noSuchMacro"))
-```
-
-An `encoding` fragment accepts the body of an encoding directive, so the DSL
-syntax `(encoding expr …)` is shorthand for
-`(toplevel $ion_encoding::(expr …))`.
-
-
-Another common test pattern, especially for testing the template language,
+A common test pattern, especially for testing the template language,
 is to define and install a number of macros.
 The syntax `(mactab expr …)` is shorthand for
-`(encoding (module M (macros expr …)) (macros M))`.
+`$ion::(module _ (macros expr …) (symbols _))`.
 For example:
 
-```
-(ion_1_1 (mactab (macro m [] (noSuchMacro)))
+```ion
+(ion_1_1 (mactab (macro m () (.noSuchMacro)))
          (signals "No such macro: noSuchMacro"))
 ```
 
@@ -540,18 +515,33 @@ and abstracted to focus on just the input fragments relevant to the specific
 test scenario.
 Expressing test cases for the template language is now direct and crisp:
 
-```
-(ion_1_1 (mactab (macro m      [] "m")
-                 (macro m_wrap [] (m)))
+```ion
+(ion_1_1 (mactab (macro m      () "m")
+                 (macro m_wrap () (.m)))
          (text "(:m_wrap)")
          (produces "m"))
 ```
 
 This brevity allows test cases to focus on the essentials:
-```
-(ion_1_1 (mactab (macro _ (v) x))
+```ion
+(ion_1_1 (mactab (macro _ (v) (%x) ))
          (signals "Unbound variable: x"))
 ```
+
+Another common test pattern, is to define and install a number of symbols.
+The syntax `(symtab strings…)` is shorthand for
+`$ion_symbol_table::{ symbols: [strings…] }`.
+For example:
+
+```ion
+(ion_1_1 (symbtab "a" "b" "c")
+         (text "$1 $2 $3")
+         (produces a b c))
+```
+
+> [!IMPORTANT]
+> Whereas the `mactab` clause preserves the symbol table of the default module,
+> the `symtab` clause has a side effect of clearing the macro table of the default module.
 
 
 ### Abstract syntax forms
@@ -580,7 +570,7 @@ top-level symbols, not IVMs.
 To encode a symbol reference that might normally look like `$123` you instead
 write `'#$123'`:
 
-```
+```ion
 (ion_1_x (toplevel '#$ion_1_0'  $ion_1_0  '#$1'  '#$2'     '#$3')
          (produces  /* IVM */   $ion_1_0  $ion   $ion_1_0  $ion_symbol_table))
 ```
@@ -588,17 +578,17 @@ write `'#$123'`:
 To denote an E-expression, you write an S-expression starting with a symbol of
 the form `#$:_macroref_`:
 
-```
+```ion
 (ion_1_1 (toplevel [1, ('#$:values' a b), 2])
          (produces [1, a, b, 2]))
 ```
 
-```
-(ion_1_1 (mactab (macro mac [] 1))
-         (each (toplevel ('#$:M:mac'))  // = (text "(:M:mac)")
-               (toplevel ('#$:M:0'))    // = (text "(:M:0)")
-               (toplevel ('#$:mac'))    // = (text "(:mac)")
-               (toplevel ('#$:0'))      // = (text "(:0)")
+```ion
+(ion_1_1 (mactab (macro mac () 1))
+         (each (toplevel ('#$:_::mac'))  // = (text "(:M::mac)")
+               (toplevel ('#$:_::0'))    // = (text "(:M::0)")
+               (toplevel ('#$:mac'))     // = (text "(:mac)")
+               (toplevel ('#$:0'))       // = (text "(:0)")
                (produces 1)))
 ```
 
@@ -609,7 +599,7 @@ independent of the E-expression parser, since these clauses do not require it.
 
 We close with a relatively complex tree of test cases:
 
-```
+```ion
 (ion_1_1 (mactab (macro m () 0))
          (then (toplevel ('#$:m'))              // = (text "(:m)")
                (produces 0))
@@ -621,17 +611,14 @@ We close with a relatively complex tree of test cases:
 Here’s where the DSL starts showing its expressiveness.
 Compare that to the expanded cases without nested `then`/`each`:
 
-```
-(ion_1_1 (toplevel $ion_encoding::((module M (macros (macro m () 0)))
-                                   (macros M))
+```ion
+(ion_1_1 (toplevel $ion::(module _ (macros (macro m () 0)))
                    ('#$:m'))
          (produces 0))
-(ion_1_1 (toplevel $ion_encoding::((module M (macros (macro m () 0)))
-                                   (macros M))
+(ion_1_1 (toplevel $ion::(module _ (macros (macro m () 0)))
                     ('#$:m' 1))
          (signals "Too many arguments"))
-(ion_1_1 (toplevel $ion_encoding::((module M (macros (macro m () 0)))
-                                   (macros M))
+(ion_1_1 (toplevel $ion::(module _ (macros (macro m () 0)))
                    ('#$:m' 1 2))
          (signals "Too many arguments"))
 ```
@@ -666,8 +653,8 @@ fragment ::=  "("  "text"      text_input*  ")"
            |  "("  "binary"    bytes*   ")"
            |  "("  "ivm"       int int  ")"
            |  "("  "toplevel"  ast*     ")"
-           |  "("  "encoding"  ast*     ")"
            |  "("  "mactab"    ast*     ")"
+           |  "("  "symtab"    string*  ")"
 
 continuation ::=  expectation  |  extension+
 
