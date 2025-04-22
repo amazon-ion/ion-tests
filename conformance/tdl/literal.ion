@@ -87,10 +87,8 @@
                (mactab (macro foo () (.literal (.literal 1))))
                (toplevel ('#$:foo')) (produces (.literal 1)))
          (then "does not prevent interpretation of symbol IDs"
-               (encoding (symbols "a"))
                (mactab (macro foo () (.literal $1)))
-               (toplevel ('#$:foo')) (produces a))
+               (toplevel ('#$:foo')) (produces $ion))
          (then "does not prevent evaluation of e-expressions"
-               (encoding (symbols "a"))
                (text "(:add_macros (macro foo () (.literal (:values 1) )))")
                (toplevel ('#$:foo')) (produces 1)))
