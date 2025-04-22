@@ -111,7 +111,7 @@ We can test something similar for Ion 1.1 using the `ion_1_1` form:
 ```ion
 (ion_1_1 (text '''
                $ion::(module _ (macros (macro mac () 1)))
-               (:_:mac) (:_:0) (:mac) (:0)
+               (:_::mac) (:_::0) (:mac) (:0)
                '''
          (produces 1 1 1 1)))
 ```
@@ -585,8 +585,8 @@ the form `#$:_macroref_`:
 
 ```ion
 (ion_1_1 (mactab (macro mac () 1))
-         (each (toplevel ('#$:_::mac'))  // = (text "(:M::mac)")
-               (toplevel ('#$:_::0'))    // = (text "(:M::0)")
+         (each (toplevel ('#$:_::mac'))  // = (text "(:_::mac)")
+               (toplevel ('#$:_::0'))    // = (text "(:_::0)")
                (toplevel ('#$:mac'))     // = (text "(:mac)")
                (toplevel ('#$:0'))       // = (text "(:0)")
                (produces 1)))
