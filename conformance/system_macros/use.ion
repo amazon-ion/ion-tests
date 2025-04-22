@@ -1,12 +1,99 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Test Cases:
-// `use` can be invoked using any type of macro reference.
-// the first parameter must have a single argument value that is a non-null, unannotated string
-// the second parameter may be absent or it may be a single value that is a non-null, unannotated, positive integer
-// if the second parameter is absent, it has an implicit default value of 1
-// if the <catalog_key, version> pair cannot be located, in the catalog, the reader should signal an error
-// invoking `use` should preserve all existing symbols and macros
-// invoking `use` should import the specified module and append its content to the default module's symbol table and macro table
-// `use` should not (re)define any existing stream-level module bindings
+(ion_1_1 "use can be invoked"
+         (each "in text with an unqualified macro name"
+               (text '''(:use "abcs" 1)''')
+               "in text with an unqualified macro address"
+               (text '''(:23 "abcs" 1)''')
+               "in text with a qualified macro name"
+               (text '''(:$ion::use "abcs" 1)''')
+               "in text with a qualified macro address"
+               (text '''(:$ion::23 "abcs" 1)''')
+               "in binary with a system macro address"
+               (binary "EF 17 01 94 61 62 63 73 61 01")
+               "in binary with a user macro address"
+               (binary "17 01 94 61 62 63 73 61 01")
+               (produces)))
+
+(ion_1_1 "use imports the specified module and appends its symbols and macros to the default module"
+         (toplevel ('#$:use' "abcs" 1))
+         (then (toplevel '#$1' '#$2' '#$63')
+               (produces a $ion use)) // Coincidentally, the last system symbol is 'use'
+         (then (toplevel '#$64')
+               (signals "invalid symbol id"))
+         (then "preserving all existing symbols"
+               (toplevel ('#$:use' "mnop" 1) )
+               (toplevel '#$1' '#$2' '#$3' '#$63')
+               (produces a m $ion use)))
+
+(ion_1_1 "use can be invoked without the version parameter, defaulting to version 1"
+         (each (toplevel ('#$:use' "abcs")
+                         '#1' '#$2')
+               (toplevel ('#$:use' "abcs" ('#$::'))
+                         '#1' '#$2')
+               (produces a $ion)))
+
+(ion_1_1 "use can import a version other than 1"
+         (toplevel ('#$:use' "abcs" 2)
+                   '#$1' '#$2' '#$3')
+         (produces a b $ion))
+
+(ion_1_1 "repeated invocations can repeatedly add the same module"
+         (toplevel ('#$:use' "abcs"))
+         (then "again"
+               (toplevel ('#$:use' "abcs"))
+               (then (toplevel '#$1' '#$2') (produces a a))
+               (then "and again"
+                     (toplevel ('#$:use' "abcs"))
+                     (then (toplevel '#$1' '#$2' '#$3') (produces a a a))
+                     (then "and again"
+                           (toplevel ('#$:use' "abcs"))
+                           (then (toplevel '#$1' '#$2' '#$3' '#$4') (produces a a a a))))))
+
+(ion_1_1 "use may not be invoked"
+         (each "from TDL"
+               (mactab (macro foo () (.use (..))))
+               "in a list"
+               (toplevel [('#$:use')])
+               "in a sexp"
+               (toplevel (('#$:use')))
+               "in a struct"
+               (toplevel { a: ('#$:use') })
+               "as an e-expression argument"
+               (toplevel ('#$:values' ('#$:use') ))
+               (signals "use may only be invoked where system values can occur")))
+
+(ion_1_1 "the first argument"
+         (each "must be a string"
+               (toplevel ('#$:use' abcs 1))
+               "must not be null"
+               (toplevel ('#$:use' null.string 1))
+               "must not be annotated"
+               (toplevel ('#$:use' foo::"abcs" 1))
+               "must not be empty group of strings"
+               (toplevel ('#$:use' ('#$::') 1))
+               "must not be multiple strings"
+               (toplevel ('#$:use' ('#$::' "abcs" "mnop") 1))
+               (signals "invalid macro argument")))
+
+(ion_1_1 "the second argument"
+         (each "must be an integer"
+               (toplevel ('#$:use' "abcs" 1d0))
+               (toplevel ('#$:use' "abcs" 1e0))
+               "must be positive"
+               (toplevel ('#$:use' "abcs" -1))
+               (toplevel ('#$:use' "abcs" 0))
+               "must not be null"
+               (toplevel ('#$:use' "abcs" null.int))
+               "must not be annotated"
+               (toplevel ('#$:use' "abcs" foo::1))
+               "must not be multiple ints"
+               (toplevel ('#$:use' "abcs" ('#$::' 1 2)))
+               (signals "invalid macro argument")))
+
+(ion_1_1 "if the exact (catalog_key, version) pair cannot be located in the catalog, the reader should signal an error"
+         (toplevel ('#$:use' "mnop" 2))
+         (signals "shared module not found in catalog"))
+
+// TODO: `use` should not (re)define any existing stream-level module bindings
