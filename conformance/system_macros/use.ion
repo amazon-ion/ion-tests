@@ -24,7 +24,7 @@
                (signals "invalid symbol id"))
          (then "preserving all existing symbols"
                (toplevel ('#$:use' "mnop" 1) )
-               (toplevel '#$1' '#$2' '#$3' '#$63')
+               (toplevel '#$1' '#$2' '#$3' '#$64')
                (produces a m $ion use)))
 
 (ion_1_1 "use can be invoked without the version parameter, defaulting to version 1"
@@ -39,7 +39,7 @@
                    '#$1' '#$2' '#$3')
          (produces a b $ion))
 
-(ion_1_1 "repeated invocations can repeatedly add the same module"
+(ion_1_1 "repeated invocations can repeatedly add the content from the same module"
          (toplevel ('#$:use' "abcs"))
          (then "again"
                (toplevel ('#$:use' "abcs"))

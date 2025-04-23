@@ -45,7 +45,7 @@
                      (toplevel ('#$:foo' ('#$::' 1 2 3)))
                      (signals "too many arguments")))
          (then "an exactly-one parameter"
-               (mactab (macro foo (x?) (%x)))
+               (mactab (macro foo (x) (%x)))
                (then "with zero arguments"
                      (toplevel ('#$:foo' ('#$::')))
                      (signals "too few arguments"))
@@ -78,7 +78,7 @@
                      (toplevel ('#$:foo' ('#$::' 1 2 3)))
                      (produces 1 2 3))))
 
-(ion_1_1 "the argument arity should not be checked for a variable that unused"
+(ion_1_1 "the argument arity should not be checked for a variable that is unused"
          (then "not enough args for exactly-one"
                (mactab (macro foo (x) 123))
                (toplevel ('#$:foo'))
