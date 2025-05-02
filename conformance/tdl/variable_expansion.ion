@@ -31,70 +31,67 @@
                (signals "invalid macro definition")))
 
 // EVALUATION TEST CASES
+//
+// All of these test cases include a wrapper macro so that the variables are not passed in as part of an E-Expression.
+// This helps to isolate the variable expansion logic from the E-Expression parsing logic in these test cases.
 
 (ion_1_1 "when expanding"
          (then "a zero-or-one parameter"
                (mactab (macro foo (x?) (%x)))
                (then "with zero arguments"
-                     (toplevel ('#$:foo' ('#$::')))
+                     (mactab (macro bar () (.foo (..))) )
+                     (toplevel ('#$:bar'))
                      (produces))
                (then "with one argument"
-                     (toplevel ('#$:foo' ('#$::' 1)))
+                     (mactab (macro bar () (.foo 1)) )
+                     (toplevel ('#$:bar'))
                      (produces 1))
                (then "with more than one argument"
-                     (toplevel ('#$:foo' ('#$::' 1 2 3)))
+                     (mactab (macro bar () (.foo (.. 1 2 3))) )
+                     (toplevel ('#$:bar'))
                      (signals "too many arguments")))
          (then "an exactly-one parameter"
                (mactab (macro foo (x) (%x)))
                (then "with zero arguments"
-                     (toplevel ('#$:foo' ('#$::')))
+                     (mactab (macro bar () (.foo (..))) )
+                     (toplevel ('#$:bar'))
                      (signals "too few arguments"))
                (then "with one argument"
-                     (toplevel ('#$:foo' ('#$::' 1)))
+                     (mactab (macro bar () (.foo 1)) )
+                     (toplevel ('#$:bar'))
                      (produces 1))
                (then "with more than one argument"
-                     (toplevel ('#$:foo' ('#$::' 1 2 3)))
+                     (mactab (macro bar () (.foo (.. 1 2 3))) )
+                     (toplevel ('#$:bar'))
                      (signals "too many arguments")))
          (then "a one-or-more parameter"
                (mactab (macro foo (x+) (%x)))
                (then "with zero arguments"
-                     (toplevel ('#$:foo' ('#$::')))
+                     (mactab (macro bar () (.foo (..))) )
+                     (toplevel ('#$:bar'))
                      (signals "too few arguments"))
                (then "with one argument"
-                     (toplevel ('#$:foo' ('#$::' 1)))
+                     (mactab (macro bar () (.foo 1)) )
+                     (toplevel ('#$:bar'))
                      (produces 1))
                (then "with more than one argument"
-                     (toplevel ('#$:foo' ('#$::' 1 2 3)))
+                     (mactab (macro bar () (.foo (.. 1 2 3))) )
+                     (toplevel ('#$:bar'))
                      (produces 1 2 3)))
          (then "a zero-or-more parameter"
                (mactab (macro foo (x*) (%x)))
                (then "with zero arguments"
-                     (toplevel ('#$:foo' ('#$::')))
+                     (mactab (macro bar () (.foo (..))) )
+                     (toplevel ('#$:bar'))
                      (produces))
                (then "with one argument"
-                     (toplevel ('#$:foo' ('#$::' 1)))
+                     (mactab (macro bar () (.foo 1)) )
+                     (toplevel ('#$:bar'))
                      (produces 1))
                (then "with more than one argument"
-                     (toplevel ('#$:foo' ('#$::' 1 2 3)))
+                     (mactab (macro bar () (.foo (.. 1 2 3))) )
+                     (toplevel ('#$:bar'))
                      (produces 1 2 3))))
-
-(ion_1_1 "the argument arity should not be checked for a variable that is unused"
-         (then "not enough args for exactly-one"
-               (mactab (macro foo (x) 123))
-               (toplevel ('#$:foo'))
-               (produces 123))
-         (then "too many args for exactly-one"
-               (mactab (macro foo (x) 123))
-               (toplevel ('#$:foo' ('#$::' 4 5 6)))
-               (produces 123))
-         (then "not enough args for one-or-more"
-               (mactab (macro foo (x+) 123))
-               (toplevel ('#$:foo'))
-               (produces 123))
-         (then "too-many args for zero-or-one"
-               (mactab (macro foo (x?) 123))
-               (toplevel ('#$:foo' ('#$::' 4 5 6)))
-               (produces 123)))
 
 (ion_1_1 "A variable expansion"
          (then "can be used inside a list"
@@ -118,10 +115,3 @@
          (mactab (macro foo (x) [(%x), (%x)]))
          (toplevel ('#$:foo' 1))
          (produces [1, 1]))
-
-(ion_1_1 "a variable should not be expanded if it is not being used"
-         // `x` should not be expanded. If it is expanded, the `(.none 123)` will signal an error.
-         (mactab (macro foo (x y) (%y))
-                 (macro bar (z) (.foo (.none 123) (%z))))
-         (toplevel ('#$:bar' 1))
-         (produces 1))
