@@ -3,15 +3,115 @@
 
 // DECLARATION TEST CASES
 
-// May not have annotations on the `%`, enclosing sexp, or variable name
-// May not have other values inside the enclosing sexp
-// Variable name must be a symbol and correspond to a valid, in-scope variable
+(ion_1_1 "a variable expansion"
+         (then "is denoted by (% <name> )"
+               (mactab (macro foo (x) (%x)))
+               // Check that this is valid syntax, and nothing else.
+               (produces /* nothing */))
+         (each "must not be annotated on the enclosing sexp"
+               (mactab (macro foo (x) a::(%x)))
+               "must not be annotated on the %"
+               (mactab (macro foo (x) (a::'%' x)))
+               "must not be annotated on the variable name"
+               (mactab (macro foo (x) (% a::x)))
+               "must use a symbol for the variable name"
+               (mactab (macro foo (x) (% "x")))
+               "must not have any extra expressions after the variable name"
+               (mactab (macro foo (x) (% x x)))
+               (mactab (macro foo (x) (% x null)))
+               (mactab (macro foo (x) (% x %)))
+               (mactab (macro foo (x) (% x ?)))
+               (mactab (macro foo (x) (% x +)))
+               (mactab (macro foo (x) (% x *)))
+               "must correspond to a valid, in-scope variable binding"
+               (mactab (macro foo (x) (%y)))
+               // `foo` cannot access `y` from where it is invoked in `bar`
+               (mactab (macro foo (x) (%y))
+                       (macro bar (y) (.foo 1)))
+               (signals "invalid macro definition")))
 
-// EVALUATION TEST CASES (Many of these tests should also be repeated for e-expression invocations)
+// EVALUATION TEST CASES
+//
+// All of these test cases include a wrapper macro so that the variables are not passed in as part of an E-Expression.
+// This helps to isolate the variable expansion logic from the E-Expression parsing logic in these test cases.
 
-// Cardinality checks for zero-or-one
-// Cardinality checks for exactly-one
-// Cardinality checks for zero-or-more
-// Cardinality checks for one-or-more
-// The variable cardinality should not be checked if the variable is unused.
-// A variable should not be expanded unless it is actually being used.
+(ion_1_1 "when expanding"
+         (then "a zero-or-one parameter"
+               (mactab (macro foo (x?) (%x)))
+               (then "with zero arguments"
+                     (mactab (macro bar () (.foo (..))) )
+                     (toplevel ('#$:bar'))
+                     (produces))
+               (then "with one argument"
+                     (mactab (macro bar () (.foo 1)) )
+                     (toplevel ('#$:bar'))
+                     (produces 1))
+               (then "with more than one argument"
+                     (mactab (macro bar () (.foo (.. 1 2 3))) )
+                     (toplevel ('#$:bar'))
+                     (signals "too many arguments")))
+         (then "an exactly-one parameter"
+               (mactab (macro foo (x) (%x)))
+               (then "with zero arguments"
+                     (mactab (macro bar () (.foo (..))) )
+                     (toplevel ('#$:bar'))
+                     (signals "too few arguments"))
+               (then "with one argument"
+                     (mactab (macro bar () (.foo 1)) )
+                     (toplevel ('#$:bar'))
+                     (produces 1))
+               (then "with more than one argument"
+                     (mactab (macro bar () (.foo (.. 1 2 3))) )
+                     (toplevel ('#$:bar'))
+                     (signals "too many arguments")))
+         (then "a one-or-more parameter"
+               (mactab (macro foo (x+) (%x)))
+               (then "with zero arguments"
+                     (mactab (macro bar () (.foo (..))) )
+                     (toplevel ('#$:bar'))
+                     (signals "too few arguments"))
+               (then "with one argument"
+                     (mactab (macro bar () (.foo 1)) )
+                     (toplevel ('#$:bar'))
+                     (produces 1))
+               (then "with more than one argument"
+                     (mactab (macro bar () (.foo (.. 1 2 3))) )
+                     (toplevel ('#$:bar'))
+                     (produces 1 2 3)))
+         (then "a zero-or-more parameter"
+               (mactab (macro foo (x*) (%x)))
+               (then "with zero arguments"
+                     (mactab (macro bar () (.foo (..))) )
+                     (toplevel ('#$:bar'))
+                     (produces))
+               (then "with one argument"
+                     (mactab (macro bar () (.foo 1)) )
+                     (toplevel ('#$:bar'))
+                     (produces 1))
+               (then "with more than one argument"
+                     (mactab (macro bar () (.foo (.. 1 2 3))) )
+                     (toplevel ('#$:bar'))
+                     (produces 1 2 3))))
+
+(ion_1_1 "A variable expansion"
+         (then "can be used inside a list"
+               (mactab (macro foo (x) [(%x)] ) )
+               (toplevel ('#$:foo' 1))
+               (produces [1] ))
+         (then "can be used inside a sexp"
+               (mactab (macro foo (x) ((%x)) ) )
+               (toplevel ('#$:foo' 1))
+               (produces (1) ))
+         (then "can be used inside a struct"
+               (mactab (macro foo (x) {a:(%x)} ) )
+               (toplevel ('#$:foo' 1))
+               (produces {a:1} ))
+         (then "can be used inside deeply nested containers"
+               (mactab (macro foo (x) [(({a:[[(%x)]]}))] ))
+               (toplevel ('#$:foo' 1))
+               (produces [(({a:[[1]]}))] )))
+
+(ion_1_1 "a single parameter can be used in more than one variable expansion"
+         (mactab (macro foo (x) [(%x), (%x)]))
+         (toplevel ('#$:foo' 1))
+         (produces [1, 1]))
