@@ -79,6 +79,11 @@
                (text '''(:sum 1 '3')''')
                (text '''(:sum "3" 2)''')
                (text '''(:sum '3' 2)''')
-               "a single expression that produces two integers"
+               "an expression that produces multiple integers"
                (text "(:sum (:values 1 3))")
+               (text "(:sum 1 (:values 2 3))")
+               (text "(:sum (:values 1 2 ) 3)")
+               "an expression that produces no integers"
+               (text "(:sum 1 (:none))")
+               (text "(:sum (:none) 1)")
                (signals "invalid argument")))
