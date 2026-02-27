@@ -244,6 +244,15 @@ It may be easier and/or faster to skip that, as long as the observable results
 are equivalent: the effect on the encoding context, the data produced, and any
 errors signaled.
 
+> [!NOTE]
+> When `toplevel` fragments contain system-level e-expressions (e.g.
+> `(toplevel ('#$:$ion::add_macros' ...))`) and are followed by `binary`
+> fragments on the same path, the runner must apply the encoding-context
+> side effects (symbol table / macro table mutations) from the abstract
+> fragments before decoding the subsequent binary bytes.  The abstract
+> fragments need not be literally transcoded into binary in this case; only
+> their side effects on the encoding context are relevant.
+
 When all fragments are abstract (that is, there are no `text` or `binary`
 fragments on the path to an expectation), it is assumed that the test case is
 not intended to verify the behavior of the Ion parser/decoder, but rather the
