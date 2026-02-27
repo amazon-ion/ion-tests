@@ -8,9 +8,9 @@
                (text " (:16 foo 0) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_field foo 0) ")
-               "in text using qualified system macro address 22"
+               "in text using qualified system macro address 16"
                (text " (:$ion::16 foo 0) ")
-               "in binary using system macro address 22"
+               "in binary using system macro address 16"
                (binary "EF 10 A3 66 6F 6F 60")
                "in binary with a user macro address"
                (binary "10 A3 66 6F 6F 60")

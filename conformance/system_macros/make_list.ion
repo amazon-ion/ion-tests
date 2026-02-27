@@ -8,9 +8,9 @@
                (text " (:14 (::)) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_list (::)) ")
-               "in text using qualified system macro address 8"
+               "in text using qualified system macro address 14"
                (text " (:$ion::14 (::)) ")
-               "in binary using system macro address 8"
+               "in binary using system macro address 14"
                (binary "EF 0E 00")
                "in binary with a user macro address"
                (binary "0E 00")

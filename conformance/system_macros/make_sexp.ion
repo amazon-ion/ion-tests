@@ -8,9 +8,9 @@
                (text " (:15 (::)) ")
                "in text with a qualified macro name"
                (text " (:$ion::make_sexp (::)) ")
-               "in text using qualified system macro address 9"
+               "in text using qualified system macro address 15"
                (text " (:$ion::15 (::)) ")
-               "in binary using system macro address 9"
+               "in binary using system macro address 15"
                (binary "EF 0F 00")
                "in binary with a user macro address"
                (binary "0F 00")

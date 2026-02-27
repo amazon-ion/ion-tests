@@ -11,9 +11,9 @@
                (text "(:22)")
                "in text with a qualified macro name"
                (text "(:$ion::add_macros)")
-               "in text with a qualified macro address 14"
+               "in text with a qualified macro address 22"
                (text "(:$ion::22)")
-               "in binary with a system macro address 14"
+               "in binary with a system macro address 22"
                (binary "EF 16 00")
                "in binary with a user macro address"
                (binary "16 00")
