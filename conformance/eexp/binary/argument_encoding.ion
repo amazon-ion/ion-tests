@@ -398,7 +398,7 @@
                            (signals "invalid expression group length")))))
 
 (ion_1_1 "a macro with a tagless, fixed-size multi-byte, one-to-many parameter"
-         (mactab (macro X (uint16::x*) (%x)))
+         (mactab (macro X (uint16::x+) (%x)))
          (binary "00")
          (then "when invoked with no presence bitmap, raises an error" (signals "Unexpected EOF"))
          (then "when invoked with no arguments"
