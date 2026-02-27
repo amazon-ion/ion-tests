@@ -99,6 +99,6 @@
          (each "from values that look like IVMs"
                (text '''(:parse_ion "$ion_1_1 $ion_literal::$ion_1_0")''')
                // TODO: These might not be correct depending on the semantics around quoted IVMs.
-               (text '''(:parse_ion "$ion_1_1 '$ion_1_0')''')
-               (text '''(:parse_ion "$ion_1_0 '$ion_1_0')''')
+               (text '''(:parse_ion "$ion_1_1 '$ion_1_0'")''')
+               (text '''(:parse_ion "$ion_1_0 '$ion_1_0'")''')
                (produces $ion_1_0)))
