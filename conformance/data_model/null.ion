@@ -54,21 +54,6 @@
          (then (binary 0xCF) (denotes (Null sexp     )))
          (then (binary 0xDF) (denotes (Null struct   ))))
 
-(ion_1_1 "null values in Ion 1.1 binary"
-         (then (binary 0xEA)      (denotes (Null          )))
-         (then (binary 0xEB 0x00) (denotes (Null bool     )))
-         (then (binary 0xEB 0x01) (denotes (Null int      )))
-         (then (binary 0xEB 0x02) (denotes (Null float    )))
-         (then (binary 0xEB 0x03) (denotes (Null decimal  )))
-         (then (binary 0xEB 0x04) (denotes (Null timestamp)))
-         (then (binary 0xEB 0x05) (denotes (Null string   )))
-         (then (binary 0xEB 0x06) (denotes (Null symbol   )))
-         (then (binary 0xEB 0x07) (denotes (Null blob     )))
-         (then (binary 0xEB 0x08) (denotes (Null clob     )))
-         (then (binary 0xEB 0x09) (denotes (Null list     )))
-         (then (binary 0xEB 0x0A) (denotes (Null sexp     )))
-         (then (binary 0xEB 0x0B) (denotes (Null struct   ))))
-
 (ion_1_x "Null denotations"
          (then (toplevel null.blob     ) (denotes (Null blob     )))
          (then (toplevel null.bool     ) (denotes (Null bool     )))

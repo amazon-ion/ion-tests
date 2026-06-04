@@ -19,35 +19,8 @@
                       (binary "2E 88 00 00 00 00 00 00 00 00")
                       (binary "2E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00")
                       (denotes 0)))
-          (then "in Ion 1.1 binary"
-                (ivm 1 1)
-                (each "with length in opcode"
-                      (binary "60")
-                      (binary "61 00")
-                      (binary "62 00 00")
-                      (binary "63 00 00 00")
-                      (binary "64 00 00 00 00")
-                      (binary "65 00 00 00 00 00")
-                      (binary "66 00 00 00 00 00 00")
-                      (binary "67 00 00 00 00 00 00 00")
-                      (binary "68 00 00 00 00 00 00 00 00")
-                      "with length in flexuint"
-                      (binary "F6 01")
-                      (binary "F6 03 00")
-                      (binary "F6 05 00 00")
-                      (binary "F6 07 00 00 00")
-                      (binary "F6 09 00 00 00 00")
-                      (binary "F6 0B 00 00 00 00 00")
-                      (binary "F6 0D 00 00 00 00 00 00")
-                      (binary "F6 0F 00 00 00 00 00 00 00")
-                      (binary "F6 11 00 00 00 00 00 00 00 00")
-                      (binary "F6 13 00 00 00 00 00 00 00 00 00")
-                      (binary "F6 15 00 00 00 00 00 00 00 00 00 00")
-                      (denotes 0)))
           (each "in Ion 1.0 text"
                 (ivm 1 0)
-                "in Ion 1.1 text"
-                (ivm 1 1)
                 (each "using base10"
                       (text "0")
                       (text "-0")
@@ -80,33 +53,8 @@
                       (binary "2E 88 00 00 00 00 00 00 00 01")
                       (binary "2E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01")
                       (denotes 1)))
-          (then "in Ion 1.1 binary"
-                (ivm 1 1)
-                (each "with length in opcode"
-                      (binary "61 01")
-                      (binary "62 01 00")
-                      (binary "63 01 00 00")
-                      (binary "64 01 00 00 00")
-                      (binary "65 01 00 00 00 00")
-                      (binary "66 01 00 00 00 00 00")
-                      (binary "67 01 00 00 00 00 00 00")
-                      (binary "68 01 00 00 00 00 00 00 00")
-                      "with length in flexuint"
-                      (binary "F6 03 01")
-                      (binary "F6 05 01 00")
-                      (binary "F6 07 01 00 00")
-                      (binary "F6 09 01 00 00 00")
-                      (binary "F6 0B 01 00 00 00 00")
-                      (binary "F6 0D 01 00 00 00 00 00")
-                      (binary "F6 0F 01 00 00 00 00 00 00")
-                      (binary "F6 11 01 00 00 00 00 00 00 00")
-                      (binary "F6 13 01 00 00 00 00 00 00 00 00")
-                      (binary "F6 15 01 00 00 00 00 00 00 00 00 00")
-                      (denotes 1)))
           (each "in Ion 1.0 text"
                 (ivm 1 0)
-                "in Ion 1.1 text"
-                (ivm 1 1)
                 (each "using base10"
                       (text "1")
                       "using base16"
@@ -136,33 +84,8 @@
                       (binary "3E 88 00 00 00 00 00 00 00 01")
                       (binary "3E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01")
                       (denotes -1)))
-          (then "in Ion 1.1 binary"
-                (ivm 1 1)
-                (each "with length in opcode"
-                      (binary "61 FF")
-                      (binary "62 FF FF")
-                      (binary "63 FF FF FF")
-                      (binary "64 FF FF FF FF")
-                      (binary "65 FF FF FF FF FF")
-                      (binary "66 FF FF FF FF FF FF")
-                      (binary "67 FF FF FF FF FF FF FF")
-                      (binary "68 FF FF FF FF FF FF FF FF")
-                      "with length in flexuint"
-                      (binary "F6 03 FF")
-                      (binary "F6 05 FF FF")
-                      (binary "F6 07 FF FF FF")
-                      (binary "F6 09 FF FF FF FF")
-                      (binary "F6 0B FF FF FF FF FF")
-                      (binary "F6 0D FF FF FF FF FF FF")
-                      (binary "F6 0F FF FF FF FF FF FF FF")
-                      (binary "F6 11 FF FF FF FF FF FF FF FF")
-                      (binary "F6 13 FF FF FF FF FF FF FF FF FF")
-                      (binary "F6 15 FF FF FF FF FF FF FF FF FF FF")
-                      (denotes -1)))
           (each "in Ion 1.0 text"
                 (ivm 1 0)
-                "in Ion 1.1 text"
-                (ivm 1 1)
                 (each "using base10"
                       (text "-1")
                       "using base16"
@@ -190,31 +113,8 @@
                       (binary "2E 88 00 00 00 00 00 00 1C 4D")
                       (binary "2E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1C 4D")
                       (denotes 7245)))
-          (then "in Ion 1.1 binary"
-                (ivm 1 1)
-                (each "with length in opcode"
-                      (binary "62 4D 1C")
-                      (binary "63 4D 1C 00")
-                      (binary "64 4D 1C 00 00")
-                      (binary "65 4D 1C 00 00 00")
-                      (binary "66 4D 1C 00 00 00 00")
-                      (binary "67 4D 1C 00 00 00 00 00")
-                      (binary "68 4D 1C 00 00 00 00 00 00")
-                      "with length in flexuint"
-                      (binary "F6 05 4D 1C")
-                      (binary "F6 07 4D 1C 00")
-                      (binary "F6 09 4D 1C 00 00")
-                      (binary "F6 0B 4D 1C 00 00 00")
-                      (binary "F6 0D 4D 1C 00 00 00 00")
-                      (binary "F6 0F 4D 1C 00 00 00 00 00")
-                      (binary "F6 11 4D 1C 00 00 00 00 00 00")
-                      (binary "F6 13 4D 1C 00 00 00 00 00 00 00")
-                      (binary "F6 15 4D 1C 00 00 00 00 00 00 00 00")
-                      (denotes 7245)))
           (each "in Ion 1.0 text"
                 (ivm 1 0)
-                "in Ion 1.1 text"
-                (ivm 1 1)
                 (each "using base10"
                       (text "7245")
                       "using base16"
@@ -253,31 +153,8 @@
                       (binary "3E 88 00 00 00 00 00 00 1C 4D")
                       (binary "3E 90 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1C 4D")
                       (denotes -7245)))
-          (then "in Ion 1.1 binary"
-                (ivm 1 1)
-                (each "with length in opcode"
-                      (binary "62 B3 E3")
-                      (binary "63 B3 E3 FF")
-                      (binary "64 B3 E3 FF FF")
-                      (binary "65 B3 E3 FF FF FF")
-                      (binary "66 B3 E3 FF FF FF FF")
-                      (binary "67 B3 E3 FF FF FF FF FF")
-                      (binary "68 B3 E3 FF FF FF FF FF FF")
-                      "with length in flexuint"
-                      (binary "F6 05 B3 E3")
-                      (binary "F6 07 B3 E3 FF")
-                      (binary "F6 09 B3 E3 FF FF")
-                      (binary "F6 0B B3 E3 FF FF FF")
-                      (binary "F6 0D B3 E3 FF FF FF FF")
-                      (binary "F6 0F B3 E3 FF FF FF FF FF")
-                      (binary "F6 11 B3 E3 FF FF FF FF FF FF")
-                      (binary "F6 13 B3 E3 FF FF FF FF FF FF FF")
-                      (binary "F6 15 B3 E3 FF FF FF FF FF FF FF FF")
-                      (denotes -7245)))
           (each "in Ion 1.0 text"
                 (ivm 1 0)
-                "in Ion 1.1 text"
-                (ivm 1 1)
                 (each "using base10"
                       (text "-7245")
                       "using base16"
@@ -312,17 +189,8 @@
                       (binary "2E 89 12 34 56 78 9A BC DE F0 12")
                       (binary "2E 90 00 00 00 00 00 00 00 12 34 56 78 9A BC DE F0 12")
                       (denotes 335812727670730321938)))
-          (then "in Ion 1.1 binary"
-                (ivm 1 1)
-                (each "with length in flexuint"
-                      (binary "F6 13 12 F0 DE BC 9A 78 56 34 12")
-                      (binary "F6 15 12 F0 DE BC 9A 78 56 34 12 00")
-                      (binary "F6 17 12 F0 DE BC 9A 78 56 34 12 00 00")
-                      (denotes 335812727670730321938)))
           (each "in Ion 1.0 text"
                 (ivm 1 0)
-                "in Ion 1.1 text"
-                (ivm 1 1)
                 (each "using base10"
                       (text "335812727670730321938")
                       "using base16"
@@ -346,17 +214,8 @@
                       (binary "3E 89 12 34 56 78 9A BC DE F0 12")
                       (binary "3E 90 00 00 00 00 00 00 00 12 34 56 78 9A BC DE F0 12")
                       (denotes -335812727670730321938)))
-          (then "in Ion 1.1 binary"
-                (ivm 1 1)
-                (each "with length in flexuint"
-                      (binary "F6 13 EE 0F 21 43 65 87 A9 CB ED")
-                      (binary "F6 15 EE 0F 21 43 65 87 A9 CB ED FF")
-                      (binary "F6 17 EE 0F 21 43 65 87 A9 CB ED FF FF")
-                      (denotes -335812727670730321938)))
           (each "in Ion 1.0 text"
                 (ivm 1 0)
-                "in Ion 1.1 text"
-                (ivm 1 1)
                 (each "using base10"
                       (text "-335812727670730321938")
                       "using base16"

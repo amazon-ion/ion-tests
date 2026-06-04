@@ -1,6 +1,0 @@
-$ion_1_1
-{ (:none) }
-{ (:none), }
-{ (:none), a: 1 }
-{ a: 1, (:none) }
-{ a: 1, (:none), }

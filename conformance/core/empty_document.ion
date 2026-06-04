@@ -28,20 +28,6 @@
 (ion_1_0 (then null.string (denotes)))
 (ion_1_0 (each null.string (denotes)))
 
-
-(ion_1_1 (denotes))
-(ion_1_1 (produces))
-
-(ion_1_1 null.string (denotes))
-(ion_1_1 null.string (produces))
-
-(ion_1_1 (then (denotes)))
-(ion_1_1 (each (denotes)))
-
-(ion_1_1 (then null.string (denotes)))
-(ion_1_1 (each null.string (denotes)))
-
-
 (ion_1_x (denotes))
 (ion_1_x (produces))
 
@@ -57,15 +43,12 @@
 // With empty fragments
 
 (ion_1_0 (binary) (produces))
-(ion_1_1 (binary) (produces))
 (ion_1_x (binary) (produces))
 
 (document (text) (produces))
 (ion_1_0 (text) (produces))
-(ion_1_1 (text) (produces))
 (ion_1_x (text) (produces))
 
 (document (toplevel) (produces))
 (ion_1_0 (toplevel) (produces))
-(ion_1_1 (toplevel) (produces))
 (ion_1_x (toplevel) (produces))

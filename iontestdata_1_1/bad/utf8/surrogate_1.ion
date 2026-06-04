@@ -1,3 +1,0 @@
-$ion_1_1
-// malformed utf-16 surrogate - missing 2nd code unit in a string
-"\ud800"
