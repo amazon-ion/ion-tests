@@ -56,3 +56,10 @@ b'
 b'
   'a\\b'
 )
+
+// Unquoted `$`-prefixed text is a symbol ID only if one or more digits and nothing else follow the `$`.
+( $1$2 '$1$2' )
+( $1_0 '$1_0' )
+( $1a '$1a' )
+( $$1 '$$1' )
+( $ '$' )
