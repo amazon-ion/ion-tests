@@ -1,0 +1,288 @@
+// Benchmark corpus manifest. Sizes and hashes are of the decompressed binary (`file` minus any
+// `.zst` suffix). `text` is the canonical compact text, reconstituted with
+// `ion cat -f text <name>.10n` (ion-cli 0.12.0).
+manifest_version::1
+{
+  name: "tiny",
+  category: synthetic,
+  file: "synthetic/tiny.10n",
+  bytes: 24,
+  sha256: "11eeaed5209560ffbaef78bb06d04f38e6ea909fd689584f38505ac025afd4c6",
+  top_level_values: 1,
+  text: { bytes: 15, sha256: "ed3515136de5ada36064e90c4127dd0b45d7985c883a910778747782cd4d7916" },
+  source: "synthetic: a two-field struct",
+}
+{
+  name: "json-isl",
+  category: real_world,
+  file: "real-world/json-isl.10n",
+  bytes: 354,
+  sha256: "92c6af74a9547be9967b65fe92af93d8406357bfdf0cd0e8a1ef4bd39b424e53",
+  top_level_values: 7,
+  text: { bytes: 600, sha256: "3b208f32bd2c26b3f93edfecfc9562c407ee1d098f78bad761bd6029b52fa129" },
+  source: "ion-schema-schemas json/json.isl at 0fb72175fa7196c3b85ac97170fc6da822e162bd (Apache-2.0)",
+}
+{
+  name: "isl-2-0",
+  category: real_world,
+  file: "real-world/isl-2-0.10n.zst",
+  compressed: { codec: zstd, bytes: 2154, sha256: "3acbb7f2cc8aea7c829b88890b9f0cf601e2bf2a5aa4c28686c7dce64968ebb1" },
+  bytes: 4418,
+  sha256: "a76dffea38912dab0434037304fbb783971b5ce155ce34187c7dd80a431290d7",
+  top_level_values: 68,
+  text: { bytes: 11264, sha256: "80b7333ebb293419a47788cfac86ded59449663729529b45a5d5e1381167cf36" },
+  source: "ion-schema-schemas isl/ion_schema_2_0/{constraints,ranges,schema,type,util}.isl concatenated in that order, at 0fb72175fa7196c3b85ac97170fc6da822e162bd (Apache-2.0)",
+}
+{
+  name: "comm-filter-sanitized",
+  category: real_world,
+  file: "real-world/comm-filter-sanitized.10n.zst",
+  compressed: { codec: zstd, bytes: 2223, sha256: "5b7188fda6f2c2baf9e96d34adf0351861f0b067ec2d40364d4ee8184a104c10" },
+  bytes: 2626,
+  sha256: "a5dca6625708290750060f10ee7799e3b308e3fd918b38be58ffce0afe299d75",
+  top_level_values: 1,
+  text: { bytes: 4331, sha256: "9b86a5e59c09923b8d7a1ecda112451368561b0c1756d4fac4c806c5c52edfcc" },
+  source: "sanitized payload with nested data",
+}
+{
+  name: "disc-sanitized",
+  category: real_world,
+  file: "real-world/disc-sanitized.10n.zst",
+  compressed: { codec: zstd, bytes: 7766, sha256: "e3049bff7b0c152a388dd1f68b7225f8239d07f9c7f56b2afc73bb239bf0acf6" },
+  bytes: 9829,
+  sha256: "6a0fdea788473aaa16f750b66f6d621899e6e7ff81af1969a4467138aff62509",
+  top_level_values: 1,
+  text: { bytes: 12712, sha256: "ce80fefd02acc8107eb7b7453a3b9d8b9a5a8b23addb6b5728afb5669a1913c3" },
+  source: "sanitized single payload",
+}
+{
+  name: "single-asin-sanitized",
+  category: real_world,
+  file: "real-world/single-asin-sanitized.10n.zst",
+  compressed: { codec: zstd, bytes: 27761, sha256: "79b96922f1e8775ce00b5c334b3cd4bea66f3a46ae50187dd15b5c4be4f3ff83" },
+  bytes: 38987,
+  sha256: "3d92d651c972b5140fb645bc80414ef53e9bacc7176a042a3dc030693568f276",
+  top_level_values: 1,
+  text: { bytes: 144137, sha256: "c2b8c2e57ad673d919779c1f322fbd6668778b0f0136f7fca4e1c914767497cf" },
+  source: "sanitized product record (deeply nested)",
+}
+{
+  name: "disc-median-sanitized",
+  category: real_world,
+  file: "real-world/disc-median-sanitized.10n.zst",
+  compressed: { codec: zstd, bytes: 55396, sha256: "b3f75d0c687981773b9a1457af0e835500364df633ed2beeaebbf5e1bf05ba2d" },
+  bytes: 75114,
+  sha256: "3a4033c3e35cac0816d27c73444219491fafe09187112f2f1e8303571de904ca",
+  top_level_values: 1,
+  text: { bytes: 194139, sha256: "a7c1e99287b35d42542c46ee03fd487a3b25a118d131004904cb4ea858adcdde" },
+  source: "sanitized message: the median-size message of disc-stratified-sanitized",
+}
+{
+  name: "disc-stratified-sanitized",
+  category: real_world,
+  file: "real-world/disc-stratified-sanitized.10n.zst",
+  compressed: { codec: zstd, bytes: 1151140, sha256: "feec244ad042df4622b2ba0a3d7f6501d14888edf5a1cbd05388740d5f078e95" },
+  bytes: 1630538,
+  sha256: "fde2b29ef1d9b5a5ecd02751f2327a522b6ba7a46eb35c05cb156d92e6486904",
+  top_level_values: 20,
+  text: { bytes: 4289197, sha256: "3f162b07950c85594ca8ca02090e2f259a4aa10d94c9d626dfee6eb8ded3aaaa" },
+  source: "sanitized messages: a stratified sample (one message per 5% size band, in size order) from a population of more than 10,000 messages",
+}
+{
+  name: "log-sanitized",
+  category: real_world,
+  file: "real-world/log-sanitized.10n.zst",
+  compressed: { codec: zstd, bytes: 2583454, sha256: "421d527dc0465b065f639fabb0b89e288f4b88eaa26c32c39370eac162ef698c" },
+  bytes: 6501739,
+  sha256: "c164c92bb283767403352f2b1c83d1384e5a6ce0be840f81d4422a413517d489",
+  top_level_values: 19200,
+  text: { bytes: 45489875, sha256: "c4c9d898d313a7eba4914508f71f3c3c58120afa8c8a25dbf7d5790dc7909ed9" },
+  source: "sanitized service log stream",
+}
+{
+  name: "ints",
+  category: synthetic,
+  file: "synthetic/ints.10n.zst",
+  compressed: { codec: zstd, bytes: 9821, sha256: "f89c75e9648fe51b1ab601a8179a2ddbdc07c816e58299ef5ad6b92590feb55a" },
+  bytes: 10010,
+  sha256: "5fbf94a0fe2c013de5a0e4820feb4c30d2880669361b88a98ea41084e929230d",
+  top_level_values: 1830,
+  text: { bytes: 22447, sha256: "20e20b0ad7b1864a60020fafedad3aed048a2371aac7767b5e2865b69474f746" },
+  source: "generated (seed 20261105): ints spread across 1- to 8-byte magnitudes",
+}
+{
+  name: "big-ints",
+  category: synthetic,
+  file: "synthetic/big-ints.10n.zst",
+  compressed: { codec: zstd, bytes: 10160, sha256: "91e57f2067ba6bfe7372208b0e5407f6d15b05c84cbbe5211f0dc720b4b2ec56" },
+  bytes: 10146,
+  sha256: "080d6ffab406b3ea474157960974fa1a1eceff5ce0fddcfe77ac774f0a60976a",
+  top_level_values: 540,
+  text: { bytes: 22547, sha256: "36080d7b2e61e3ef21aa6ed8c8fc81be5c4ecc5110289e24c7199ebc08a8eb4b" },
+  source: "generated (seed 20261105): ints of 20 to 60 decimal digits",
+}
+{
+  name: "floats",
+  category: synthetic,
+  file: "synthetic/floats.10n.zst",
+  compressed: { codec: zstd, bytes: 9558, sha256: "5954dab009e5e32448751f631e04a780eebc7ce81464d3c5008649d5174088db" },
+  bytes: 10038,
+  sha256: "b5f02a4a7c280179f79b1d4b8c75cc9495226643a2178d8f64c5c0384441d698",
+  top_level_values: 1330,
+  text: { bytes: 29007, sha256: "d094570f90570ee649580362da297f2cc79ffbdb4b98881b246ef557629e4a76" },
+  source: "generated (seed 20261105): floats: random doubles, values exactly representable as 32-bit floats, and a few zeros and special values",
+}
+{
+  name: "decimals",
+  category: synthetic,
+  file: "synthetic/decimals.10n.zst",
+  compressed: { codec: zstd, bytes: 9602, sha256: "2a87f3619cd2e77735c94909183ec6d469f01fef76df2fbe533908f82f3b90d6" },
+  bytes: 10030,
+  sha256: "f6cd9fbd2c6b7f900074447318b35c59e28990b898ed34530e89fb0ff6278ec7",
+  top_level_values: 1540,
+  text: { bytes: 21449, sha256: "e84cb336785e2901a896258ef1e95cc75bbad0ea1023f4c34bb4d6731233205c" },
+  source: "generated (seed 20261105): decimals with 1 to 34 digits and varied exponents, including zeros",
+}
+{
+  name: "timestamps",
+  category: synthetic,
+  file: "synthetic/timestamps.10n.zst",
+  compressed: { codec: zstd, bytes: 8962, sha256: "434c75c9f30eb5fb8689efcaad05d3fc9a6d72e46538f0f46093590d328f9232" },
+  bytes: 10062,
+  sha256: "12ba6ea258d54c3e4bb7732e9b349ca4e3db6af6c35eb71495fefdf068842af2",
+  top_level_values: 1200,
+  text: { bytes: 23789, sha256: "64a3a662df5d5cf735e07557ff2b09bcd00986b1757410f07f4096ade6708bcc" },
+  source: "generated (seed 20261105): timestamps at every precision, with UTC, unknown, and other offsets",
+}
+{
+  name: "strings",
+  category: synthetic,
+  file: "synthetic/strings.10n.zst",
+  compressed: { codec: zstd, bytes: 8634, sha256: "26f9e991428650bf74f407796def334de1f2aa817f4279316422ae022cf4f781" },
+  bytes: 10227,
+  sha256: "cdbe27a2c70ba7d7da6cb4b5b553a3690199f7ca26baae0809ee6adce8460c32",
+  top_level_values: 150,
+  text: { bytes: 11005, sha256: "cc8c7dbad899cf07b918dcea20c3813341c9e324c98cb7d087b5b97fd28591e3" },
+  source: "generated (seed 20261105): strings with escapes and multi-byte UTF-8",
+}
+{
+  name: "simple-strings",
+  category: synthetic,
+  file: "synthetic/simple-strings.10n.zst",
+  compressed: { codec: zstd, bytes: 9035, sha256: "c988c0028384f6509df66772376168c1ab96fd2ddd85b68e547614ca9b29dad9" },
+  bytes: 10569,
+  sha256: "6e8af50bc88935ff333dbc305e87f6e48dd2da2e6576042f524a2983142a0c3a",
+  top_level_values: 210,
+  text: { bytes: 10897, sha256: "c2c6eca0dec1156df0e899bdb44226c5a9221339f8a51499854253996c471fc6" },
+  source: "generated (seed 20261105): printable ASCII strings without escapes",
+}
+{
+  name: "symbols",
+  category: synthetic,
+  file: "synthetic/symbols.10n.zst",
+  compressed: { codec: zstd, bytes: 6568, sha256: "bb3ed0581963a72eb761b1fc7074f91f53cfb57ee07aa5396e0b8fb54c0a1029" },
+  bytes: 10016,
+  sha256: "824143d321151cb24143567aff0bd94aa230ef42c93494bc1e5ee3ff5a882a29",
+  top_level_values: 3650,
+  text: { bytes: 47398, sha256: "bfb99ef32f62d33d78ea8e00cb2633e670cfef786255b15bc7ab1de8343b284d" },
+  source: "generated (seed 20261105): symbol values drawn with skew from a 200-symbol vocabulary",
+}
+{
+  name: "nulls-bools",
+  category: synthetic,
+  file: "synthetic/nulls-bools.10n.zst",
+  compressed: { codec: zstd, bytes: 2733, sha256: "f85c001d58d70b53e7c5dd6242ea290ba8b0a57a24447101f68b898791ef3796" },
+  bytes: 10004,
+  sha256: "d469a9de35e6f41f9f64a38504d3bf5127a1eda07e37f003f0b0345e98509bfc",
+  top_level_values: 10000,
+  text: { bytes: 59560, sha256: "8e79de3719f4a5dfbd28ef70e98341246719ca030e6b3316e1d2faa859e6fd00" },
+  source: "generated (seed 20261105): bools, null, and typed nulls",
+}
+{
+  name: "lobs",
+  category: synthetic,
+  file: "synthetic/lobs.10n.zst",
+  compressed: { codec: zstd, bytes: 10322, sha256: "d3bda6a97bdb9ee589e7dfa5ed484596865e916313d272e95d37b24e76017338" },
+  bytes: 10579,
+  sha256: "99a5702720468c4d4cb8664fc00d149fb6be9c1747e89e92d549ab8d9e05353e",
+  top_level_values: 70,
+  text: { bytes: 12615, sha256: "71b09054de0e0eac90d13f5749860eb9b2eb58442f19a798bfa4d5f6bb7ca212" },
+  source: "generated (seed 20261105): blobs and clobs of up to 300 bytes",
+}
+{
+  name: "annotations",
+  category: synthetic,
+  file: "synthetic/annotations.10n.zst",
+  compressed: { codec: zstd, bytes: 8689, sha256: "bd1374ec5709b9d5500d6896fd1d958ba6bfbbbe1d8fdafc07099a91fe544e52" },
+  bytes: 10016,
+  sha256: "11fd0bbbf6bfaad9ca2675ce62a98a8251b6a20bef3ebb5b8c6342905c9ba51f",
+  top_level_values: 910,
+  text: { bytes: 26645, sha256: "4c88ff75eeeaace126f173f993f3d2391ffcfb8ed1d385e1761e3edb36957737" },
+  source: "generated (seed 20261105): small values carrying one to three annotations",
+}
+{
+  name: "flat-structs",
+  category: synthetic,
+  file: "synthetic/flat-structs.10n.zst",
+  compressed: { codec: zstd, bytes: 7416, sha256: "bbab0ca581e4d4e03f3b53ac6c785d7fbf7790144b6482ce4629ba1f0deda4aa" },
+  bytes: 10374,
+  sha256: "69857e464fb4569e4409eba4e22bc5d90c5481457fe3470ae78c28312c4e053d",
+  top_level_values: 180,
+  text: { bytes: 38043, sha256: "8a0c5cd5d7f47c84faaca67aab11f921042ee23a3e1420fa37fd995a4a0e53e0" },
+  source: "generated (seed 20261105): structs of 6 to 24 int fields from a 40-name vocabulary",
+}
+{
+  name: "lists",
+  category: synthetic,
+  file: "synthetic/lists.10n.zst",
+  compressed: { codec: zstd, bytes: 6683, sha256: "a3b5dfce13755159a2970c6e230e7bab15009136a1ff2b5f49848a85b067a143" },
+  bytes: 10160,
+  sha256: "bc933b8a5d80370cc0fcae3ed85e63e79632521e10bf7390584cc606426f34d7",
+  top_level_values: 160,
+  text: { bytes: 17997, sha256: "07873c17120f5d637d7efe02a7aa783bc6da19237aa584a8da8bec352579af4e" },
+  source: "generated (seed 20261105): lists of 1 to 40 ints",
+}
+{
+  name: "mixed",
+  category: synthetic,
+  file: "synthetic/mixed.10n.zst",
+  compressed: { codec: zstd, bytes: 9098, sha256: "60d3a65df2a7f55bbb492d2e397fd08f4b5418cd17e7f16241d635f0203e93af" },
+  bytes: 10246,
+  sha256: "9f1f5a6787524ba8f046e3a5031aecd8ba641a79f48fd1d1d03b038bc8ff660c",
+  top_level_values: 100,
+  text: { bytes: 22538, sha256: "eddf866c178cffbfa9c98db7fb9cd10cd4cb11d7514c1659d3f030e9b52948e2" },
+  source: "generated (seed 20261105): structs with a field of each scalar type plus a list and a sexp",
+}
+{
+  name: "deep-nesting",
+  category: synthetic,
+  file: "synthetic/deep-nesting.10n.zst",
+  compressed: { codec: zstd, bytes: 4593, sha256: "13d0cec1171c3e0ea784ab0d111eba5433aa77b060c00dd247af1c78fecc73a1" },
+  bytes: 11559,
+  sha256: "60f10202f94fb873ed9b25b7c1300820f7d664409c631a6378ed1b9c16a87d06",
+  top_level_values: 80,
+  text: { bytes: 22583, sha256: "06daf36b3675eb3625d193e297d1ad4abbeee319eae8cf32a221ad0edfb2d985" },
+  source: "generated (seed 20261105): values nested 20 to 100 levels deep in lists, sexps, and structs",
+}
+{
+  name: "large-values",
+  category: synthetic,
+  file: "synthetic/large-values.10n.zst",
+  compressed: { codec: zstd, bytes: 11960, sha256: "5c6de0389d9d60fbd2e9878a4b9a00a5c10af1a2be80b89ec71a6b3ba0408268" },
+  bytes: 12576,
+  sha256: "12d125bb705e1b82c65347992be2413d79860b9d0d9ddb41c0047f098c9f1ff2",
+  top_level_values: 10,
+  text: { bytes: 15135, sha256: "11619a0164c969b2031dfd1a3c455bb129e74e641d9af16905eecb733c156840" },
+  source: "generated (seed 20261105): structs each holding one large string, blob, int, or decimal",
+}
+{
+  name: "symbol-tables",
+  category: synthetic,
+  file: "synthetic/symbol-tables.10n.zst",
+  compressed: { codec: zstd, bytes: 7085, sha256: "da6d74cae66609baf365fbcbf643b8fc880b716ea8874e1a457d95c4656beab0" },
+  bytes: 10133,
+  sha256: "15c10ff89abd3084425dda74359d2e81abe5b52491a14ed1aaec94b72171efc0",
+  top_level_values: 938,
+  text: { bytes: 11625, sha256: "fffc2e049094938bb4445af74b96b0aee00011796faf4d41c99e07454a2184be" },
+  source: "generated (seed 20261105): many short binary streams concatenated, each with its own local symbol table",
+}
